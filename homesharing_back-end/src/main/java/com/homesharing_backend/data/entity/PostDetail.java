@@ -41,4 +41,16 @@ public class PostDetail {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "human_capacity_id", referencedColumnName = "id")
     private HumanCapacity humanCapacity;
+
+    @Column(name = "guest_number")
+    private int guestNumber;
+
+    @Column(name = "number_of_beds")
+    private int numberOfBeds;
+
+    @Column(name = "number_of_bedrooms")
+    private int numberOfBedrooms;
+
+    @Column(name = "numberOfBathrooms")
+    private int numberOfBathroom;
 }

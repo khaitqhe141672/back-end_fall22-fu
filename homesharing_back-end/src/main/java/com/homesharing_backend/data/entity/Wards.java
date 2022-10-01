@@ -10,16 +10,16 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-public class Host {
+public class Wards {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "district_id", referencedColumnName = "id")
+    private Province province;
 
-    @Column(name = "type_account")
-    private Long typeAccount;
+    @Column(name = "name")
+    private String name;
 }

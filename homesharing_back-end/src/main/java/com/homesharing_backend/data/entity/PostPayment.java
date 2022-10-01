@@ -5,30 +5,26 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "report_post")
+@Table(name = "post_payment")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class ReportPost {
+public class PostPayment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    private Customer customer;
-
-    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
-    @Column(name = "description")
-    private String description;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_package_id", referencedColumnName = "id")
+    private PaymentPackage paymentPackage;
 
     @Column(name = "status")
     private int status;
-
 }

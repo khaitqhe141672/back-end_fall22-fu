@@ -6,29 +6,29 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
+@Table(name = "payment_package")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class Post {
+public class PaymentPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "host_id", referencedColumnName = "id")
-    private User host;
-
-    @Column(name = "title")
-    private String title;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "price")
     private float price;
 
-    @Column(name = "create_date")
-    private Date createDate;
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Column(name = "end_date")
+    private Date endStart;
 
     @Column(name = "status")
     private int status;

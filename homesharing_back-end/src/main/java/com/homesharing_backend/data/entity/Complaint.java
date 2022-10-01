@@ -10,19 +10,20 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-public class Payment {
+public class Complaint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    private Post post;
+    @JoinColumn(name = "report_id", referencedColumnName = "id")
+    private Report report;
 
-    @Column(name = "price")
-    private float price;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "status")
     private int status;
+
 }
