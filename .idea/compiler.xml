@@ -2,20 +2,36 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+<<<<<<< Updated upstream
+=======
+      <profile default="true" name="Default" enabled="true" />
+>>>>>>> Stashed changes
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+<<<<<<< Updated upstream
         <module name="backend-fall22-fu" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="backend-fall22-fu" target="11" />
+=======
+        <module name="homesharing_back-end" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="homesharing_back-end" target="17" />
+>>>>>>> Stashed changes
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+<<<<<<< Updated upstream
       <module name="backend-fall22-fu" options="-parameters" />
+=======
+      <module name="homesharing_back-end" options="-parameters" />
+>>>>>>> Stashed changes
     </option>
   </component>
 </project>
