@@ -1,5 +1,7 @@
 package com.homesharing_backend.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
     @Id
@@ -36,6 +39,7 @@ public class User {
 
     @NotBlank
     @Size(max = 120)
+    @JsonIgnore
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -46,8 +50,6 @@ public class User {
     @JoinColumn(name = "user_detail_id", referencedColumnName = "user_detail_id")
     private UserDetail userDetail;
 
-    @NotBlank
-    @Size(max = 6)
     @Column(name = "active_code")
     private String codeActive;
 

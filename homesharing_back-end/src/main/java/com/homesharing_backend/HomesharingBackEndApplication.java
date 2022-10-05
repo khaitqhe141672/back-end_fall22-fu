@@ -27,6 +27,7 @@ public class HomesharingBackEndApplication implements CommandLineRunner {
         roles.add(new Role(ERole.ROLE_CUSTOMER));
         roles.add(new Role(ERole.ROLE_ADMIN));
         roles.add(new Role(ERole.ROLE_HOST));
+        roles.add(new Role(ERole.ROLE_WAIT));
         roles.forEach(role -> {
             if (!roleRepository.existsByName(role.getName())) {
                 roleRepository.save(role);

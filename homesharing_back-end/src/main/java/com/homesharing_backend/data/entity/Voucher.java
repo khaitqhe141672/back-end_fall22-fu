@@ -8,6 +8,7 @@ import java.sql.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

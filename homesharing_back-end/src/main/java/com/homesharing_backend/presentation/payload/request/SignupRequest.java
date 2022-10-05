@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.sql.Date;
 import java.util.Set;
 
 @Data
@@ -28,13 +29,21 @@ public class SignupRequest {
 
 //    private Set<String> role;
 
-    private String role;
+//    private String role;
 
 
-    @Size(max = 20)
-    private String firstName;
+//    @Size(max = 20)
+//    private String firstName;
+//
+//    @Size(max = 20)
+//    private String lastName;
 
-    @Size(max = 20)
-    private String lastName;
+    private String fullName;
+
+    private String address;
+
+    private String mobile;
+
+    private Date dob;
 
 }

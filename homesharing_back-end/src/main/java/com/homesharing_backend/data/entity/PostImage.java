@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "post_image")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

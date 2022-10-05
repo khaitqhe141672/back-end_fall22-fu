@@ -9,6 +9,7 @@ import java.sql.Date;
 @Table(name = "payment_package")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

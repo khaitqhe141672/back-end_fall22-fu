@@ -17,7 +17,7 @@ import java.util.List;
 public class UserDto {
      private String username;
      private String email;
-     private String firstName;
-     private String lastName;
+     private String fullName;
      private String role;
+     private int status;
 }

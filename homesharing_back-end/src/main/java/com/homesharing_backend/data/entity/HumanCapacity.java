@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "human_capacity")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

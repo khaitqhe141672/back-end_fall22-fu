@@ -7,6 +7,7 @@ import java.sql.Date;
 
 @Entity
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Getter
 @Setter

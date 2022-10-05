@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "room_type")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

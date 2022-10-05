@@ -1,16 +1,14 @@
 package com.homesharing_backend.presentation.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import com.homesharing_backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -26,7 +24,19 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        return authService.register(signUpRequest);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest,
+                                          HttpServletRequest  servletRequest) {
+        return authService.register(signUpRequest, servletRequest);
+    }
+
+    @GetMapping("/confirm-account")
+    public ResponseEntity<?> confirmAccount(@RequestParam("token") String otp) {
+        return authService.confirmAccount(otp);
+    }
+
+    @PutMapping("/update-role")
+    public ResponseEntity<?> updateRole(@RequestPart(value = "email") String email,
+                                        @RequestParam("type") int type) {
+        return authService.updateRole(email, type);
     }
 }

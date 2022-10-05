@@ -3,10 +3,12 @@ package com.homesharing_backend.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
@@ -16,22 +18,19 @@ public class UserDetail {
     @Column(name = "user_detail_id")
     private Long userDetailId;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "mobile")
     private String mobile;
-
-    @Column(name = "gender")
-    private boolean gender;
 
     @Column(name = "address")
     private String address;
 
     @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @Column(name = "dob")
+    private Date dob;
 
 }
