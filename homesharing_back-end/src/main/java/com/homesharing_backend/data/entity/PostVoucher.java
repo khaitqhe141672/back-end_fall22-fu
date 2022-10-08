@@ -6,14 +6,14 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "post_payment")
+@Table(name = "post_voucher")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
 @ToString
-public class PostPayment {
+public class PostVoucher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +24,14 @@ public class PostPayment {
     private Post post;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_package_id", referencedColumnName = "id")
-    private PaymentPackage paymentPackage;
+    @JoinColumn(name = "voucher_id", referencedColumnName = "id")
+    private Voucher voucher;
 
     @Column(name = "start_date")
     private Date startDate;
 
     @Column(name = "end_date")
-    private Date endStart;
+    private Date endDate;
 
     @Column(name = "status")
     private int status;
