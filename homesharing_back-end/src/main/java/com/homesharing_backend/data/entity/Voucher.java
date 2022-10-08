@@ -19,8 +19,8 @@ public class Voucher {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    private Post post;
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
 
     @Column(name = "name_voucher")
     private String nameVoucher;
@@ -28,11 +28,11 @@ public class Voucher {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "start_date")
-    private Date startDate;
+    @Column(name = "percent")
+    private int percent;
 
-    @Column(name = "end_date")
-    private Date endDate;
+    @Column(name = "due_day")
+    private int dueDay;
 
     @Column(name = "status")
     private int status;

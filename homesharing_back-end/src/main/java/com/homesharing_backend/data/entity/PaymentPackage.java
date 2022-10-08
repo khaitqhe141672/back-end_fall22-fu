@@ -22,14 +22,11 @@ public class PaymentPackage {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "due_month")
+    private int dueMonth;
+
     @Column(name = "price")
     private float price;
-
-    @Column(name = "start_date")
-    private Date startDate;
-
-    @Column(name = "end_date")
-    private Date endStart;
 
     @Column(name = "status")
     private int status;
