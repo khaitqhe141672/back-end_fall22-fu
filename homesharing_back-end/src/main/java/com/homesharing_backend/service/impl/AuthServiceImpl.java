@@ -65,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseObject> register(SignupRequest signUpRequest, HttpServletRequest servletRequest) {
+
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new ConflictException("Username is already taken");
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -78,14 +79,59 @@ public class AuthServiceImpl implements AuthService {
             userDetail.setAddress(signUpRequest.getAddress());
             userDetail.setMobile(signUpRequest.getMobile());
             user.setUserDetail(userDetail);
-            Role waitRole = roleRepository.findByName(ERole.ROLE_WAIT)
-                    .orElseThrow(() -> new NotFoundException("WAIT role is not found"));
-            user.setRole(waitRole);
+            String strRoles = signUpRequest.getRole();
+            Role roles = new Role();
+            if (strRoles == null || strRoles.isEmpty()) {
+                Role customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+                        .orElseThrow(() -> new NotFoundException("Student role is not found"));
+//                roles.add(new UserRole(user, customerRole));
+                user.setRole(customerRole);
+            } else {
+//                strRoles.forEach(role -> {
+                switch (strRoles) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new NotFoundException("Admin role is not found"));
+//                            roles.add(new UserRole(user, adminRole));
+                        user.setRole(adminRole);
+                        Admin admin = Admin.builder()
+                                .user(user)
+                                .build();
 
+                        adminRepository.save(admin);
+                        break;
+                    case "host":
+                        Role hostRole = roleRepository.findByName(ERole.ROLE_HOST)
+                                .orElseThrow(() -> new NotFoundException("Teacher role is not found"));
+//                            roles.add(new UserRole(user, hostRole));
+                        user.setRole(hostRole);
+                        Host host = Host.builder()
+                                .user(user)
+                                .build();
+
+                        hostRepository.save(host);
+                        break;
+                    default:
+                        Role customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+                                .orElseThrow(() -> new NotFoundException("Student role is not found"));
+//                            roles.add(new UserRole(user, customerRole));
+                        user.setRole(customerRole);
+                        Customer customer = Customer.builder()
+                                .user(user)
+                                .build();
+
+                        customerRepository.save(customer);
+                }
+//                });
+            }
+//            user.setRoles(roles);
             String otp = UUID.randomUUID().toString();
-
             user.setCodeActive(otp);
+
             User savedUser = userRepository.save(user);
+
+//            List<String> resRoles = new ArrayList<>();
+//            roles.forEach(e -> resRoles.add(e.getRole().getName().name()));
             UserDto userDto = modelMapper.map(user, UserDto.class);
             userDto.setRole(user.getRole().getName().name());
             userDto.setFullName(signUpRequest.getFullName());
@@ -93,6 +139,7 @@ public class AuthServiceImpl implements AuthService {
                     .replacePath(null)
                     .build()
                     .toUriString();
+
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
             String text = baseUrl + "/api/auth/confirm-account?token=" + otp;
@@ -107,13 +154,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseObject> login(LoginRequest signInRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword()));
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
+                        signInRequest.getPassword()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        UserDto userDto = UserDto.builder().email(userDetails.getEmail()).username(userDetails.getUsername()).role(roles.get(0)).build();
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority()).collect(Collectors.toList());
+
+        UserDto userDto = UserDto.builder()
+                .email(userDetails.getEmail())
+                .username(userDetails.getUsername()).role(roles.get(0)).build();
         Map data = new HashMap<String, Object>();
+
         if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
             Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
             data.put("customerID", customer.getId());
@@ -166,8 +222,8 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.getUserByEmail(email);
         Map data = new HashMap<String, Object>();
 
-        if(user != null){
-            if(role == 1){
+        if (user != null) {
+            if (role == 1) {
                 Role customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
                         .orElseThrow(() -> new NotFoundException("Customer role is not found"));
                 user.setRole(customerRole);
@@ -198,5 +254,28 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> existAccountByUsername(String username) {
+        Map data = new HashMap<String, Object>();
+        if (userRepository.existsByUsername(username.trim())) {
+            data.put("user", username + " đã tồn tại" );
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("USERNAME_EXIST", data));
+        } else {
+            data.put("user", username + " chưa tồn tại" );
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("USERNAME_NOT_EXIST", data));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> existAccountByEmail(String email) {
+        Map data = new HashMap<String, Object>();
+        if (userRepository.existsByEmail(email.trim())) {
+            data.put("user", email + " đã tồn tại" );
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_EXIST", data));
+        } else {
+            data.put("user", email + " chưa tồn tại" );
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_NOT_EXIST", data));
+        }
+    }
 
 }

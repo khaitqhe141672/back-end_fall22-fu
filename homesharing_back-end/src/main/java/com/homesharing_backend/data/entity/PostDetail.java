@@ -39,10 +39,6 @@ public class PostDetail {
     @JoinColumn(name = "room_type_id", referencedColumnName = "id")
     private RoomType roomType;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "human_capacity_id", referencedColumnName = "id")
-    private HumanCapacity humanCapacity;
-
     @Column(name = "guest_number")
     private int guestNumber;
 

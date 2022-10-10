@@ -15,4 +15,8 @@ public interface AuthService {
     public ResponseEntity<ResponseObject> login(LoginRequest signInRequest);
     public ResponseEntity<ResponseObject> confirmAccount(String otp);
     public ResponseEntity<ResponseObject> updateRole(String email, int role);
+
+    public ResponseEntity<ResponseObject> existAccountByUsername(String username);
+
+    public ResponseEntity<ResponseObject> existAccountByEmail(String email);
 }
