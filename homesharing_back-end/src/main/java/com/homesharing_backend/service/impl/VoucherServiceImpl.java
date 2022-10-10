@@ -84,6 +84,7 @@ public class VoucherServiceImpl implements VoucherService {
                 .description(voucherRequest.getDescription())
                 .dueDay(voucherRequest.getDueDate())
                 .host(host)
+                .status(1)
                 .build();
 
         Voucher voucher = voucherRepository.save(v);
@@ -106,11 +107,40 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public ResponseEntity<ResponseObject> updateVoucher(Long id, VoucherRequest voucherRequest) {
-        return null;
+
+        Voucher voucher = voucherRepository.getVoucherById(id);
+
+        Voucher v = Voucher.builder()
+                .nameVoucher(voucherRequest.getName())
+                .description(voucherRequest.getDescription())
+                .dueDay(voucherRequest.getDueDate())
+                .host(voucher.getHost())
+                .status(voucher.getStatus())
+                .build();
+
+        Voucher vUpdate = voucherRepository.save(v);
+
+        VoucherDto dto = VoucherDto.builder()
+                .nameVoucher(vUpdate.getNameVoucher())
+                .description(vUpdate.getDescription())
+                .dueDate(vUpdate.getDueDay())
+                .percent(vUpdate.getPercent())
+                .hostID(vUpdate.getHost().getId())
+                .status(vUpdate.getStatus())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Update success voucher", new HashMap<>() {
+            {
+                put("voucher", dto);
+            }
+        }));
     }
 
     @Override
     public ResponseEntity<ResponseObject> updateStatusVoucher(Long id, int status) {
+
+        Voucher voucher = voucherRepository.getVoucherById(id);
+
         return null;
     }
 }

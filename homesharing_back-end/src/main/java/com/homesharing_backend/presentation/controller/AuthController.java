@@ -35,8 +35,18 @@ public class AuthController {
     }
 
     @PutMapping("/update-role")
-    public ResponseEntity<?> updateRole(@RequestPart(value = "email") String email,
+    public ResponseEntity<?> updateRole(@RequestParam("email") String email,
                                         @RequestParam("type") int type) {
         return authService.updateRole(email, type);
+    }
+
+    @GetMapping("/exist-username")
+    public ResponseEntity<?> existUsername(@RequestParam("username") String username){
+        return authService.existAccountByUsername(username);
+    }
+
+    @GetMapping("/exist-email")
+    public ResponseEntity<?> existEmail(@RequestParam("email") String email){
+        return authService.existAccountByEmail(email);
     }
 }
