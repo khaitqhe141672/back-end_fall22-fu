@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class VoucherDto {
+public class PostUtilityDto {
 
-    private String nameVoucher;
+    private Long postUtilityID;
     private String description;
-    private int percent;
-    private int dueDate;
+    private float price;
+    private Long utilityID;
     private int status;
 }

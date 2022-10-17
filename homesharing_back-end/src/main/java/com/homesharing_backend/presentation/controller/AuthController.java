@@ -1,6 +1,7 @@
 package com.homesharing_backend.presentation.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
@@ -48,5 +49,10 @@ public class AuthController {
     @GetMapping("/exist-email")
     public ResponseEntity<?> existEmail(@RequestParam("email") String email){
         return authService.existAccountByEmail(email);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest servletRequest, HttpServletResponse httpServletResponse){
+        return authService.logout(servletRequest, httpServletResponse);
     }
 }

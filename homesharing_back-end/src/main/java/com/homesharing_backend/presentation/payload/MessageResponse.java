@@ -2,12 +2,13 @@ package com.homesharing_backend.presentation.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class JwtResponse {
+@NoArgsConstructor
+public class MessageResponse {
 
-    private String status;
-    private Object object;
+    private int status;
+    private String message;
 }

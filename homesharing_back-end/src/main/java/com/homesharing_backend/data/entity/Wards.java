@@ -14,12 +14,11 @@ import javax.persistence.*;
 public class Wards {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "district_id", referencedColumnName = "id")
-    private Province province;
+    private District district;
 
     @Column(name = "name")
     private String name;
