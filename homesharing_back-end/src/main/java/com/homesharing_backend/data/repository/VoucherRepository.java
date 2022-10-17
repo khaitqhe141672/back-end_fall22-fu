@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     Voucher getVoucherById(Long id);
+
 }

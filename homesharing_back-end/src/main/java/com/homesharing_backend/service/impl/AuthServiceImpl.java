@@ -5,6 +5,7 @@ import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.ConflictException;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
@@ -24,10 +25,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +81,7 @@ public class AuthServiceImpl implements AuthService {
             userDetail.setDob(signUpRequest.getDob());
             userDetail.setAddress(signUpRequest.getAddress());
             userDetail.setMobile(signUpRequest.getMobile());
+            userDetail.setAvatarUrl("https://home-sharing.s3.ap-southeast-1.amazonaws.com/1665851455149_avatar.png");
             user.setUserDetail(userDetail);
             String strRoles = signUpRequest.getRole();
             Role roles = new Role();
@@ -275,6 +279,19 @@ public class AuthServiceImpl implements AuthService {
         } else {
             data.put("user", email + " chưa tồn tại" );
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_NOT_EXIST", data));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> logout(HttpServletRequest request, HttpServletResponse response) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200,  "Login success full!"));
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(400,  " Login success fail!"));
         }
     }
 

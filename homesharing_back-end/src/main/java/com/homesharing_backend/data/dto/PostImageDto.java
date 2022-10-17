@@ -11,11 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class VoucherDto {
+public class PostImageDto {
 
-    private String nameVoucher;
-    private String description;
-    private int percent;
-    private int dueDate;
-    private int status;
+    private Long postImageID;
+    private String imageUrl;
 }

@@ -1,5 +1,6 @@
 package com.homesharing_backend.service;
 
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Service
 public interface AuthService {
@@ -19,4 +21,6 @@ public interface AuthService {
     public ResponseEntity<ResponseObject> existAccountByUsername(String username);
 
     public ResponseEntity<ResponseObject> existAccountByEmail(String email);
+
+    public ResponseEntity<MessageResponse> logout(HttpServletRequest request, HttpServletResponse response);
 }

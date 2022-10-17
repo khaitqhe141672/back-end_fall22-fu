@@ -40,7 +40,6 @@ public class VoucherServiceImpl implements VoucherService {
                     .description(v.getDescription())
                     .dueDate(v.getDueDay())
                     .percent(v.getPercent())
-                    .hostID(v.getHost().getId())
                     .status(v.getStatus())
                     .build();
             dtoList.add(dto);
@@ -63,7 +62,6 @@ public class VoucherServiceImpl implements VoucherService {
                 .description(voucher.getDescription())
                 .dueDate(voucher.getDueDay())
                 .percent(voucher.getPercent())
-                .hostID(voucher.getHost().getId())
                 .status(voucher.getStatus())
                 .build();
 
@@ -94,7 +92,6 @@ public class VoucherServiceImpl implements VoucherService {
                 .description(voucher.getDescription())
                 .dueDate(voucher.getDueDay())
                 .percent(voucher.getPercent())
-                .hostID(voucher.getHost().getId())
                 .status(voucher.getStatus())
                 .build();
 
@@ -125,7 +122,6 @@ public class VoucherServiceImpl implements VoucherService {
                 .description(vUpdate.getDescription())
                 .dueDate(vUpdate.getDueDay())
                 .percent(vUpdate.getPercent())
-                .hostID(vUpdate.getHost().getId())
                 .status(vUpdate.getStatus())
                 .build();
 

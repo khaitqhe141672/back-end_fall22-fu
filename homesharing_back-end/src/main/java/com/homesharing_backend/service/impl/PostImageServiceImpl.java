@@ -23,9 +23,6 @@ public class PostImageServiceImpl implements PostImageService {
 
     @Override
     public ResponseEntity<ResponseObject> insertPostImage(List<MultipartFile> multipartFile) {
-
-
-
         return null;
     }
 
