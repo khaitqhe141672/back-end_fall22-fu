@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface PostUtilityRepository extends JpaRepository<PostUtility, Long> {
 
     Optional<PostUtility> getPostUtilitiesByPost_Id(Long postID);
+
+    List<PostUtility> findPostUtilitiesByPost_Id(Long postID);
 }

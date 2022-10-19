@@ -10,10 +10,12 @@ import com.homesharing_backend.service.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class RateServiceImpl implements RateService {
 
     @Autowired
@@ -25,11 +27,10 @@ public class RateServiceImpl implements RateService {
     @Override
     public ResponseEntity<JwtResponse> getAllRate(Long postID) {
 
-        if (postRepository.existsPostById(postID)) {
-            throw new NotFoundException("post_id khong ton tai");
+        if (!postRepository.existsPostById(postID)) {
+            throw new NotFoundException("post_id khong ton tai trong rate");
         } else {
-            List<Rate> rates = (List<Rate>) rateRepository.findAllByBookingDetail_Post_Id(postID)
-                    .orElseThrow(() -> new NotFoundException("Khong co rate nao lien quan den post_id nay"));
+            List<Rate> rates = rateRepository.findAllByBookingDetail_Post_Id(postID);
 
 
             List<RateDto> rateDtos = new ArrayList<>();

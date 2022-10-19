@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface PostImageRepository extends JpaRepository<PostImage,Long> {
 
     Optional<PostImage> getPostImageByPost_Id(Long postID);
+
+    List<PostImage> findPostImageByPost_Id(Long postID);
 }
