@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 public interface PostDetailService {
 
     public ResponseEntity<JwtResponse> getPostDetailByPostID(Long postID);
+
+    public ResponseEntity<JwtResponse> getRateByPostID(Long postID);
 }

@@ -35,5 +35,6 @@ public class PostDetailDto {
     private List<PostUtilityDto> postUtilityDtoList;
     private DistrictDto districtDto;
     private VoucherDto voucherDto;
+    private Double avgRate;
     private int status;
 }

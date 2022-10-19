@@ -11,5 +11,5 @@ public interface PostDetailRepository extends JpaRepository<PostDetail, Long> {
 
     PostDetail getPostDetailByPost_Id(Long postID);
 
-    Optional<PostDetail> findPostDetailById(Long postID);
+    Optional<PostDetail> findPostDetailByPost_Id(Long postID);
 }

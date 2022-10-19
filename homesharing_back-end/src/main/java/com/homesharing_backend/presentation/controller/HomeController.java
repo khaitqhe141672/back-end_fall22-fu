@@ -1,18 +1,14 @@
 package com.homesharing_backend.presentation.controller;
 
-import com.homesharing_backend.data.repository.PostRepository;
-import com.homesharing_backend.presentation.payload.ResponseObject;
+
 import com.homesharing_backend.service.PostService;
 import com.homesharing_backend.service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -26,12 +22,17 @@ public class HomeController {
     private ProvinceService provinceService;
 
     @GetMapping("/interesting-place")
-    public ResponseEntity<?> interestingPlace(){
+    public ResponseEntity<?> getInterestingPlace(){
         return postService.getInterestingPlaceByPost();
     }
 
     @GetMapping("/recommended-places")
-    public ResponseEntity<?> recommendedPlaces(){
+    public ResponseEntity<?> getRecommendedPlaces(){
         return provinceService.getRecommendedPlaces();
+    }
+
+    @GetMapping("/post-top-rate")
+    public ResponseEntity<?>  getPostTopRate(){
+        return postService.getTopPostByRate();
     }
 }

@@ -31,7 +31,7 @@ public class PostPayment {
     private Date startDate;
 
     @Column(name = "end_date")
-    private Date endStart;
+    private Date endDate;
 
     @Column(name = "status")
     private int status;
