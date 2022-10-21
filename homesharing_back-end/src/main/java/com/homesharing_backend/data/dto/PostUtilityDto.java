@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class PostUtilityDto {
 
     private Long postUtilityID;
+    private String iconUtility;
     private String description;
     private float price;
     private Long utilityID;
