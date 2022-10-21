@@ -19,4 +19,7 @@ public class Utility {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "icon")
+    private String icon;
 }

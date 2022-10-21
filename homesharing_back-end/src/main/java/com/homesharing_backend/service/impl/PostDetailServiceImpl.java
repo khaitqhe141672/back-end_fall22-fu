@@ -56,7 +56,7 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             List<PostUtilityDto> utilityDtoList = new ArrayList<>();
             postUtilities.forEach(postUtility -> {
-                utilityDtoList.add(new PostUtilityDto(postUtility.getId(), postUtility.getDescription(),
+                utilityDtoList.add(new PostUtilityDto(postUtility.getId(), postUtility.getUtility().getIcon() ,postUtility.getDescription(),
                         postUtility.getPrice(), postUtility.getUtility().getId(), postUtility.getStatus()));
             });
 
@@ -69,7 +69,8 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .title(postDetail.getPost().getTitle())
                     .price(postDetail.getPost().getPrice())
                     .createDate(postDetail.getPost().getCreateDate())
-                    .hostName(postDetail.getPost().getHost().getUser().getUsername())
+                    .hostName(postDetail.getPost().getHost().getUser().getUserDetail().getFullName())
+                    .mobileHost(postDetail.getPost().getHost().getUser().getUserDetail().getMobile())
                     .imageUrlHost(postDetail.getPost().getHost().getUser().getUserDetail().getAvatarUrl())
                     .address(postDetail.getAddress())
                     .description(postDetail.getDescription())

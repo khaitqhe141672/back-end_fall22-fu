@@ -22,6 +22,7 @@ public class PostDetailDto {
     private float price;
     private Date createDate;
     private String hostName;
+    private String mobileHost;
     private String imageUrlHost;
     private String address;
     private String description;

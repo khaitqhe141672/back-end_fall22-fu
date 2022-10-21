@@ -48,6 +48,6 @@ public class PostDetail {
     @Column(name = "number_of_bedrooms")
     private int numberOfBedrooms;
 
-    @Column(name = "numberOfBathrooms")
+    @Column(name = "number_of_bathrooms")
     private int numberOfBathroom;
 }
