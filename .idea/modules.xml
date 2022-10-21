@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/back-end_fall22-fu.iml" filepath="$PROJECT_DIR$/.idea/back-end_fall22-fu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/backend-fall22-fu/backend-fall22-fu.iml" filepath="$PROJECT_DIR$/backend-fall22-fu/backend-fall22-fu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/back-end_fall22-fu/homesharing_back-end/homesharing_back-end.iml" filepath="$PROJECT_DIR$/back-end_fall22-fu/homesharing_back-end/homesharing_back-end.iml" />
     </modules>
   </component>
 </project>

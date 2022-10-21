@@ -4,26 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    <list default="true" id="d5df995b-bdfa-4e2a-b778-61b375fd1c03" name="Changes" comment="" />
-=======
-    <list default="true" id="147f3828-7e02-43b0-961e-01d0b507e341" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend-fall22-fu/backend-fall22-fu.iml" afterDir="false" />
-    </list>
->>>>>>> Stashed changes
-=======
-    <list default="true" id="9439bdc2-5962-40f6-a280-423bf50cf749" name="Changes" comment="" />
->>>>>>> Stashed changes
+    <list default="true" id="0b83b8c5-2656-407b-97a4-f7fb01fc6687" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -31,29 +17,22 @@
       </list>
     </option>
   </component>
->>>>>>> Stashed changes
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/back-end_fall22-fu" />
   </component>
   <component name="JpbToolWindowState">
     <option name="myId2FirstActivated">
       <map>
-<<<<<<< Updated upstream
-=======
         <entry key="com.haulmont.jpb.jpaInspector" value="true" />
         <entry key="com.haulmont.jpb.jpaPalette" value="true" />
->>>>>>> Stashed changes
         <entry key="com.haulmont.jpb.jpaStructure" value="true" />
       </map>
     </option>
     <option name="myId2Visible">
       <map>
-<<<<<<< Updated upstream
-=======
-        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaInspector" value="false" />
         <entry key="com.haulmont.jpb.jpaPalette" value="false" />
->>>>>>> Stashed changes
-        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="false" />
       </map>
     </option>
   </component>
@@ -63,85 +42,57 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-<<<<<<< Updated upstream
-=======
-        <option name="mavenHome" value="Use Maven wrapper" />
->>>>>>> Stashed changes
         <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
   </component>
-<<<<<<< Updated upstream
-  <component name="ProjectId" id="2FOwp4nXMhZT5I3lXZw2oMzgPiD" />
-=======
-  <component name="ProjectId" id="2FbybpbijJq87dUGn8FVwqqRyqP" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectId" id="2Fq6HQgM9ulPme1oKDaxqaZMhKB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
->>>>>>> Stashed changes
-=======
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectId" id="2FlSmhtntazpVsRR4XDbAb40QOi" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
->>>>>>> Stashed changes
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/FPT University/Mobifone Intern/StudentManagement",
-    "spring.configuration.checksum": "94b4533bea6c378a4eef5fc97c47e0e3"
-  }
-}]]></component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="d5df995b-bdfa-4e2a-b778-61b375fd1c03" name="Changes" comment="" />
-      <created>1664376623873</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1664376623873</updated>
-      <workItem from="1664376626851" duration="2401000" />
-      <workItem from="1664556270185" duration="221000" />
-=======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-=======
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
->>>>>>> Stashed changes
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/FPT University/2022 Fall/back-end_fall22-fu&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-<<<<<<< Updated upstream
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;KerberosSettings&quot;,
     &quot;spring.configuration.checksum&quot;: &quot;e87fec49ff1186c16eb6af065ae8e887&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.HomesharingBackEndApplication">
+    <configuration name="HomeSharing" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ACTIVE_PROFILES" />
+      <module name="back-end_fall22-fu" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.homesharing_backend.HomesharingBackEndApplication" />
+      <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+        <option name="credential" />
+        <option name="region" />
+        <option name="useCurrentConnection" value="false" />
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="HomesharingBackEndApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="homesharing_back-end" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.homesharing_backend.HomesharingBackEndApplication" />
@@ -149,70 +100,40 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Spring Boot.HomesharingBackEndApplication" />
+      <item itemvalue="Spring Boot.HomeSharing" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="147f3828-7e02-43b0-961e-01d0b507e341" name="Changes" comment="" />
-      <created>1664775152755</created>
+      <changelist id="0b83b8c5-2656-407b-97a4-f7fb01fc6687" name="Changes" comment="" />
+      <created>1665207178659</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1664775152755</updated>
-      <workItem from="1664775155283" duration="822000" />
-      <workItem from="1664787468390" duration="1283000" />
-      <workItem from="1664938831766" duration="1230000" />
->>>>>>> Stashed changes
-=======
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
-  }
-}</component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="9439bdc2-5962-40f6-a280-423bf50cf749" name="Changes" comment="" />
-      <created>1665065345761</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1665065345761</updated>
-      <workItem from="1665065349813" duration="36000" />
-      <workItem from="1665065390873" duration="743000" />
-      <workItem from="1665066200400" duration="13000" />
-      <workItem from="1665066306437" duration="38000" />
->>>>>>> Stashed changes
+      <updated>1665207178659</updated>
+      <workItem from="1665207179956" duration="1843000" />
+      <workItem from="1665233243593" duration="11304000" />
+      <workItem from="1665476759905" duration="1487000" />
+      <workItem from="1666021505322" duration="881000" />
+      <workItem from="1666027730510" duration="1467000" />
+      <workItem from="1666057199199" duration="669000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-<<<<<<< Updated upstream
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-<<<<<<< Updated upstream
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="vupdl" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-=======
             <State />
->>>>>>> Stashed changes
           </value>
         </entry>
       </map>
     </option>
   </component>
-=======
->>>>>>> Stashed changes
 </project>

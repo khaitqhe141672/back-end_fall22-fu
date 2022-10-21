@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-<<<<<<< Updated upstream
-    <file url="file://$PROJECT_DIR$/backend-fall22-fu/src/main/java" charset="UTF-8" />
-=======
-    <file url="file://$PROJECT_DIR$/homesharing_back-end/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/homesharing_back-end/src/main/resources" charset="UTF-8" />
->>>>>>> Stashed changes
+    <file url="file://$PROJECT_DIR$/back-end_fall22-fu/homesharing_back-end/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/back-end_fall22-fu/homesharing_back-end/src/main/resources" charset="UTF-8" />
   </component>
 </project>

@@ -1,32 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-<<<<<<< Updated upstream
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-<<<<<<< Updated upstream
-        <option value="$PROJECT_DIR$/backend-fall22-fu/pom.xml" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectType">
-    <option name="id" value="jpab" />
-  </component>
-  <component name="SwUserDefinedSpecifications">
-    <option name="specTypeByUrl">
-      <map />
-    </option>
-  </component>
-=======
-        <option value="$PROJECT_DIR$/homesharing_back-end/pom.xml" />
+        <option value="$PROJECT_DIR$/back-end_fall22-fu/homesharing_back-end/pom.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK" />
->>>>>>> Stashed changes
-=======
   <component name="ProjectType">
     <option name="id" value="jpab" />
   </component>
->>>>>>> Stashed changes
 </project>
