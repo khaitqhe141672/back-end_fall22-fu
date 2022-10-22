@@ -8,4 +8,8 @@ import org.springframework.stereotype.Service;
 public interface ProvinceService {
 
     public ResponseEntity<JwtResponse> getRecommendedPlaces();
+
+    public ResponseEntity<JwtResponse> getAllProvince();
+
+    public ResponseEntity<JwtResponse> getAllDistrict();
 }

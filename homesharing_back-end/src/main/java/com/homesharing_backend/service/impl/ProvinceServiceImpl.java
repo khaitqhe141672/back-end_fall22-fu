@@ -1,7 +1,9 @@
 package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.ProvinceDto;
+import com.homesharing_backend.data.entity.District;
 import com.homesharing_backend.data.entity.Province;
+import com.homesharing_backend.data.repository.DistrictRepository;
 import com.homesharing_backend.data.repository.ProvinceRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
@@ -19,6 +21,9 @@ public class ProvinceServiceImpl implements ProvinceService {
 
     @Autowired
     private ProvinceRepository provinceRepository;
+
+    @Autowired
+    private DistrictRepository districtRepository;
 
     @Override
     public ResponseEntity<JwtResponse> getRecommendedPlaces() {
@@ -41,6 +46,30 @@ public class ProvinceServiceImpl implements ProvinceService {
             });
 
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dtoList));
+        }
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> getAllProvince() {
+
+        List<Province> provinces = provinceRepository.findAll();
+
+        if(provinces.isEmpty()){
+            throw new NotFoundException("khong co du lieu thanh pho");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), provinces));
+        }
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> getAllDistrict() {
+
+        List<District> districts = districtRepository.findAll();
+
+        if(districts.isEmpty()){
+            throw new NotFoundException("khong co du lieu cua huyen");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), districts));
         }
     }
 }
