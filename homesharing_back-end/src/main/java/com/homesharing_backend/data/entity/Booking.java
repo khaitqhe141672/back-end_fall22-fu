@@ -25,7 +25,7 @@ public class Booking {
     @Column(name = "total_money")
     private float totalMoney;
 
-    @Column(name = "note")
+    @Column(name = "note", length = 5000)
     private String note;
 
     @Column(name = "create_date")

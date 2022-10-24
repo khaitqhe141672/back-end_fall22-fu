@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import com.homesharing_backend.service.AuthService;
@@ -26,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest,
-                                          HttpServletRequest  servletRequest) {
+                                          HttpServletRequest servletRequest) {
         return authService.register(signUpRequest, servletRequest);
     }
 
@@ -42,17 +43,27 @@ public class AuthController {
     }
 
     @GetMapping("/exist-username")
-    public ResponseEntity<?> existUsername(@RequestParam("username") String username){
+    public ResponseEntity<?> existUsername(@RequestParam("username") String username) {
         return authService.existAccountByUsername(username);
     }
 
     @GetMapping("/exist-email")
-    public ResponseEntity<?> existEmail(@RequestParam("email") String email){
+    public ResponseEntity<?> existEmail(@RequestParam("email") String email) {
         return authService.existAccountByEmail(email);
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest servletRequest, HttpServletResponse httpServletResponse){
+    public ResponseEntity<?> logout(HttpServletRequest servletRequest, HttpServletResponse httpServletResponse) {
         return authService.logout(servletRequest, httpServletResponse);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> profile() {
+        return authService.profile();
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest){
+        return authService.changePassword(changePasswordRequest);
     }
 }

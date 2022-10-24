@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProvinceServiceImpl implements ProvinceService {
@@ -36,7 +37,7 @@ public class ProvinceServiceImpl implements ProvinceService {
 
             List<ProvinceDto> dtoList = new ArrayList<>();
 
-            provinceList.forEach(p ->{
+            provinceList.forEach(p -> {
                 ProvinceDto dto = ProvinceDto.builder()
                         .provinceID(p.getId())
                         .provinceName(p.getName())
@@ -54,7 +55,7 @@ public class ProvinceServiceImpl implements ProvinceService {
 
         List<Province> provinces = provinceRepository.findAll();
 
-        if(provinces.isEmpty()){
+        if (provinces.isEmpty()) {
             throw new NotFoundException("khong co du lieu thanh pho");
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), provinces));
@@ -66,10 +67,34 @@ public class ProvinceServiceImpl implements ProvinceService {
 
         List<District> districts = districtRepository.findAll();
 
-        if(districts.isEmpty()){
+        if (districts.isEmpty()) {
             throw new NotFoundException("khong co du lieu cua huyen");
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), districts));
+        }
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> getAllDistrictByProvinceID(Long provinceID) {
+
+        List<District> districts = districtRepository.findDistrictByProvince_Id(provinceID);
+
+        if (Objects.isNull(districts)) {
+            throw new NotFoundException("khong co du lieu cua huyen theo province_id");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), districts));
+        }
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> getOneProvinceByProvinceID(Long provinceID) {
+
+        Province province = provinceRepository.getById(provinceID);
+
+        if(Objects.isNull(province)){
+            throw new NotFoundException("khong co du lieu cua thanh pho theo province_id");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), province));
         }
     }
 }

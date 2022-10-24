@@ -29,7 +29,7 @@ public class PostDetail {
     @JoinColumn(name = "district_id", referencedColumnName = "id")
     private District district;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 5000)
     private String description;
 
     @Column(name = "service_fee")

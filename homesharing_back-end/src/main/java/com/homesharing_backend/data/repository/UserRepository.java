@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User getUserByCodeActive(String otp);
 
     User getUserByEmail(String email);
+
+    User findUserById(Long id);
 }

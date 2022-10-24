@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -132,7 +133,7 @@ public class PostServiceImpl implements PostService {
 
         Post savePost = postRepository.save(post);
 
-        if (savePost == null) {
+        if (Objects.isNull(savePost)) {
             throw new EmptyDataException("Insert post not success");
         } else {
 

@@ -1,23 +1,29 @@
 package com.homesharing_backend.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.sql.Date;
 
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
 public class UserDto {
-     private String username;
-     private String email;
-     private String fullName;
-     private String role;
-     private int status;
+
+    private Long userID;
+    private String email;
+    private String username;
+    private Long userDetailID;
+    private String urlImage;
+    private Date dob;
+    private String fullName;
+    private String mobile;
+    private String address;
+    private int status;
+    private String role;
 }

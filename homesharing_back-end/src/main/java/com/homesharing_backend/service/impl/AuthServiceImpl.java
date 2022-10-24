@@ -1,12 +1,16 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.dto.LoginDto;
 import com.homesharing_backend.data.dto.UserDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
+import com.homesharing_backend.exception.BadRequestAlertException;
 import com.homesharing_backend.exception.ConflictException;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
+import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import com.homesharing_backend.security.jwt.JwtUtils;
@@ -16,6 +20,7 @@ import com.homesharing_backend.service.AuthService;
 import java.util.*;
 
 import com.homesharing_backend.util.JavaMail;
+import com.homesharing_backend.util.SecurityUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -136,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
 
 //            List<String> resRoles = new ArrayList<>();
 //            roles.forEach(e -> resRoles.add(e.getRole().getName().name()));
-            UserDto userDto = modelMapper.map(user, UserDto.class);
+            LoginDto userDto = modelMapper.map(user, LoginDto.class);
             userDto.setRole(user.getRole().getName().name());
             userDto.setFullName(signUpRequest.getFullName());
             String baseUrl = ServletUriComponentsBuilder.fromRequestUri(servletRequest)
@@ -169,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority()).collect(Collectors.toList());
 
-        UserDto userDto = UserDto.builder()
+        LoginDto userDto = LoginDto.builder()
                 .email(userDetails.getEmail())
                 .username(userDetails.getUsername()).role(roles.get(0)).build();
         Map data = new HashMap<String, Object>();
@@ -204,7 +209,7 @@ public class AuthServiceImpl implements AuthService {
             user.setStatus(1);
             User updateRole = userRepository.save(user);
 
-            UserDto dto = UserDto.builder()
+            LoginDto dto = LoginDto.builder()
                     .email(user.getEmail())
                     .role(updateRole.getRole().getName().name())
                     .username(user.getUsername())
@@ -262,10 +267,10 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<ResponseObject> existAccountByUsername(String username) {
         Map data = new HashMap<String, Object>();
         if (userRepository.existsByUsername(username.trim())) {
-            data.put("user", username + " đã tồn tại" );
+            data.put("user", username + " đã tồn tại");
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("USERNAME_EXIST", data));
         } else {
-            data.put("user", username + " chưa tồn tại" );
+            data.put("user", username + " chưa tồn tại");
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("USERNAME_NOT_EXIST", data));
         }
     }
@@ -274,10 +279,10 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<ResponseObject> existAccountByEmail(String email) {
         Map data = new HashMap<String, Object>();
         if (userRepository.existsByEmail(email.trim())) {
-            data.put("user", email + " đã tồn tại" );
+            data.put("user", email + " đã tồn tại");
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_EXIST", data));
         } else {
-            data.put("user", email + " chưa tồn tại" );
+            data.put("user", email + " chưa tồn tại");
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_NOT_EXIST", data));
         }
     }
@@ -287,11 +292,54 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null){
+        if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200,  "Login success full!"));
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(400,  " Login success fail!"));
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Login success full!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(400, " Login success fail!"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> profile() {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("User khong ton tai");
+        } else {
+            UserDto dto = UserDto.builder()
+                    .userID(user.getId())
+                    .username(user.getUsername())
+                    .dob(user.getUserDetail().getDob())
+                    .mobile(user.getUserDetail().getMobile())
+                    .fullName(user.getUserDetail().getFullName())
+                    .userDetailID(user.getUserDetail().getUserDetailId())
+                    .urlImage(user.getUserDetail().getAvatarUrl())
+                    .email(user.getEmail())
+                    .address(user.getUserDetail().getAddress())
+                    .status(user.getStatus())
+                    .role(user.getRole().getName().name())
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> changePassword(ChangePasswordRequest changePasswordRequest) {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("User khong ton tai");
+        } else {
+            if (passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+                userRepository.save(user);
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Change password success full!"));
+            } else {
+                throw new BadRequestAlertException("mat khau current khong khop");
+            }
         }
     }
 

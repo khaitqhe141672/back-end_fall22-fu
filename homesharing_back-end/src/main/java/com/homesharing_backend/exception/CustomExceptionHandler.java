@@ -25,4 +25,11 @@ public class CustomExceptionHandler {
     public ErrorResponse handlerException(Exception ex, WebRequest req){
         return new ErrorResponse(HttpStatus.EXPECTATION_FAILED, ex.getMessage());
     }
+
+    @ExceptionHandler(BadRequestAlertException.class)
+    public ExceptionResponse handlerBadRequestAlertException(BadRequestAlertException ex, WebRequest req){
+        return new ExceptionResponse(101, ex.getMessage());
+    }
+
+
 }

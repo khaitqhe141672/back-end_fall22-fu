@@ -19,6 +19,6 @@ public class Province {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 5000)
     private String imageUrl;
 }

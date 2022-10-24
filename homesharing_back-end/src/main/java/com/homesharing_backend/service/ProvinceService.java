@@ -12,4 +12,8 @@ public interface ProvinceService {
     public ResponseEntity<JwtResponse> getAllProvince();
 
     public ResponseEntity<JwtResponse> getAllDistrict();
+
+    public ResponseEntity<JwtResponse> getAllDistrictByProvinceID(Long provinceID);
+
+    public ResponseEntity<JwtResponse> getOneProvinceByProvinceID(Long provinceID);
 }
