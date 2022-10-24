@@ -29,7 +29,7 @@ public class PostUtility {
     @Column(name = "price")
     private float price;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 5000)
     private String description;
 
     @Column(name = "status")

@@ -21,7 +21,7 @@ public class Complaint {
     @JoinColumn(name = "report_id", referencedColumnName = "id")
     private Report report;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 5000)
     private String description;
 
     @Column(name = "status")

@@ -5,34 +5,24 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "favourite_post")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
 @ToString
-public class Report {
+public class FavouritePost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "report_type_id", referencedColumnName = "id")
-    private ReportType reportType;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rate_id", referencedColumnName = "id")
-    private Rate rate;
-
-    @Column(name = "description", length = 5000)
-    private String description;
-
-    @Column(name = "status")
-    private int status;
-
 }

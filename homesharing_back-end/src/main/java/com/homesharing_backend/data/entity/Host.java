@@ -23,4 +23,5 @@ public class Host {
 
     @Column(name = "type_account")
     private Long typeAccount;
+
 }

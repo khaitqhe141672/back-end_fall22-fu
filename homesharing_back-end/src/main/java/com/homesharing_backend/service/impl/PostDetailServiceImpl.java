@@ -56,7 +56,8 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             List<PostUtilityDto> utilityDtoList = new ArrayList<>();
             postUtilities.forEach(postUtility -> {
-                utilityDtoList.add(new PostUtilityDto(postUtility.getId(), postUtility.getUtility().getIcon() ,postUtility.getDescription(),
+                utilityDtoList.add(new PostUtilityDto(postUtility.getId(), postUtility.getUtility().getIcon(),
+                        postUtility.getUtility().getName(), postUtility.getDescription(),
                         postUtility.getPrice(), postUtility.getUtility().getId(), postUtility.getStatus()));
             });
 

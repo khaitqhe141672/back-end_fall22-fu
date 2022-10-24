@@ -25,7 +25,7 @@ public class Rate {
     @Column(name = "point")
     private int point;
 
-    @Column(name = "comment")
+    @Column(name = "comment", length = 5000)
     private String comment;
 
     @Column(name = "date_rate")

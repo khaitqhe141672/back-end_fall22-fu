@@ -5,23 +5,24 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "post_image")
+@Table(name = "follow_host")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
 @ToString
-public class PostImage {
+public class FollowHost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    private Post post;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 
-    @Column(name = "image_url", length = 5000)
-    private String imageUrl;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
 }
