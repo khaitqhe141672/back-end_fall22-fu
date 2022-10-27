@@ -22,4 +22,8 @@ public class Utility {
 
     @Column(name = "icon")
     private String icon;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
 }

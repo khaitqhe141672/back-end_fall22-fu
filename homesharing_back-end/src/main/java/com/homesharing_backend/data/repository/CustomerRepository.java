@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer getByUser_Username(String useName);
+
+    Customer getCustomerByUser_Id(Long userID);
 }

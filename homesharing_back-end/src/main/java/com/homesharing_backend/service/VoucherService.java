@@ -1,5 +1,6 @@
 package com.homesharing_backend.service;
 
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.VoucherRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,4 +18,6 @@ public interface VoucherService {
     public ResponseEntity<ResponseObject> updateVoucher(Long id, VoucherRequest voucherRequest);
 
     public ResponseEntity<ResponseObject> updateStatusVoucher(Long id, int status);
+
+    public ResponseEntity<JwtResponse> getAllVoucherByHostID();
 }

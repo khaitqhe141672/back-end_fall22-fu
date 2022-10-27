@@ -33,4 +33,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id WHERE p.id =:postID " +
             " group by p.id order by avg(r.point) desc")
     Optional<PostTopRateDto> getPostDetailByPostID(@Param("postID") Long postID);
+
+    List<Post> getPostByHost_Id(Long hostID);
 }

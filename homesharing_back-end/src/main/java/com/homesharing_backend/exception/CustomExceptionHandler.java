@@ -31,5 +31,19 @@ public class CustomExceptionHandler {
         return new ExceptionResponse(101, ex.getMessage());
     }
 
+    @ExceptionHandler(SaveDataException.class)
+    public ExceptionResponse handlerSaveDataException(SaveDataException ex, WebRequest req){
+        return new ExceptionResponse(111, ex.getMessage());
+    }
+
+    @ExceptionHandler(UpdateDataException.class)
+    public ExceptionResponse handlerUpdateDataException(UpdateDataException ex, WebRequest req){
+        return new ExceptionResponse(112, ex.getMessage());
+    }
+
+    @ExceptionHandler(DateException.class)
+    public ExceptionResponse handlerDateException(DateException ex, WebRequest req){
+        return new ExceptionResponse(113, ex.getMessage());
+    }
 
 }

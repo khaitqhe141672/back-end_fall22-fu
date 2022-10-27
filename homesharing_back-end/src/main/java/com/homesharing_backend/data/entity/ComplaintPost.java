@@ -5,34 +5,26 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "complaint_post")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
 @ToString
-public class Report {
+public class ComplaintPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "report_type_id", referencedColumnName = "id")
-    private ReportType reportType;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    private Post post;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rate_id", referencedColumnName = "id")
-    private Rate rate;
+    @JoinColumn(name = "report_post_id", referencedColumnName = "id")
+    private ReportPost reportPost;
 
     @Column(name = "description", length = 5000)
     private String description;
 
     @Column(name = "status")
     private int status;
-
 }

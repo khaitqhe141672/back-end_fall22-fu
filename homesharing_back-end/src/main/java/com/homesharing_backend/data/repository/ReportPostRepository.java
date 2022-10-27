@@ -1,11 +1,11 @@
 package com.homesharing_backend.data.repository;
 
-import com.homesharing_backend.data.entity.ReportType;
+import com.homesharing_backend.data.entity.ReportPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReportTypeRepository extends JpaRepository<ReportType, Long> {
+public interface ReportPostRepository extends JpaRepository<ReportPost, Long> {
 
-    ReportType getReportTypeById(Long id);
+    ReportPost getReportPostById(Long id);
 }
