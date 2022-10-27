@@ -34,4 +34,10 @@ public class VoucherController {
     public ResponseEntity<?> insertVoucher(@Valid @RequestBody VoucherRequest voucherRequest) {
         return voucherService.insertVoucher(voucherRequest);
     }
+
+    @GetMapping("/list-voucher-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllVoucherByHostID() {
+        return voucherService.getAllVoucherByHostID();
+    }
 }

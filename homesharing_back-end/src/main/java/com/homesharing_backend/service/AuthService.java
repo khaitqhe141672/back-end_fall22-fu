@@ -4,6 +4,7 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
+import com.homesharing_backend.presentation.payload.request.ForgotPasswordRequest;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,7 @@ public interface AuthService {
     public ResponseEntity<MessageResponse> logout(HttpServletRequest request, HttpServletResponse response);
     public ResponseEntity<JwtResponse> profile();
     public ResponseEntity<MessageResponse> changePassword(ChangePasswordRequest changePasswordRequest);
-    
+    public ResponseEntity<MessageResponse> forgotPassword(String email, HttpServletRequest servletRequest);
+    public ResponseEntity<MessageResponse> confirmResetPassword(String token);
+    public ResponseEntity<MessageResponse> resetPassword(ForgotPasswordRequest forgotPasswordRequest);
 }

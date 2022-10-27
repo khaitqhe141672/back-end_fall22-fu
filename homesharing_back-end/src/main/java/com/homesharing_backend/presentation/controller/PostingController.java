@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/posting")
 public class PostingController {
-
     @Autowired
     private PostService postService;
 

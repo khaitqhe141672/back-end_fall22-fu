@@ -11,6 +11,7 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
+import com.homesharing_backend.presentation.payload.request.ForgotPasswordRequest;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import com.homesharing_backend.security.jwt.JwtUtils;
@@ -343,4 +344,52 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public ResponseEntity<MessageResponse> forgotPassword(String email, HttpServletRequest servletRequest) {
+
+        User user = userRepository.getUserByEmail(email);
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("email khong ton tai");
+        } else {
+            String resetPassword = UUID.randomUUID().toString();
+            String baseUrl = ServletUriComponentsBuilder.fromRequestUri(servletRequest)
+                    .replacePath(null)
+                    .build()
+                    .toUriString();
+            String toEmail = user.getEmail();
+            String subject = "[JavaMail] - Demo sent email";
+            String text = baseUrl + "/api/auth/forgot-password?token=" + resetPassword;
+            user.setCodeActive(resetPassword);
+            userRepository.save(user);
+            new JavaMail().sentEmail(toEmail, subject, text);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Reset-password success check mail"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> confirmResetPassword(String token) {
+
+        User user = userRepository.getUserByCodeActive(token);
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("otp khong ton tai");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "confirm-reset success"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> resetPassword(ForgotPasswordRequest forgotPasswordRequest) {
+
+        User user = userRepository.getUserByEmail(forgotPasswordRequest.getEmail());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("email khong ton tai");
+        } else {
+            user.setPassword(passwordEncoder.encode(forgotPasswordRequest.getPassword()));
+            userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "reset-password success"));
+        }
+    }
 }

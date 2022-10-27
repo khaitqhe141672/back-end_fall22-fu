@@ -3,6 +3,7 @@ package com.homesharing_backend.presentation.controller;
 import com.homesharing_backend.service.UtilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -14,12 +15,18 @@ public class UtilityController {
     private UtilityService utilityService;
 
     @GetMapping("")
-    public ResponseEntity<?> getAllUtility(){
+    public ResponseEntity<?> getAllUtility() {
         return utilityService.getAllUtility();
     }
 
     @PostMapping("/insert-utility")
-    public ResponseEntity<?> insertUtility(@RequestPart(value = "name") String name){
+    public ResponseEntity<?> insertUtility(@RequestPart(value = "name") String name) {
         return utilityService.insertUtility(name);
+    }
+
+    @GetMapping("/list-utility-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllUtilityByHost() {
+        return utilityService.getAllUtilityByHostID();
     }
 }

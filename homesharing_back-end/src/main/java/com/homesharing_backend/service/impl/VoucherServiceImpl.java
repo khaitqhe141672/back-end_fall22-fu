@@ -6,6 +6,8 @@ import com.homesharing_backend.data.entity.User;
 import com.homesharing_backend.data.entity.Voucher;
 import com.homesharing_backend.data.repository.HostRepository;
 import com.homesharing_backend.data.repository.VoucherRepository;
+import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.VoucherRequest;
 import com.homesharing_backend.service.VoucherService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -34,7 +37,7 @@ public class VoucherServiceImpl implements VoucherService {
         List<Voucher> vouchers = voucherRepository.findAll();
         List<VoucherDto> dtoList = new ArrayList<>();
 
-        for (Voucher v : vouchers){
+        for (Voucher v : vouchers) {
             VoucherDto dto = VoucherDto.builder()
                     .nameVoucher(v.getNameVoucher())
                     .description(v.getDescription())
@@ -138,5 +141,34 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = voucherRepository.getVoucherById(id);
 
         return null;
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> getAllVoucherByHostID() {
+
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+        List<Voucher> vouchers = voucherRepository.getVoucherByHost_Id(host.getId());
+
+        if (Objects.isNull(vouchers)) {
+            throw new NotFoundException("Khong co data voucher cua host_id nay");
+        } else {
+
+            List<VoucherDto> dtoList = new ArrayList<>();
+
+            vouchers.forEach(v -> {
+                VoucherDto dto = VoucherDto.builder()
+                        .nameVoucher(v.getNameVoucher())
+                        .description(v.getDescription())
+                        .dueDate(v.getDueDay())
+                        .percent(v.getPercent())
+                        .status(v.getStatus())
+                        .build();
+
+                dtoList.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dtoList));
+        }
+
     }
 }
