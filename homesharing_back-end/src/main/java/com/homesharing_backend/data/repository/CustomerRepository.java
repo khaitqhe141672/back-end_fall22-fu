@@ -9,4 +9,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer getByUser_Username(String useName);
 
     Customer getCustomerByUser_Id(Long userID);
+
+    Customer getCustomerById(Long customerID);
 }

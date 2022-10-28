@@ -27,4 +27,6 @@ public class PostRequest {
     private List<PostUtilityRequest> utilityRequests;
     private Long voucherID;
     private Long paymentPackageID;
+    private String latitude;
+    private String longitude;
 }

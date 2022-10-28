@@ -2,6 +2,7 @@ package com.homesharing_backend.service;
 
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ComplaintRequest;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,9 @@ public interface ReportService {
 
     public ResponseEntity<MessageResponse> resolveComplaintRate(Long complaintRateID, int type);
 
-    public ResponseEntity<JwtResponse> getAllReportRateByAdmin();
+    public ResponseEntity<ResponseObject> getAllReportRateByAdmin(int indexPage);
 
-    public ResponseEntity<JwtResponse> getAllReportPostByAdmin();
+    public ResponseEntity<ResponseObject> getAllReportPostByAdmin(int indexPage);
 
-    public ResponseEntity<JwtResponse> getAllReportRateByHost();
-
-    public ResponseEntity<JwtResponse> getAllReportPostByHost();
+    public ResponseEntity<JwtResponse> getAllReportPostByHost(Long postID);
 }

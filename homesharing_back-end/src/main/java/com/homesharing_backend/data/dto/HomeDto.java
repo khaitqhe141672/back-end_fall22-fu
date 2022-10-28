@@ -16,6 +16,6 @@ public class HomeDto {
     private Long postID;
     private String urlImage;
     private String title;
-    private Double start;
+    private Double star;
 
 }

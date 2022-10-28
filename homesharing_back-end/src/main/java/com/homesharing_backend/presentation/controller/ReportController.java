@@ -44,6 +44,12 @@ public class ReportController {
         return reportService.createComplaintPost(ComplaintRequest, reportPostID);
     }
 
+    @GetMapping("/list-reportPost-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllReportPostByHost(@RequestParam("post-id") Long postID) {
+        return reportService.getAllReportPostByHost(postID);
+    }
+
     @PutMapping("/resolve-complaintPost")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> resolveComplaintPostByAdmin(@RequestParam("complaintPost-id") Long complaintPostID,
@@ -56,5 +62,17 @@ public class ReportController {
     public ResponseEntity<?> resolveComplaintRateByAdmin(@RequestParam("complaintRate-id") Long complaintRateID,
                                                          @RequestParam("type") int type) {
         return reportService.resolveComplaintRate(complaintRateID, type);
+    }
+
+    @GetMapping("/list-reportRate-admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllReportRateByAdmin(@RequestParam("index-page") int indexPage) {
+        return reportService.getAllReportRateByAdmin(indexPage);
+    }
+
+    @GetMapping("/list-reportPost-admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllReportPostByAdmin(@RequestParam("index-page") int indexPage) {
+        return reportService.getAllReportPostByAdmin(indexPage);
     }
 }
