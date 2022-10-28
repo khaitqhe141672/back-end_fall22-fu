@@ -18,4 +18,5 @@ public interface PostService {
 
     public ResponseEntity<MessageResponse> createPosting(PostRequest postRequest);
 
+    public ResponseEntity<JwtResponse> getAllPostByHost();
 }

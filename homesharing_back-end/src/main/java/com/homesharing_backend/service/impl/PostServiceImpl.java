@@ -1,11 +1,13 @@
 package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.HomeDto;
+import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.EmptyDataException;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.request.PostRequest;
@@ -97,13 +99,13 @@ public class PostServiceImpl implements PostService {
         } else {
             List<HomeDto> homeDtoList = new ArrayList<>();
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i <= 7; i++) {
                 List<PostImage> image = postImageRepository.findPostImageByPost_Id(postTopRateDtos.get(i).getId());
                 HomeDto dto = HomeDto.builder()
                         .postID(postTopRateDtos.get(i).getId())
                         .urlImage(image.get(0).getImageUrl())
                         .title(postTopRateDtos.get(i).getTitle())
-                        .start(postTopRateDtos.get(i).getAvgRate())
+                        .star(postTopRateDtos.get(i).getAvgRate())
                         .build();
                 homeDtoList.add(dto);
             }
@@ -134,7 +136,7 @@ public class PostServiceImpl implements PostService {
         Post savePost = postRepository.save(post);
 
         if (Objects.isNull(savePost)) {
-            throw new EmptyDataException("Insert post not success");
+            throw new SaveDataException("Insert post not success");
         } else {
 
             District district = districtRepository.findDistrictById(postRequest.getDistrictID())
@@ -153,6 +155,8 @@ public class PostServiceImpl implements PostService {
                     .district(district)
                     .post(savePost)
                     .roomType(roomType)
+                    .latitude(postRequest.getLatitude())
+                    .longitude(postRequest.getLongitude())
                     .build();
             postDetailRepository.save(postDetail);
 
@@ -196,6 +200,21 @@ public class PostServiceImpl implements PostService {
 
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Tao post thanh cong"));
         }
+    }
+
+    @Override
+    public ResponseEntity<JwtResponse> getAllPostByHost() {
+
+//        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+//
+//        List<PostDto> postList = postRepository.listAllPostByHost(host.getId());
+//
+//        if (Objects.isNull(postList)) {
+//            throw new NotFoundException("Post khong co data nao lq den host_id");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), postList));
+//        }
+        return null;
     }
 
 }

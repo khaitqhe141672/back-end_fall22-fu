@@ -50,4 +50,10 @@ public class PostDetail {
 
     @Column(name = "number_of_bathrooms")
     private int numberOfBathroom;
+
+    @Column(name = "longitude")
+    private String longitude;
+
+    @Column(name = "latitude")
+    private String latitude;
 }

@@ -1,20 +1,26 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.dto.ReportDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ComplaintRequest;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
 import com.homesharing_backend.service.ReportService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -198,57 +204,142 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<JwtResponse> getAllReportRateByAdmin() {
+    public ResponseEntity<ResponseObject> getAllReportRateByAdmin(int indexPage) {
 
-        List<ReportRate> reportRates = reportRateRepository.findAll();
-
-        if(Objects.isNull(reportRates)){
-            throw new NotFoundException("ReportRate khong co data");
+        if (Objects.isNull(indexPage)) {
+            throw new NotFoundException("IndexPage null");
         } else {
+            int size = 10;
+            int page = indexPage * size - size;
 
+            Page<ReportRate> reportRates = reportRateRepository.findAll(PageRequest.of(page, size));
+
+            if (Objects.isNull(reportRates)) {
+                throw new NotFoundException("khong co data voi indexPage");
+            } else {
+
+                List<ReportDto> reportDtoList = new ArrayList<>();
+
+                reportRates.forEach(r -> {
+                    ReportDto dto = ReportDto.builder()
+                            .reportTypeID(r.getReportType().getId())
+                            .reportID(r.getId())
+                            .description(r.getDescription())
+                            .nameReportType(r.getReportType().getName())
+                            .username(r.getCustomer().getUser().getUsername())
+                            .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                            .status(r.getStatus())
+                            .build();
+
+                    reportDtoList.add(dto);
+                });
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                    {
+                        put("ReportRate", reportDtoList);
+                        put("SizePage", reportRates.getTotalPages());
+                    }
+                }));
+            }
         }
-
-        return null;
     }
 
     @Override
-    public ResponseEntity<JwtResponse> getAllReportPostByAdmin() {
-        return null;
+    public ResponseEntity<ResponseObject> getAllReportPostByAdmin(int indexPage) {
+
+        if (Objects.isNull(indexPage)) {
+            throw new NotFoundException("index page null");
+        } else {
+            int size = 10;
+            int page = indexPage * size - size;
+
+            Page<ReportPost> reportPosts = reportPostRepository.findAll(PageRequest.of(page, size));
+
+            if (Objects.isNull(reportPosts)) {
+                throw new NotFoundException("khong co data voi indexPage");
+            } else {
+                List<ReportDto> reportDtoList = new ArrayList<>();
+
+                reportPosts.forEach(r -> {
+                    ReportDto dto = ReportDto.builder()
+                            .reportTypeID(r.getReportType().getId())
+                            .reportID(r.getId())
+                            .description(r.getDescription())
+                            .nameReportType(r.getReportType().getName())
+                            .username(r.getCustomer().getUser().getUsername())
+                            .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                            .status(r.getStatus())
+                            .build();
+
+                    reportDtoList.add(dto);
+                });
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                    {
+                        put("ReportPost", reportDtoList);
+                        put("SizePage", reportPosts.getTotalPages());
+                    }
+                }));
+            }
+        }
     }
 
     @Override
-    public ResponseEntity<JwtResponse> getAllReportRateByHost() {
-        return null;
-    }
+    public ResponseEntity<JwtResponse> getAllReportPostByHost(Long postID) {
 
-    @Override
-    public ResponseEntity<JwtResponse> getAllReportPostByHost() {
-        return null;
+        if (Objects.isNull(postID)) {
+            throw new NotFoundException("postID null");
+        } else {
+            List<ReportPost> reportPosts = reportPostRepository.getReportPostByPost_Id(postID);
+
+            if (Objects.isNull(reportPosts)) {
+                throw new NotFoundException("reportPosts null");
+            } else {
+                List<ReportDto> reportPostDtoList = new ArrayList<>();
+
+                reportPosts.forEach(r -> {
+                    ReportDto dto = ReportDto.builder()
+                            .reportID(r.getId())
+                            .username(r.getCustomer().getUser().getUsername())
+                            .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                            .description(r.getDescription())
+                            .reportTypeID(r.getReportType().getId())
+                            .nameReportType(r.getReportType().getName())
+                            .status(r.getStatus())
+                            .build();
+
+                    reportPostDtoList.add(dto);
+                });
+                return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), reportPostDtoList));
+            }
+        }
     }
 
     /*status = 1 dang cho admin xu ly*/
     @Override
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportRateID) {
 
-        ReportRate reportRate = reportRateRepository.getReportRateById(reportRateID);
-
         if (Objects.isNull(reportRateID)) {
-            throw new NotFoundException("ReportRate-id khong ton tai");
+            throw new NotFoundException("ReportRateID null");
         } else {
-            Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+            ReportRate reportRate = reportRateRepository.getReportRateById(reportRateID);
 
-            ComplaintRate complaintRate = ComplaintRate.builder()
-                    .reportRate(reportRate)
-                    .description(complaintRequest.getDescription())
-                    .status(1)
-                    .build();
-
-            ComplaintRate saveComplaintRate = complaintRateRepository.save(complaintRate);
-
-            if (Objects.isNull(saveComplaintRate)) {
-                throw new SaveDataException("Complaint rate khong thanh cong");
+            if (Objects.isNull(reportRateID)) {
+                throw new NotFoundException("ReportRate-id khong ton tai");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Complaint rate thanh cong"));
+                Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+                ComplaintRate complaintRate = ComplaintRate.builder()
+                        .reportRate(reportRate)
+                        .description(complaintRequest.getDescription())
+                        .status(1)
+                        .build();
+
+                ComplaintRate saveComplaintRate = complaintRateRepository.save(complaintRate);
+
+                if (Objects.isNull(saveComplaintRate)) {
+                    throw new SaveDataException("Complaint rate khong thanh cong");
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Complaint rate thanh cong"));
+                }
             }
         }
     }

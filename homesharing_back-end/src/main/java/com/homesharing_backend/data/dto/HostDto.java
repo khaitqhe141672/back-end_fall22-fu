@@ -13,18 +13,18 @@ import java.sql.Date;
 @Data
 @Builder
 @NoArgsConstructor
-public class UserDto {
+public class HostDto {
 
-    private Long userID;
-    private String email;
+    private Long hostID;
     private String username;
-    private Long userDetailID;
+    private String email;
     private String urlImage;
+    private String roleName;
     private Date createDate;
     private Date dob;
     private String fullName;
     private String mobile;
     private String address;
+    private Long totalFollower;
     private int status;
-    private String role;
 }

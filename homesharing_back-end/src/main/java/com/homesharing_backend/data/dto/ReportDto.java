@@ -6,25 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class UserDto {
+public class ReportDto {
 
-    private Long userID;
-    private String email;
+    private Long reportID;
     private String username;
-    private Long userDetailID;
-    private String urlImage;
-    private Date createDate;
-    private Date dob;
-    private String fullName;
-    private String mobile;
-    private String address;
+    private String imageUrl;
+    private String description;
+    private Long reportTypeID;
+    private String nameReportType;
     private int status;
-    private String role;
 }

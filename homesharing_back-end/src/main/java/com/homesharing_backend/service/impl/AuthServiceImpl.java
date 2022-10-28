@@ -18,6 +18,9 @@ import com.homesharing_backend.security.jwt.JwtUtils;
 import com.homesharing_backend.security.services.UserDetailsImpl;
 import com.homesharing_backend.service.AuthService;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.homesharing_backend.util.JavaMail;
@@ -137,6 +140,14 @@ public class AuthServiceImpl implements AuthService {
 //            user.setRoles(roles);
             String otp = UUID.randomUUID().toString();
             user.setCodeActive(otp);
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            LocalDate localDate = localDateTime.toLocalDate();
+
+
+            Date dateStart = Date.valueOf(localDate);
+
+            user.setCreateDate(dateStart);
 
             User savedUser = userRepository.save(user);
 
@@ -312,6 +323,7 @@ public class AuthServiceImpl implements AuthService {
             UserDto dto = UserDto.builder()
                     .userID(user.getId())
                     .username(user.getUsername())
+                    .createDate(user.getCreateDate())
                     .dob(user.getUserDetail().getDob())
                     .mobile(user.getUserDetail().getMobile())
                     .fullName(user.getUserDetail().getFullName())
