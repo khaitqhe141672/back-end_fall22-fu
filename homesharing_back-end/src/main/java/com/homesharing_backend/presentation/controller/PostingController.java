@@ -43,7 +43,7 @@ public class PostingController {
         return postImageService.insertPostImage(multipartFiles, postID);
     }
 
-    @PostMapping(value = "/all-post-host")
+    @GetMapping(value = "/all-post-host")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> getAllPostByHost() {
         return postService.getAllPostByHost();

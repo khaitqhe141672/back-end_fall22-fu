@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -31,7 +32,7 @@ public class VoucherController {
 
     @PostMapping("/insert")
     @PreAuthorize("hasRole('ROLE_HOST')")
-    public ResponseEntity<?> insertVoucher(@Valid @RequestBody VoucherRequest voucherRequest) {
+    public ResponseEntity<?> insertVoucher(@Valid @RequestBody List<VoucherRequest> voucherRequest) {
         return voucherService.insertVoucher(voucherRequest);
     }
 

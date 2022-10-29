@@ -14,4 +14,6 @@ public interface ProvinceRepository extends JpaRepository<Province, Long> {
 
     @Query(value = "SELECT * FROM Province Limit 8", nativeQuery = true)
     List<Province> getRecommendedPlacesByProvinces();
+
+    Province getProvincesByName(String name);
 }

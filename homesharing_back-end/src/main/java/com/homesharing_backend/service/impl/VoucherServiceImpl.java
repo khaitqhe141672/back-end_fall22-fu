@@ -7,7 +7,9 @@ import com.homesharing_backend.data.entity.Voucher;
 import com.homesharing_backend.data.repository.HostRepository;
 import com.homesharing_backend.data.repository.VoucherRepository;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.VoucherRequest;
 import com.homesharing_backend.service.VoucherService;
@@ -76,33 +78,32 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> insertVoucher(VoucherRequest voucherRequest) {
+    public ResponseEntity<MessageResponse> insertVoucher(List<VoucherRequest> voucherRequest) {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        Voucher v = Voucher.builder()
-                .nameVoucher(voucherRequest.getName())
-                .description(voucherRequest.getDescription())
-                .dueDay(voucherRequest.getDueDate())
-                .host(host)
-                .status(1)
-                .build();
+        List<Voucher> vouchers = new ArrayList<>();
 
-        Voucher voucher = voucherRepository.save(v);
+        voucherRequest.forEach(vp -> {
+            Voucher v = Voucher.builder()
+                    .nameVoucher(vp.getName())
+                    .description(vp.getDescription())
+                    .dueDay(vp.getDueDate())
+                    .host(host)
+                    .status(1)
+                    .build();
+            Voucher voucher = voucherRepository.save(v);
 
-        VoucherDto dto = VoucherDto.builder()
-                .nameVoucher(voucher.getNameVoucher())
-                .description(voucher.getDescription())
-                .dueDate(voucher.getDueDay())
-                .percent(voucher.getPercent())
-                .status(voucher.getStatus())
-                .build();
+            vouchers.add(voucher);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Save success voucher", new HashMap<>() {
-            {
-                put("voucher", dto);
-            }
-        }));
+        });
+
+        if (Objects.isNull(vouchers)) {
+            throw new SaveDataException("create voucher khong thanh cong");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Create voucher thanh cong"));
+        }
+
     }
 
     @Override

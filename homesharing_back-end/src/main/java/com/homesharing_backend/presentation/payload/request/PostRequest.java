@@ -16,7 +16,6 @@ public class PostRequest {
 
     private Long roomTypeID;
     private String address;
-    private Long districtID;
     private int guestNumber;
     private int numberOfBathrooms;
     private int numberOfBedrooms;
@@ -25,7 +24,7 @@ public class PostRequest {
     private String description;
     private float price;
     private List<PostUtilityRequest> utilityRequests;
-    private Long voucherID;
+    private List<Long> voucherList;
     private Long paymentPackageID;
     private String latitude;
     private String longitude;
