@@ -64,6 +64,9 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostPaymentRepository postPaymentRepository;
 
+    @Autowired
+    private ProvinceRepository provinceRepository;
+
     @Override
     public ResponseEntity<JwtResponse> getInterestingPlaceByPost() {
 
@@ -139,82 +142,94 @@ public class PostServiceImpl implements PostService {
             throw new SaveDataException("Insert post not success");
         } else {
 
-            District district = districtRepository.findDistrictById(postRequest.getDistrictID())
-                    .orElseThrow(() -> new NotFoundException("District_id khong ton tai"));
+            String[] addr = postRequest.getAddress().split(",");
 
-            RoomType roomType = roomTypeRepository.findRoomTypeById(postRequest.getRoomTypeID())
-                    .orElseThrow(() -> new NotFoundException("RoomType_id khong ton tai"));
+            Province province = provinceRepository.getProvincesByName(addr[addr.length - 2]);
 
-            PostDetail postDetail = PostDetail.builder()
-                    .address(postRequest.getAddress())
-                    .description(postRequest.getDescription())
-                    .guestNumber(postRequest.getGuestNumber())
-                    .numberOfBathroom(postRequest.getNumberOfBathrooms())
-                    .numberOfBedrooms(postRequest.getNumberOfBedrooms())
-                    .numberOfBeds(postRequest.getNumberOfBeds())
-                    .district(district)
-                    .post(savePost)
-                    .roomType(roomType)
-                    .latitude(postRequest.getLatitude())
-                    .longitude(postRequest.getLongitude())
-                    .build();
-            postDetailRepository.save(postDetail);
+            if (Objects.isNull(province)) {
+                throw new NotFoundException("Province khong co");
+            } else {
+                District district = districtRepository.getDistrictByNameAndProvince_Id(addr[addr.length - 3], province.getId());
+
+                if (Objects.isNull(district)) {
+                    throw new NotFoundException("Dictrict khong co");
+                } else {
+                    RoomType roomType = roomTypeRepository.findRoomTypeById(postRequest.getRoomTypeID())
+                            .orElseThrow(() -> new NotFoundException("RoomType_id khong ton tai"));
+
+                    PostDetail postDetail = PostDetail.builder()
+                            .address(postRequest.getAddress())
+                            .description(postRequest.getDescription())
+                            .guestNumber(postRequest.getGuestNumber())
+                            .numberOfBathroom(postRequest.getNumberOfBathrooms())
+                            .numberOfBedrooms(postRequest.getNumberOfBedrooms())
+                            .numberOfBeds(postRequest.getNumberOfBeds())
+                            .district(district)
+                            .post(savePost)
+                            .roomType(roomType)
+                            .latitude(postRequest.getLatitude())
+                            .longitude(postRequest.getLongitude())
+                            .build();
+                    postDetailRepository.save(postDetail);
 
 
-            postRequest.getUtilityRequests().forEach(p -> {
+                    postRequest.getUtilityRequests().forEach(p -> {
 
-                Utility utility = utilityRepository.findUtilityById(p.getUtilityID())
-                        .orElseThrow(() -> new NotFoundException("Utility_id khong ton tai"));
+                        Utility utility = utilityRepository.findUtilityById(p.getUtilityID())
+                                .orElseThrow(() -> new NotFoundException("Utility_id khong ton tai"));
 
-                PostUtility postUtility = PostUtility.builder()
-                        .utility(utility)
-                        .post(savePost)
-                        .price(p.getPrice())
-                        .status(1)
-                        .build();
-                postUtilityRepository.save(postUtility);
-            });
+                        PostUtility postUtility = PostUtility.builder()
+                                .utility(utility)
+                                .post(savePost)
+                                .price(p.getPrice())
+                                .status(1)
+                                .build();
+                        postUtilityRepository.save(postUtility);
+                    });
 
-            Voucher voucher = voucherRepository.findVoucherById(postRequest.getVoucherID())
-                    .orElseThrow(() -> new NotFoundException("Voucher_id khong ton tai"));
+                    postRequest.getVoucherList().forEach(v -> {
+                        Voucher voucher = voucherRepository.findVoucherById(v)
+                                .orElseThrow(() -> new NotFoundException("Voucher_id khong ton tai"));
 
-            PostVoucher postVoucher = PostVoucher.builder()
-                    .startDate(dateStart)
-                    .endDate(Date.valueOf(localDate.plusDays(voucher.getDueDay())))
-                    .post(savePost)
-                    .voucher(voucher)
-                    .status(1)
-                    .build();
-            postVoucherRepository.save(postVoucher);
+                        PostVoucher postVoucher = PostVoucher.builder()
+                                .startDate(dateStart)
+                                .endDate(Date.valueOf(localDate.plusDays(voucher.getDueDay())))
+                                .post(savePost)
+                                .voucher(voucher)
+                                .status(1)
+                                .build();
+                        postVoucherRepository.save(postVoucher);
+                    });
 
-            PaymentPackage paymentPackage = paymentPackageRepository.findPaymentPackageById(postRequest.getPaymentPackageID())
-                    .orElseThrow(() -> new NotFoundException("PaymentPackage_id khong ton tai"));
-            PostPayment postPayment = PostPayment.builder()
-                    .post(savePost)
-                    .paymentPackage(paymentPackage)
-                    .startDate(dateStart)
-                    .endDate(Date.valueOf(localDate.plusMonths(voucher.getDueDay())))
-                    .status(0)
-                    .build();
-            postPaymentRepository.save(postPayment);
+                    PaymentPackage paymentPackage = paymentPackageRepository.findPaymentPackageById(postRequest.getPaymentPackageID())
+                            .orElseThrow(() -> new NotFoundException("PaymentPackage_id khong ton tai"));
+                    PostPayment postPayment = PostPayment.builder()
+                            .post(savePost)
+                            .paymentPackage(paymentPackage)
+                            .startDate(dateStart)
+                            .endDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())))
+                            .status(0)
+                            .build();
+                    postPaymentRepository.save(postPayment);
 
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Tao post thanh cong"));
+                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Tao post thanh cong"));
+                }
+            }
         }
     }
 
     @Override
     public ResponseEntity<JwtResponse> getAllPostByHost() {
 
-//        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
-//
-//        List<PostDto> postList = postRepository.listAllPostByHost(host.getId());
-//
-//        if (Objects.isNull(postList)) {
-//            throw new NotFoundException("Post khong co data nao lq den host_id");
-//        } else {
-//            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), postList));
-//        }
-        return null;
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+        List<PostDto> postList = postRepository.getPostDTO(host.getId());
+
+        if (Objects.isNull(postList)) {
+            throw new NotFoundException("Post khong co data nao lq den host_id");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), postList));
+        }
     }
 
 }
