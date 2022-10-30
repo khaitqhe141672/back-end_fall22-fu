@@ -30,7 +30,7 @@ public class PostDetailDto {
     private int numberOfBathrooms;
     private int numberOfBedrooms;
     private int numberOfBeds;
-    private float serviceFee;
+    private List<PostServiceDto> serviceDtoList;
     private String roomTypeName;
     private List<PostImageDto> imageDtoList;
     private List<PostUtilityDto> postUtilityDtoList;

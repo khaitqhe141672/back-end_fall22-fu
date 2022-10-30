@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PostDetailServiceImpl implements PostDetailService {
@@ -28,6 +29,9 @@ public class PostDetailServiceImpl implements PostDetailService {
 
     @Autowired
     private PostUtilityRepository postUtilityRepository;
+
+    @Autowired
+    private PostServiceRepository postServiceRepository;
 
     /*
         còn voucher, rate bổ sung sau
@@ -57,12 +61,28 @@ public class PostDetailServiceImpl implements PostDetailService {
             List<PostUtilityDto> utilityDtoList = new ArrayList<>();
             postUtilities.forEach(postUtility -> {
                 utilityDtoList.add(new PostUtilityDto(postUtility.getId(), postUtility.getUtility().getIcon(),
-                        postUtility.getUtility().getName(), postUtility.getDescription(),
-                        postUtility.getPrice(), postUtility.getUtility().getId(), postUtility.getStatus()));
+                        postUtility.getUtility().getName(),
+                        postUtility.getUtility().getId(), postUtility.getStatus()));
             });
 
             PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(postID)
                     .orElseThrow(() -> new NotFoundException("khong co data lien quan den post_id cua rate"));
+
+            List<PostServiceDto> serviceDtoList = new ArrayList<>();
+
+            List<PostServices> postServices = postServiceRepository.getPostServicesByPost_Id(postID);
+            if (!Objects.isNull(postServices)) {
+                postServices.forEach(s -> {
+                    PostServiceDto dto = PostServiceDto.builder()
+                            .iconService(s.getServices().getIcon())
+                            .postServiceID(s.getId())
+                            .serviceID(s.getServices().getId())
+                            .nameService(s.getServices().getName())
+                            .status(s.getStatus())
+                            .build();
+                    serviceDtoList.add(dto);
+                });
+            }
 
             PostDetailDto dto = PostDetailDto.builder()
                     .postDetailID(postDetail.getId())
@@ -79,7 +99,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .numberOfBathrooms(postDetail.getNumberOfBathroom())
                     .numberOfBedrooms(postDetail.getNumberOfBedrooms())
                     .numberOfBeds(postDetail.getNumberOfBeds())
-                    .serviceFee(postDetail.getServiceFee())
+                    .serviceDtoList(serviceDtoList)
                     .roomTypeName(postDetail.getRoomType().getName())
                     .imageDtoList(postImageDtoList)
                     .postUtilityDtoList(utilityDtoList)

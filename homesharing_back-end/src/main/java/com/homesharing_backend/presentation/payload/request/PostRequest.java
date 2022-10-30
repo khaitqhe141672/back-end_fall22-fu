@@ -23,9 +23,10 @@ public class PostRequest {
     private String title;
     private String description;
     private float price;
-    private List<PostUtilityRequest> utilityRequests;
+    private List<Long> utilityRequests;
     private List<Long> voucherList;
     private Long paymentPackageID;
     private String latitude;
     private String longitude;
+    private List<PostServiceRequest> postServiceRequests;
 }

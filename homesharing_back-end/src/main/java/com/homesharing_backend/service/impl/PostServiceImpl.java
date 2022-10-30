@@ -67,6 +67,12 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private ProvinceRepository provinceRepository;
 
+    @Autowired
+    private ServicesRepository servicesRepository;
+
+    @Autowired
+    private PostServiceRepository postServiceRepository;
+
     @Override
     public ResponseEntity<JwtResponse> getInterestingPlaceByPost() {
 
@@ -175,42 +181,58 @@ public class PostServiceImpl implements PostService {
 
                     postRequest.getUtilityRequests().forEach(p -> {
 
-                        Utility utility = utilityRepository.findUtilityById(p.getUtilityID())
-                                .orElseThrow(() -> new NotFoundException("Utility_id khong ton tai"));
+                        Utility utility = utilityRepository.getUtilityById(p);
 
-                        PostUtility postUtility = PostUtility.builder()
-                                .utility(utility)
-                                .post(savePost)
-                                .price(p.getPrice())
-                                .status(1)
-                                .build();
-                        postUtilityRepository.save(postUtility);
+                        if (!Objects.isNull(utility)) {
+                            PostUtility postUtility = PostUtility.builder()
+                                    .utility(utility)
+                                    .post(savePost)
+                                    .status(1)
+                                    .build();
+                            postUtilityRepository.save(postUtility);
+                        }
                     });
 
                     postRequest.getVoucherList().forEach(v -> {
-                        Voucher voucher = voucherRepository.findVoucherById(v)
-                                .orElseThrow(() -> new NotFoundException("Voucher_id khong ton tai"));
+                        Voucher voucher = voucherRepository.getVoucherById(v);
 
-                        PostVoucher postVoucher = PostVoucher.builder()
-                                .startDate(dateStart)
-                                .endDate(Date.valueOf(localDate.plusDays(voucher.getDueDay())))
-                                .post(savePost)
-                                .voucher(voucher)
-                                .status(1)
-                                .build();
-                        postVoucherRepository.save(postVoucher);
+                        if (!Objects.isNull(voucher)) {
+                            PostVoucher postVoucher = PostVoucher.builder()
+                                    .startDate(dateStart)
+                                    .endDate(Date.valueOf(localDate.plusDays(voucher.getDueDay())))
+                                    .post(savePost)
+                                    .voucher(voucher)
+                                    .status(1)
+                                    .build();
+                            postVoucherRepository.save(postVoucher);
+                        }
                     });
 
-                    PaymentPackage paymentPackage = paymentPackageRepository.findPaymentPackageById(postRequest.getPaymentPackageID())
-                            .orElseThrow(() -> new NotFoundException("PaymentPackage_id khong ton tai"));
-                    PostPayment postPayment = PostPayment.builder()
-                            .post(savePost)
-                            .paymentPackage(paymentPackage)
-                            .startDate(dateStart)
-                            .endDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())))
-                            .status(0)
-                            .build();
-                    postPaymentRepository.save(postPayment);
+                    PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(postRequest.getPaymentPackageID());
+                    if (!Objects.isNull(paymentPackage)) {
+                        PostPayment postPayment = PostPayment.builder()
+                                .post(savePost)
+                                .paymentPackage(paymentPackage)
+                                .startDate(dateStart)
+                                .endDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())))
+                                .status(0)
+                                .build();
+                        postPaymentRepository.save(postPayment);
+                    }
+
+                    postRequest.getPostServiceRequests().forEach(s -> {
+                        Services services = servicesRepository.getServicesById(s.getServiceID());
+
+                        if (!Objects.isNull(services)) {
+                            PostServices postServices = PostServices.builder()
+                                    .post(savePost)
+                                    .services(services)
+                                    .price(s.getPrice())
+                                    .status(1)
+                                    .build();
+                            postServiceRepository.save(postServices);
+                        }
+                    });
 
                     return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Tao post thanh cong"));
                 }

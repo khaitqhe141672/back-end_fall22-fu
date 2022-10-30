@@ -32,8 +32,9 @@ public class PostDetail {
     @Column(name = "description", length = 5000)
     private String description;
 
-    @Column(name = "service_fee")
-    private float serviceFee;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_service_id", referencedColumnName = "id")
+    private PostServices postService;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_type_id", referencedColumnName = "id")
