@@ -148,17 +148,17 @@ public class PostServiceImpl implements PostService {
             throw new SaveDataException("Insert post not success");
         } else {
 
-            String[] addr = postRequest.getAddress().split(",");
+            String[] addr = postRequest.getAddress().split(", ");
 
-            Province province = provinceRepository.getProvincesByName(addr[addr.length - 2]);
+            Province province = provinceRepository.getProvincesByName(" " + addr[addr.length - 2]);
 
             if (Objects.isNull(province)) {
-                throw new NotFoundException("Province khong co");
+                throw new NotFoundException("Province khong co" + addr[addr.length - 2]);
             } else {
                 District district = districtRepository.getDistrictByNameAndProvince_Id(addr[addr.length - 3], province.getId());
 
                 if (Objects.isNull(district)) {
-                    throw new NotFoundException("Dictrict khong co");
+                    throw new NotFoundException("Dictrict khong co" + addr[addr.length - 3] + province.getName() + province.getId());
                 } else {
                     RoomType roomType = roomTypeRepository.findRoomTypeById(postRequest.getRoomTypeID())
                             .orElseThrow(() -> new NotFoundException("RoomType_id khong ton tai"));
