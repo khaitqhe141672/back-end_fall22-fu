@@ -15,4 +15,6 @@ public interface UtilityRepository extends JpaRepository<Utility, Long> {
     Optional<Utility> findUtilityById(Long id);
 
     List<Utility> getUtilityByHost_Id(Long hostID);
+
+    Utility getUtilityById(Long id);
 }

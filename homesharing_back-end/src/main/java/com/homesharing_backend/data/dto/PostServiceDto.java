@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class PostUtilityDto {
+public class PostServiceDto {
 
-    private Long postUtilityID;
-    private String iconUtility;
-    private String nameUtility;
-    private Long utilityID;
+    private Long postServiceID;
+    private String iconService;
+    private String nameService;
+    private Long serviceID;
     private int status;
 }
