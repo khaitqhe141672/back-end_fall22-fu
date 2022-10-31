@@ -56,6 +56,12 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private PostImageRepository postImageRepository;
 
+    @Autowired
+    private PostServiceRepository postServiceRepository;
+
+    @Autowired
+    private BookingServiceRepository bookingServiceRepository;
+
     /* status = 1 chờ confirm bởi host */
     @Override
     public ResponseEntity<MessageResponse> booking(BookingRequest bookingRequest, Long postID) {
@@ -89,32 +95,85 @@ public class BookingServiceImpl implements BookingService {
                         .booking(saveBooking)
                         .endDate(bookingRequest.getEndDate())
                         .startDate(bookingRequest.getStartDate())
-                        .serviceCharge(bookingRequest.getServiceCharge())
                         .totalPerson(bookingRequest.getTotalPerson())
                         .post(post)
+                        .email(bookingRequest.getEmail())
+                        .fullName(bookingRequest.getFullName())
+                        .mobile(bookingRequest.getMobile())
                         .build();
                 BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
 
+
                 bookingRequest.getPostUtilityID().forEach(p -> {
                     PostUtility postUtility = postUtilityRepository.getPostUtilityById(p);
-                    BookingUtility utility = BookingUtility.builder()
-                            .booking(saveBooking)
-                            .postUtility(postUtility)
-                            .build();
-                    bookingUtilityRepository.save(utility);
+                    if (!Objects.isNull(postUtility)) {
+                        BookingUtility utility = BookingUtility.builder()
+                                .booking(saveBooking)
+                                .postUtility(postUtility)
+                                .status(1)
+                                .build();
+                        bookingUtilityRepository.save(utility);
+                    }
                 });
 
-                if (Objects.isNull(saveBookingDetail)) {
-                    throw new SaveDataException("save booking_detail not success");
-                } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "booking success"));
-                }
+                bookingRequest.getPostServices().forEach(s -> {
+
+                    PostServices postServices = postServiceRepository.getPostServicesByIdAndPost_Id(s, postID);
+
+                    if (!Objects.isNull(postServices)) {
+                        BookingServices services = BookingServices.builder()
+                                .postServices(postServices)
+                                .booking(saveBooking)
+                                .status(1)
+                                .build();
+
+                        bookingServiceRepository.save(services);
+                    }
+                });
+
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "booking success"));
             }
         }
     }
 
     @Override
     public ResponseEntity<MessageResponse> editBooking(BookingRequest bookingRequest, Long bookingID) {
+
+        if (Objects.isNull(bookingID)) {
+            throw new NotFoundException("Booking_id null");
+        } else {
+            Booking booking = bookingRepository.getBookingById(bookingID);
+
+            if (Objects.isNull(booking)) {
+                throw new NotFoundException("Booking null");
+            } else {
+                LocalDateTime localDateTime = LocalDateTime.now();
+                LocalDate localDate = localDateTime.toLocalDate();
+
+                Date editDate = Date.valueOf(localDate);
+
+                booking.setCreateDate(editDate);
+                booking.setTotalMoney(bookingRequest.getTotalMoney());
+                booking.setNote(bookingRequest.getNote());
+                bookingRepository.save(booking);
+
+                BookingDetail bookingDetail = bookingDetailRepository.getBookingDetailByBooking_Id(booking.getId());
+
+                if (Objects.isNull(bookingDetail)) {
+                    throw new NotFoundException("BookingDetail null");
+                } else {
+                    bookingDetail.setEmail(bookingRequest.getEmail());
+                    bookingDetail.setMobile(bookingRequest.getMobile());
+                    bookingDetail.setFullName(bookingRequest.getFullName());
+                    bookingDetail.setEndDate(bookingRequest.getEndDate());
+                    bookingDetail.setStartDate(bookingRequest.getStartDate());
+                    bookingDetail.setTotalPerson(bookingRequest.getTotalPerson());
+
+                    bookingDetailRepository.save(bookingDetail);
+                }
+            }
+        }
+
         /*lam sau chua co man cua customer khong biet can nhung thong tin gi*/
         return null;
     }

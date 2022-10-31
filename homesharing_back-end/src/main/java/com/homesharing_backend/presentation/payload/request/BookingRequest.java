@@ -17,6 +17,9 @@ public class BookingRequest {
     private String note;
     private float totalMoney;
     private int totalPerson;
-    private float serviceCharge;
+    private List<Long> postServices;
     List<Long> postUtilityID;
+    private String fullName;
+    private String mobile;
+    private String email;
 }

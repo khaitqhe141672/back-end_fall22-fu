@@ -5,14 +5,14 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "booking_utility")
+@Table(name = "booking_services")
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
-public class BookingUtility {
+public class BookingServices {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,8 @@ public class BookingUtility {
     private Booking booking;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_utility_id", referencedColumnName = "id")
-    private PostUtility postUtility;
+    @JoinColumn(name = "post_service_id", referencedColumnName = "id")
+    private PostServices postServices;
 
     @Column(name = "status")
     private int status;

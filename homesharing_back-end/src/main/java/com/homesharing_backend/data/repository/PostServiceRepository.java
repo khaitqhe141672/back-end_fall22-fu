@@ -10,4 +10,6 @@ import java.util.List;
 public interface PostServiceRepository extends JpaRepository<PostServices, Long> {
 
     List<PostServices> getPostServicesByPost_Id(Long postID);
+
+    PostServices getPostServicesByIdAndPost_Id(Long id, Long postID);
 }

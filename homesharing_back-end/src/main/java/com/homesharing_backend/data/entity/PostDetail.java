@@ -33,10 +33,6 @@ public class PostDetail {
     private String description;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_service_id", referencedColumnName = "id")
-    private PostServices postService;
-
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_type_id", referencedColumnName = "id")
     private RoomType roomType;
 

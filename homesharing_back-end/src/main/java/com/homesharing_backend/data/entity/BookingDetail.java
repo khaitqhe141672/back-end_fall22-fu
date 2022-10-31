@@ -35,10 +35,12 @@ public class BookingDetail {
     @Column(name = "total_person")
     private int totalPerson;
 
-    @Column(name = "service_charge")
-    private float serviceCharge;
+    @Column(name = "full_name")
+    private String fullName;
 
-    @Column(name = "status")
-    private int status;
+    @Column(name = "mobile")
+    private String mobile;
 
+    @Column(name = "email")
+    private String email;
 }
