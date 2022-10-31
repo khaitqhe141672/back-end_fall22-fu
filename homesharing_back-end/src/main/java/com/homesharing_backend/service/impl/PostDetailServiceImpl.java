@@ -78,6 +78,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                             .postServiceID(s.getId())
                             .serviceID(s.getServices().getId())
                             .nameService(s.getServices().getName())
+                            .price(s.getPrice())
                             .status(s.getStatus())
                             .build();
                     serviceDtoList.add(dto);
