@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VoucherDto {
 
+    private Long idVoucher;
     private String nameVoucher;
     private String description;
     private int percent;
