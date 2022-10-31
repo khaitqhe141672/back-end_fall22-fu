@@ -16,6 +16,7 @@ public class PostServiceDto {
     private Long postServiceID;
     private String iconService;
     private String nameService;
+    private float price;
     private Long serviceID;
     private int status;
 }
