@@ -41,6 +41,7 @@ public class VoucherServiceImpl implements VoucherService {
 
         for (Voucher v : vouchers) {
             VoucherDto dto = VoucherDto.builder()
+                    .idVoucher(v.getId())
                     .nameVoucher(v.getNameVoucher())
                     .description(v.getDescription())
                     .dueDate(v.getDueDay())
@@ -63,6 +64,7 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = voucherRepository.getVoucherById(id);
 
         VoucherDto dto = VoucherDto.builder()
+                .idVoucher(voucher.getId())
                 .nameVoucher(voucher.getNameVoucher())
                 .description(voucher.getDescription())
                 .dueDate(voucher.getDueDay())
@@ -159,6 +161,7 @@ public class VoucherServiceImpl implements VoucherService {
 
             vouchers.forEach(v -> {
                 VoucherDto dto = VoucherDto.builder()
+                        .idVoucher(v.getId())
                         .nameVoucher(v.getNameVoucher())
                         .description(v.getDescription())
                         .dueDate(v.getDueDay())
