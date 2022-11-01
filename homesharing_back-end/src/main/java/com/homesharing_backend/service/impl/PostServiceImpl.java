@@ -5,7 +5,6 @@ import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
-import com.homesharing_backend.exception.EmptyDataException;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;

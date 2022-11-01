@@ -43,6 +43,41 @@ public class PostingController {
         return postImageService.insertPostImage(multipartFiles, postID);
     }
 
+    @PostMapping(value = "/insert-post-image-one")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> insertPostImageOne(@RequestParam("file") MultipartFile multipartFiles,
+                                                @RequestParam("post-id") Long postID) {
+        return postImageService.insertPostImageOneByPostID(multipartFiles, postID);
+    }
+
+    @PostMapping(value = "/insert-post-image-two")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> insertPostImageTwo(@RequestParam("file") MultipartFile multipartFiles,
+                                                @RequestParam("post-id") Long postID) {
+        return postImageService.insertPostImageTwoByPostID(multipartFiles, postID);
+    }
+
+    @PostMapping(value = "/insert-post-image-third")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> insertPostImageThird(@RequestParam("file") MultipartFile multipartFiles,
+                                                  @RequestParam("post-id") Long postID) {
+        return postImageService.insertPostImageThirdByPostID(multipartFiles, postID);
+    }
+
+    @PostMapping(value = "/insert-post-image-four")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> insertPostImageFour(@RequestParam("file") MultipartFile multipartFiles,
+                                                 @RequestParam("post-id") Long postID) {
+        return postImageService.insertPostImageFourByPostID(multipartFiles, postID);
+    }
+
+    @PostMapping(value = "/insert-post-image-five")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> insertPostImageFive(@RequestParam("file") MultipartFile multipartFiles,
+                                                 @RequestParam("post-id") Long postID) {
+        return postImageService.insertPostImageFiveByPostID(multipartFiles, postID);
+    }
+
     @GetMapping(value = "/all-post-host")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> getAllPostByHost() {

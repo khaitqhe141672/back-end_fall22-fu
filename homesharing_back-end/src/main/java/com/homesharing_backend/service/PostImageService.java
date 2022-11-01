@@ -15,5 +15,15 @@ public interface PostImageService {
 
     public ResponseEntity<MessageResponse> insertPostImage(List<MultipartFile> multipartFile, Long postID);
 
+    public ResponseEntity<MessageResponse> insertPostImageOneByPostID(MultipartFile multipartFile, Long postID);
+
+    public ResponseEntity<MessageResponse> insertPostImageTwoByPostID(MultipartFile multipartFile, Long postID);
+
+    public ResponseEntity<MessageResponse> insertPostImageThirdByPostID(MultipartFile multipartFile, Long postID);
+
+    public ResponseEntity<MessageResponse> insertPostImageFourByPostID(MultipartFile multipartFile, Long postID);
+
+    public ResponseEntity<MessageResponse> insertPostImageFiveByPostID(MultipartFile multipartFile, Long postID);
+
     public ResponseEntity<ResponseObject> editPostImageByPostImageID(Long postID, List<MultipartFile> multipartFile);
 }
