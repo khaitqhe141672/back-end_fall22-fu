@@ -91,45 +91,54 @@ public class BookingServiceImpl implements BookingService {
             if (Objects.isNull(saveBooking)) {
                 throw new SaveDataException("save booking not success");
             } else {
-                BookingDetail bookingDetail = BookingDetail.builder()
-                        .booking(saveBooking)
-                        .endDate(bookingRequest.getEndDate())
-                        .startDate(bookingRequest.getStartDate())
-                        .totalPerson(bookingRequest.getTotalPerson())
-                        .post(post)
-                        .email(bookingRequest.getEmail())
-                        .fullName(bookingRequest.getFullName())
-                        .mobile(bookingRequest.getMobile())
-                        .build();
-                BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
+
+                if (Objects.isNull(bookingRequest.getStartDate()) || Objects.isNull(bookingRequest.getEndDate())) {
+                    throw new NotFoundException("End date or start date null");
+                } else {
+                    BookingDetail bookingDetail = BookingDetail.builder()
+                            .booking(saveBooking)
+                            .endDate(bookingRequest.getEndDate())
+                            .startDate(bookingRequest.getStartDate())
+                            .totalPerson(bookingRequest.getTotalPerson())
+                            .post(post)
+                            .email(bookingRequest.getEmail())
+                            .fullName(bookingRequest.getFullName())
+                            .mobile(bookingRequest.getMobile())
+                            .build();
+                    BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
+                }
 
 
-                bookingRequest.getPostUtilityID().forEach(p -> {
-                    PostUtility postUtility = postUtilityRepository.getPostUtilityById(p);
-                    if (!Objects.isNull(postUtility)) {
-                        BookingUtility utility = BookingUtility.builder()
-                                .booking(saveBooking)
-                                .postUtility(postUtility)
-                                .status(1)
-                                .build();
-                        bookingUtilityRepository.save(utility);
-                    }
-                });
+                if (!Objects.isNull(bookingRequest.getPostUtilityID())) {
+                    bookingRequest.getPostUtilityID().forEach(p -> {
+                        PostUtility postUtility = postUtilityRepository.getPostUtilityById(p);
+                        if (!Objects.isNull(postUtility)) {
+                            BookingUtility utility = BookingUtility.builder()
+                                    .booking(saveBooking)
+                                    .postUtility(postUtility)
+                                    .status(1)
+                                    .build();
+                            bookingUtilityRepository.save(utility);
+                        }
+                    });
+                }
 
-                bookingRequest.getPostServices().forEach(s -> {
+                if (!Objects.isNull(bookingRequest.getPostServices())) {
+                    bookingRequest.getPostServices().forEach(s -> {
 
-                    PostServices postServices = postServiceRepository.getPostServicesByIdAndPost_Id(s, postID);
+                        PostServices postServices = postServiceRepository.getPostServicesByIdAndPost_Id(s, postID);
 
-                    if (!Objects.isNull(postServices)) {
-                        BookingServices services = BookingServices.builder()
-                                .postServices(postServices)
-                                .booking(saveBooking)
-                                .status(1)
-                                .build();
+                        if (!Objects.isNull(postServices)) {
+                            BookingServices services = BookingServices.builder()
+                                    .postServices(postServices)
+                                    .booking(saveBooking)
+                                    .status(1)
+                                    .build();
 
-                        bookingServiceRepository.save(services);
-                    }
-                });
+                            bookingServiceRepository.save(services);
+                        }
+                    });
+                }
 
                 return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "booking success"));
             }
