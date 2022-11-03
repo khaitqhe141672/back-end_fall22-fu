@@ -7,6 +7,7 @@ import com.homesharing_backend.data.repository.BookingDetailRepository;
 import com.homesharing_backend.data.repository.BookingRepository;
 import com.homesharing_backend.data.repository.PostRepository;
 import com.homesharing_backend.data.repository.RateRepository;
+import com.homesharing_backend.exception.EmptyDataException;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.exception.UpdateDataException;
@@ -84,20 +85,23 @@ public class RateServiceImpl implements RateService {
 
             Date createDate = Date.valueOf(localDate);
 
-            Rate rate = Rate.builder()
-                    .comment(rateRequest.getComment())
-                    .point(rateRequest.getPoint())
-                    .dateRate(createDate)
-                    .bookingDetail(bookingDetail)
-                    .status(1)
-                    .build();
-
-            Rate saveRate = rateRepository.save(rate);
-
-            if (Objects.isNull(saveRate)) {
-                throw new SaveDataException("rate khong thanh cong");
+            if (Objects.isNull(rateRequest.getComment()) || Objects.isNull(rateRequest.getPoint())) {
+                throw new NotFoundException("Comment or Point empty");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "rate thanh cong"));
+                Rate rate = Rate.builder()
+                        .comment(rateRequest.getComment())
+                        .point(rateRequest.getPoint())
+                        .dateRate(createDate)
+                        .bookingDetail(bookingDetail)
+                        .status(1)
+                        .build();
+
+                Rate saveRate = rateRepository.save(rate);
+                if (Objects.isNull(saveRate)) {
+                    throw new SaveDataException("rate khong thanh cong");
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "rate thanh cong"));
+                }
             }
         }
     }

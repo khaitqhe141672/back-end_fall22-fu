@@ -43,7 +43,7 @@ public class PostingController {
         return postImageService.insertPostImage(multipartFiles, postID);
     }
 
-    @PostMapping(value = "/insert-post-image-one")
+    @PostMapping(value = "/insert-post-image-one" ,consumes = "multipart/form-data")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> insertPostImageOne(@RequestParam("file") MultipartFile multipartFiles,
                                                 @RequestParam("post-id") Long postID) {
