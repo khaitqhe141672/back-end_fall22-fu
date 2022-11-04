@@ -26,6 +26,19 @@ public class BookingDetail {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_voucher_id", referencedColumnName = "id")
+    private PostVoucher postVoucher;
+
+    @Column(name = "total_price_room")
+    private float totalPriceRoom;
+
+    @Column(name = "total_service")
+    private float totalService;
+
+    @Column(name = "discount")
+    private float discount;
+
     @Column(name = "start_date")
     private Date startDate;
 

@@ -30,6 +30,7 @@ public class Test {
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> testD(@RequestParam("file") MultipartFile file) {
+        System.out.println(file);
         String fileName = awsService.upload(file);
         Province p = Province.builder()
                 .name(fileName)

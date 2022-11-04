@@ -33,6 +33,9 @@ public class PostDetailServiceImpl implements PostDetailService {
     @Autowired
     private PostServiceRepository postServiceRepository;
 
+    @Autowired
+    private PostVoucherRepository postVoucherRepository;
+
     /*
         còn voucher, rate bổ sung sau
     */
@@ -85,6 +88,25 @@ public class PostDetailServiceImpl implements PostDetailService {
                 });
             }
 
+            List<PostVoucherDto> postVoucherDtoList = new ArrayList<>();
+
+            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_Id(postID);
+
+            postVouchers.forEach(v -> {
+                PostVoucherDto dto = PostVoucherDto.builder()
+                        .startDate(v.getStartDate())
+                        .endDate(v.getEndDate())
+                        .status(v.getStatus())
+                        .nameVoucher(v.getVoucher().getNameVoucher())
+                        .percent(v.getVoucher().getPercent())
+                        .dueDay(v.getVoucher().getDueDay())
+                        .voucherID(v.getVoucher().getId())
+                        .description(v.getVoucher().getDescription())
+                        .build();
+
+                postVoucherDtoList.add(dto);
+            });
+
             PostDetailDto dto = PostDetailDto.builder()
                     .postDetailID(postDetail.getId())
                     .postID(postID)
@@ -107,6 +129,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .districtDto(districtDto)
                     .avgRate(postTopRateDto.getAvgRate())
                     .status(postDetail.getPost().getStatus())
+                    .postVoucherDtoList(postVoucherDtoList)
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));
         }
