@@ -102,9 +102,6 @@ public class BookingServiceImpl implements BookingService {
                     PostVoucher postVoucher = postVoucherRepository.getPostVoucherByIdAndPost_Id(bookingRequest.getPostVoucherID(), postID);
 
                     if (!Objects.isNull(postVoucher)) {
-                        throw new NotFoundException("Post voucher id khong ton tai");
-                    } else {
-
                         BookingDetail bookingDetail = BookingDetail.builder()
                                 .booking(saveBooking)
                                 .endDate(bookingRequest.getEndDate())
