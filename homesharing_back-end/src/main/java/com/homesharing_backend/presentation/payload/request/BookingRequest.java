@@ -18,7 +18,10 @@ public class BookingRequest {
     private float totalMoney;
     private int totalPerson;
     private List<Long> postServices;
-    List<Long> postUtilityID;
+    private Long postVoucherID;
+    private float totalPriceRoom;
+    private float totalPriceService;
+    private float discount;
     private String fullName;
     private String mobile;
     private String email;

@@ -62,6 +62,9 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingServiceRepository bookingServiceRepository;
 
+    @Autowired
+    private PostVoucherRepository postVoucherRepository;
+
     /* status = 1 chờ confirm bởi host */
     @Override
     public ResponseEntity<MessageResponse> booking(BookingRequest bookingRequest, Long postID) {
@@ -95,33 +98,32 @@ public class BookingServiceImpl implements BookingService {
                 if (Objects.isNull(bookingRequest.getStartDate()) || Objects.isNull(bookingRequest.getEndDate())) {
                     throw new NotFoundException("End date or start date null");
                 } else {
-                    BookingDetail bookingDetail = BookingDetail.builder()
-                            .booking(saveBooking)
-                            .endDate(bookingRequest.getEndDate())
-                            .startDate(bookingRequest.getStartDate())
-                            .totalPerson(bookingRequest.getTotalPerson())
-                            .post(post)
-                            .email(bookingRequest.getEmail())
-                            .fullName(bookingRequest.getFullName())
-                            .mobile(bookingRequest.getMobile())
-                            .build();
-                    BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
+
+                    PostVoucher postVoucher = postVoucherRepository.getPostVoucherByIdAndPost_Id(bookingRequest.getPostVoucherID(), postID);
+
+                    if (!Objects.isNull(postVoucher)) {
+                        throw new NotFoundException("Post voucher id khong ton tai");
+                    } else {
+
+                        BookingDetail bookingDetail = BookingDetail.builder()
+                                .booking(saveBooking)
+                                .endDate(bookingRequest.getEndDate())
+                                .startDate(bookingRequest.getStartDate())
+                                .totalPerson(bookingRequest.getTotalPerson())
+                                .post(post)
+                                .email(bookingRequest.getEmail())
+                                .fullName(bookingRequest.getFullName())
+                                .mobile(bookingRequest.getMobile())
+                                .discount(bookingRequest.getDiscount())
+                                .totalService(bookingRequest.getTotalPriceService())
+                                .totalPriceRoom(bookingRequest.getTotalPriceRoom())
+                                .postVoucher(postVoucher)
+                                .build();
+                        BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
+                    }
+
                 }
 
-
-                if (!Objects.isNull(bookingRequest.getPostUtilityID())) {
-                    bookingRequest.getPostUtilityID().forEach(p -> {
-                        PostUtility postUtility = postUtilityRepository.getPostUtilityById(p);
-                        if (!Objects.isNull(postUtility)) {
-                            BookingUtility utility = BookingUtility.builder()
-                                    .booking(saveBooking)
-                                    .postUtility(postUtility)
-                                    .status(1)
-                                    .build();
-                            bookingUtilityRepository.save(utility);
-                        }
-                    });
-                }
 
                 if (!Objects.isNull(bookingRequest.getPostServices())) {
                     bookingRequest.getPostServices().forEach(s -> {

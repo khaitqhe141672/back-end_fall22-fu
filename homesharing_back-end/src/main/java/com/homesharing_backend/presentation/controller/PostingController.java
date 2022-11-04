@@ -9,6 +9,7 @@ import com.homesharing_backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +44,7 @@ public class PostingController {
         return postImageService.insertPostImage(multipartFiles, postID);
     }
 
-    @PostMapping(value = "/insert-post-image-one" ,consumes = "multipart/form-data")
+    @PostMapping(value = "/insert-post-image-one")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> insertPostImageOne(@RequestParam("file") MultipartFile multipartFiles,
                                                 @RequestParam("post-id") Long postID) {

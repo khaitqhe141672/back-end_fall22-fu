@@ -61,7 +61,6 @@ public class PostImageServiceImpl implements PostImageService {
     public ResponseEntity<MessageResponse> insertPostImageOneByPostID(MultipartFile multipartFile, Long postID) {
 
         Post post = postRepository.getPostById(postID);
-
         if (Objects.isNull(post)) {
             throw new NotFoundException("Post_id khong ton tai");
         } else {
