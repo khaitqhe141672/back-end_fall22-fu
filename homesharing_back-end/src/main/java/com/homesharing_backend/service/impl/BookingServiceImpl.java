@@ -101,24 +101,25 @@ public class BookingServiceImpl implements BookingService {
 
                     PostVoucher postVoucher = postVoucherRepository.getPostVoucherByIdAndPost_Id(bookingRequest.getPostVoucherID(), postID);
 
+                    BookingDetail bookingDetail = BookingDetail.builder()
+                            .booking(saveBooking)
+                            .endDate(bookingRequest.getEndDate())
+                            .startDate(bookingRequest.getStartDate())
+                            .totalPerson(bookingRequest.getTotalPerson())
+                            .post(post)
+                            .email(bookingRequest.getEmail())
+                            .fullName(bookingRequest.getFullName())
+                            .mobile(bookingRequest.getMobile())
+                            .discount(bookingRequest.getDiscount())
+                            .totalService(bookingRequest.getTotalPriceService())
+                            .totalPriceRoom(bookingRequest.getTotalPriceRoom())
+                            .build();
+
                     if (!Objects.isNull(postVoucher)) {
-                        BookingDetail bookingDetail = BookingDetail.builder()
-                                .booking(saveBooking)
-                                .endDate(bookingRequest.getEndDate())
-                                .startDate(bookingRequest.getStartDate())
-                                .totalPerson(bookingRequest.getTotalPerson())
-                                .post(post)
-                                .email(bookingRequest.getEmail())
-                                .fullName(bookingRequest.getFullName())
-                                .mobile(bookingRequest.getMobile())
-                                .discount(bookingRequest.getDiscount())
-                                .totalService(bookingRequest.getTotalPriceService())
-                                .totalPriceRoom(bookingRequest.getTotalPriceRoom())
-                                .postVoucher(postVoucher)
-                                .build();
-                        BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
+                        bookingDetail.setPostVoucher(postVoucher);
                     }
 
+                    BookingDetail saveBookingDetail = bookingDetailRepository.save(bookingDetail);
                 }
 
 
