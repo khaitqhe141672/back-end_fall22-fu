@@ -3,10 +3,7 @@ package com.homesharing_backend.service.impl;
 import com.homesharing_backend.data.dto.RateDto;
 import com.homesharing_backend.data.entity.BookingDetail;
 import com.homesharing_backend.data.entity.Rate;
-import com.homesharing_backend.data.repository.BookingDetailRepository;
-import com.homesharing_backend.data.repository.BookingRepository;
-import com.homesharing_backend.data.repository.PostRepository;
-import com.homesharing_backend.data.repository.RateRepository;
+import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.EmptyDataException;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
@@ -42,6 +39,9 @@ public class RateServiceImpl implements RateService {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private LikesDislikesRepository likesDislikesRepository;
+
     @Override
     public ResponseEntity<JwtResponse> getAllRate(Long postID) {
 
@@ -54,6 +54,10 @@ public class RateServiceImpl implements RateService {
             List<RateDto> rateDtos = new ArrayList<>();
 
             rates.forEach(r -> {
+
+                int countLike = likesDislikesRepository. countLikesDislikesByRate_IdAndType(r.getId(), 1);
+                int countDislike = likesDislikesRepository.countLikesDislikesByRate_IdAndType(r.getId(), 2);
+
                 RateDto dto = RateDto.builder()
                         .rateID(r.getId())
                         .postID(r.getBookingDetail().getPost().getId())
@@ -63,6 +67,8 @@ public class RateServiceImpl implements RateService {
                         .comment(r.getComment())
                         .point(r.getPoint())
                         .dateRate(r.getDateRate())
+                        .countDislike(countDislike)
+                        .countLike(countLike)
                         .status(r.getStatus())
                         .build();
                 rateDtos.add(dto);
