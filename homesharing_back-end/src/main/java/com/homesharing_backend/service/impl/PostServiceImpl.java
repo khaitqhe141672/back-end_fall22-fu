@@ -9,6 +9,7 @@ import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.PostRequest;
 import com.homesharing_backend.service.PostService;
 import com.homesharing_backend.util.SecurityUtils;
@@ -20,9 +21,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -123,7 +122,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> createPosting(PostRequest postRequest) {
+    public ResponseEntity<ResponseObject> createPosting(PostRequest postRequest) {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -233,7 +232,12 @@ public class PostServiceImpl implements PostService {
                         }
                     });
 
-                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Tao post thanh cong"));
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.toString(), new HashMap<>() {
+                        {
+                            put("postID", savePost.getId());
+                            put("Message", "Tao posting thanh cong");
+                        }
+                    }));
                 }
             }
         }
