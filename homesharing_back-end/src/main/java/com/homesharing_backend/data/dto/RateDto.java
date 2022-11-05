@@ -23,5 +23,7 @@ public class RateDto {
     private String comment;
     private int point;
     private Date dateRate;
+    private int countLike;
+    private int countDislike;
     private int status;
 }
