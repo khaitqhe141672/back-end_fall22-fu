@@ -25,4 +25,7 @@ public class FollowHost {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "host_id", referencedColumnName = "id")
     private Host host;
+
+    @Column(name = "status")
+    private int status;
 }

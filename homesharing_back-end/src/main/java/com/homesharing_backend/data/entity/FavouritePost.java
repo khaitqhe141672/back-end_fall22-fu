@@ -25,4 +25,7 @@ public class FavouritePost {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
+
+    @Column(name = "status")
+    private int status;
 }
