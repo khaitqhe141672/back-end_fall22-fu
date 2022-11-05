@@ -47,6 +47,13 @@ public class BookingController {
         return bookingService.getOneBookingOfCustomerByBookingID(bookingID);
     }
 
+    @GetMapping("/check-post-voucher")
+//    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    public ResponseEntity<?> checkPostVoucher(@RequestParam("post-id") Long postID,
+                                              @RequestParam("post-voucher-id") Long postVoucherID) {
+        return bookingService.checkVoucher(postVoucherID, postID);
+    }
+
     @GetMapping("/all-booking-host")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> getAllBookingByHostID() {
