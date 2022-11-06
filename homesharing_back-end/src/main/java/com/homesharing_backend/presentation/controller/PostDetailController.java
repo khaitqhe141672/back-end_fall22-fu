@@ -1,6 +1,7 @@
 package com.homesharing_backend.presentation.controller;
 
 import com.homesharing_backend.service.PostDetailService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.service.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ public class PostDetailController {
     @Autowired
     private RateService rateService;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
     @GetMapping("")
     public ResponseEntity<?> getOnePostByID(@RequestParam("post_id") Long postID) {
         return postDetailService.getPostDetailByPostID(postID);
@@ -25,5 +29,10 @@ public class PostDetailController {
     @GetMapping("/rate-post")
     public ResponseEntity<?> getAllRateByPostID(@RequestParam("post_id") Long postID) {
         return rateService.getAllRate(postID);
+    }
+
+    @GetMapping("/get-all-voucher")
+    public ResponseEntity<?> getAllVoucherPostByPostID(@RequestParam("post_id") Long postID) {
+        return postVoucherService.getPostVoucherByPostID(postID);
     }
 }
