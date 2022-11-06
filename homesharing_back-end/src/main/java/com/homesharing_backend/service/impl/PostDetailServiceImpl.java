@@ -94,13 +94,14 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             postVouchers.forEach(v -> {
                 PostVoucherDto dto = PostVoucherDto.builder()
+                        .voucherID(v.getVoucher().getId())
                         .startDate(v.getStartDate())
                         .endDate(v.getEndDate())
                         .status(v.getStatus())
                         .nameVoucher(v.getVoucher().getNameVoucher())
                         .percent(v.getVoucher().getPercent())
                         .dueDay(v.getVoucher().getDueDay())
-                        .voucherID(v.getVoucher().getId())
+                        .postVoucherID(v.getId())
                         .description(v.getVoucher().getDescription())
                         .build();
 

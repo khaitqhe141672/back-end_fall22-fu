@@ -14,6 +14,7 @@ import java.sql.Date;
 
 public class PostVoucherDto {
 
+    private Long postVoucherID;
     private Long voucherID;
     private String description;
     private int dueDay;
