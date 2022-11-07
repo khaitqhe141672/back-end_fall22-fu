@@ -30,16 +30,12 @@ public class Test {
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> testD(@RequestParam("file") MultipartFile file) {
-        System.out.println(file);
         String fileName = awsService.upload(file);
-        Province p = Province.builder()
-                .name(fileName)
-                .build();
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Data existed",
                 new HashMap<>() {
                     {
                         put("File", fileName);
-                        put("image", provinceRepository.save(p));
+//                        put("image", provinceRepository.save(p));
                     }
                 }
         ));

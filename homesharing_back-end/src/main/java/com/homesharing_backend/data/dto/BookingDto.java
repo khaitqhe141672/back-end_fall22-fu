@@ -18,6 +18,7 @@ public class BookingDto {
 
     private Long bookingID;
     private Long postID;
+    private String titlePost;
     private String imagePost;
     private String nameHost;
     private String avatarHost;

@@ -327,6 +327,7 @@ public class BookingServiceImpl implements BookingService {
                 BookingDto dto = BookingDto.builder()
                         .bookingID(b.getId())
                         .postID(bookingDetail.getPost().getId())
+                        .titlePost(bookingDetail.getPost().getTitle())
                         .imagePost(postImages.get(0).getImageUrl())
                         .nameHost(bookingDetail.getPost().getHost().getUser().getUserDetail().getFullName())
                         .avatarHost(bookingDetail.getPost().getHost().getUser().getUserDetail().getAvatarUrl())
