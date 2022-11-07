@@ -65,6 +65,9 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private PostVoucherRepository postVoucherRepository;
 
+    @Autowired
+    private RateRepository rateRepository;
+
     /* status = 1 chờ confirm bởi host */
     @Override
     public ResponseEntity<MessageResponse> booking(BookingRequest bookingRequest, Long postID) {
@@ -326,12 +329,21 @@ public class BookingServiceImpl implements BookingService {
                         .postID(bookingDetail.getPost().getId())
                         .imagePost(postImages.get(0).getImageUrl())
                         .nameHost(bookingDetail.getPost().getHost().getUser().getUserDetail().getFullName())
+                        .avatarHost(bookingDetail.getPost().getHost().getUser().getUserDetail().getAvatarUrl())
                         .startDate(bookingDetail.getStartDate())
                         .endDate(bookingDetail.getEndDate())
                         .totalMoney(b.getTotalMoney())
                         .totalPerson(bookingDetail.getTotalPerson())
-                        .status(b.getStatus())
+                        .statusBooking(b.getStatus())
                         .build();
+
+                Rate rate = rateRepository.getRateByBookingDetail_Id(bookingDetail.getId());
+
+                if (Objects.isNull(rate)) {
+                    dto.setStatusRate(0);
+                } else {
+                    dto.setStatusRate(rate.getStatus());
+                }
 
                 bookingDtoList.add(dto);
             });
@@ -366,7 +378,7 @@ public class BookingServiceImpl implements BookingService {
                             .endDate(b.getEndDate())
                             .totalMoney(b.getBooking().getTotalMoney())
                             .totalPerson(b.getTotalPerson())
-                            .status(b.getBooking().getStatus())
+                            .statusBooking(b.getBooking().getStatus())
                             .build();
 
                     bookingDtoList.add(dto);
@@ -401,7 +413,7 @@ public class BookingServiceImpl implements BookingService {
                         .endDate(bookingDetail.getEndDate())
                         .totalMoney(b.getTotalMoney())
                         .totalPerson(bookingDetail.getTotalPerson())
-                        .status(b.getStatus())
+                        .statusBooking(b.getStatus())
                         .build();
 
                 bookingDtoList.add(dto);

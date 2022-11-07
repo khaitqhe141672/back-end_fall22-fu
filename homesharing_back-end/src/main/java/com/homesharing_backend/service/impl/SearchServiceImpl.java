@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -30,10 +31,23 @@ public class SearchServiceImpl implements SearchService {
         if (Objects.isNull(search)) {
             throw new NotFoundException("Search null");
         } else {
-            List<SearchDto> searchDtoList = postRepository.listSearchPostByTitle(search);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("List room_type", new HashMap<>() {
+            List<SearchDto> searchDtoListByTitle = postRepository.listSearchPostByTitle(search);
+
+            List<SearchDto> list = new ArrayList<>();
+
+            if (Objects.isNull(searchDtoListByTitle)) {
+                List<SearchDto> searchDtoListByProvince = postRepository.listSearchPostByProvince(search);
+                if (Objects.isNull(searchDtoListByProvince)) {
+                    throw new NotFoundException("Search not find data");
+                } else {
+                    list = searchDtoListByProvince;
+                }
+            } else {
+                list = searchDtoListByTitle;
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                 {
-                    put("roomTypes", searchDtoList);
+                    put("search list", searchDtoListByTitle);
                 }
             }));
         }
