@@ -11,6 +11,7 @@ import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.exception.UpdateDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.LikesDislikesService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 @Service
@@ -35,7 +37,7 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
 
     /* type = 1 like; type = 2 dislike*/
     @Override
-    public ResponseEntity<MessageResponse> createLikeOrDislikeRateByCustomer(Long rateID, int type) {
+    public ResponseEntity<ResponseObject> createLikeOrDislikeRateByCustomer(Long rateID, int type) {
 
         Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -62,14 +64,19 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
             if (Objects.isNull(save)) {
                 throw new SaveDataException("Like or dislike not success");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse(HttpStatus.OK.value(), "Like or dislike success!"));
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
+                    {
+                        put("likeDislikeID", save.getId());
+                        put("type", save.getType());
+                        put("status", save.getStatus());
+                    }
+                }));
             }
         }
     }
 
     @Override
-    public ResponseEntity<MessageResponse> editLikeOrDislikeRateByCustomer(Long likeOrDislikeID, int type) {
+    public ResponseEntity<ResponseObject> editLikeOrDislikeRateByCustomer(Long likeOrDislikeID, int type) {
 
         LikesDislikes likesDislikes = likesDislikesRepository.getLikesDislikesById(likeOrDislikeID);
 
@@ -87,8 +94,13 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
                 if (Objects.isNull(update)) {
                     throw new UpdateDataException("Update not success");
                 } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(
-                            new MessageResponse(HttpStatus.OK.value(), "Update success!"));
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Update Like or dislike success", new HashMap<>() {
+                        {
+                            put("likeDislikeID", update.getId());
+                            put("type", update.getType());
+                            put("status", update.getStatus());
+                        }
+                    }));
                 }
             }
         }

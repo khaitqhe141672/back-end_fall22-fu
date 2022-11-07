@@ -9,6 +9,7 @@ import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.exception.UpdateDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.FollowAndFavouriteService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 @Service
@@ -38,7 +40,7 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
 
     /*status = 1 theo doi host*/
     @Override
-    public ResponseEntity<MessageResponse> followHostByCustomer(Long hostID) {
+    public ResponseEntity<ResponseObject> followHostByCustomer(Long hostID) {
 
         Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -57,15 +59,20 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
             if (Objects.isNull(save)) {
                 throw new SaveDataException("Follow host khong thanh cong");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse(HttpStatus.OK.value(), "Follow host thanh cong"));
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Follow host success", new HashMap<>() {
+                    {
+                        put("FollowerHostID", save.getId());
+                        put("customerFollow", save.getCustomer().getId());
+                        put("status", save.getStatus());
+                    }
+                }));
             }
         }
     }
 
     /*status = 2 bo theo doi host*/
     @Override
-    public ResponseEntity<MessageResponse> editFollowHostByCustomer(Long followHostID) {
+    public ResponseEntity<ResponseObject> editFollowHostByCustomer(Long followHostID) {
 
         FollowHost followHost = followHostRepository.getFollowHostById(followHostID);
 
@@ -84,8 +91,13 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
                 if (Objects.isNull(edit)) {
                     throw new UpdateDataException("edit Follow host khong thanh cong");
                 } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(
-                            new MessageResponse(HttpStatus.OK.value(), "edit Follow host thanh cong"));
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("edit Follow host success", new HashMap<>() {
+                        {
+                            put("FollowerHostID", edit.getId());
+                            put("customerFollow", edit.getCustomer().getId());
+                            put("status", edit.getStatus());
+                        }
+                    }));
                 }
             }
         }
@@ -112,7 +124,7 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
 
     /*status = 1 theo doi post*/
     @Override
-    public ResponseEntity<MessageResponse> createFavouritePostByCustomer(Long postID) {
+    public ResponseEntity<ResponseObject> createFavouritePostByCustomer(Long postID) {
 
         Post post = postRepository.getPostById(postID);
 
@@ -132,15 +144,20 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
             if (Objects.isNull(save)) {
                 throw new SaveDataException("Favourite post khong thanh cong");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse(HttpStatus.OK.value(), "Favourite post thanh cong"));
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Favourite post success", new HashMap<>() {
+                    {
+                        put("FavouriteID", save.getId());
+                        put("customerFavourite", save.getCustomer().getId());
+                        put("status", save.getStatus());
+                    }
+                }));
             }
         }
     }
 
     /*status = 2 bo theo doi post*/
     @Override
-    public ResponseEntity<MessageResponse> editFavouritePostByCustomer(Long favouritePostID) {
+    public ResponseEntity<ResponseObject> editFavouritePostByCustomer(Long favouritePostID) {
 
         Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
         FavouritePost favouritePost = favouritePostRepository.getFavouritePostById(favouritePostID);
@@ -158,8 +175,13 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
                 if (Objects.isNull(edit)) {
                     throw new UpdateDataException("edit FfavouritePost khong thanh cong");
                 } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(
-                            new MessageResponse(HttpStatus.OK.value(), "edit favouritePost thanh cong"));
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("edit Favourite post success", new HashMap<>() {
+                        {
+                            put("FavouriteID", edit.getId());
+                            put("customerFavourite", edit.getCustomer().getId());
+                            put("status", edit.getStatus());
+                        }
+                    }));
                 }
             }
         }

@@ -128,10 +128,16 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .imageDtoList(postImageDtoList)
                     .postUtilityDtoList(utilityDtoList)
                     .districtDto(districtDto)
-                    .avgRate(postTopRateDto.getAvgRate())
                     .status(postDetail.getPost().getStatus())
                     .postVoucherDtoList(postVoucherDtoList)
                     .build();
+
+            if (Objects.isNull(postTopRateDto.getAvgRate())) {
+                dto.setAvgRate(0.0);
+            } else {
+                dto.setAvgRate(postTopRateDto.getAvgRate());
+            }
+
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));
         }
     }
