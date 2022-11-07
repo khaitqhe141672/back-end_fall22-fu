@@ -148,12 +148,15 @@ public class PostServiceImpl implements PostService {
 
             String[] addr = postRequest.getAddress().split(", ");
 
-            Province province = provinceRepository.getProvincesByName(" " + addr[addr.length - 2]);
+            String[] provinceName = addr[addr.length - 2].split("\\d");
+
+            Province province = provinceRepository.getProvincesByName(" " + provinceName[0].trim());
 
             if (Objects.isNull(province)) {
-                throw new NotFoundException("Province khong co" + addr[addr.length - 2]);
+                throw new NotFoundException("Province khong co " + provinceName[0]);
             } else {
-                District district = districtRepository.getDistrictByNameAndProvince_Id(addr[addr.length - 3], province.getId());
+
+                District district = districtRepository.getSearchDistrict(addr[addr.length - 3], province.getId());
 
                 if (Objects.isNull(district)) {
                     throw new NotFoundException("Dictrict khong co" + addr[addr.length - 3] + province.getName() + province.getId());
