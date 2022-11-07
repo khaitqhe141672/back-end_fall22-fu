@@ -20,9 +20,11 @@ public class BookingDto {
     private Long postID;
     private String imagePost;
     private String nameHost;
+    private String avatarHost;
     private Date startDate;
     private Date endDate;
     private int totalPerson;
     private float totalMoney;
-    private int status;
+    private int statusBooking;
+    private int statusRate;
 }

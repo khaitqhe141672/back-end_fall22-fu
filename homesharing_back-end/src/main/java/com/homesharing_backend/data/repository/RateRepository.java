@@ -15,4 +15,6 @@ public interface RateRepository extends JpaRepository<Rate, Long> {
     Rate getRateById(Long id);
 
     Boolean existsRatesById(Long id);
+
+    Rate getRateByBookingDetail_Id(Long bookingDetailID);
 }
