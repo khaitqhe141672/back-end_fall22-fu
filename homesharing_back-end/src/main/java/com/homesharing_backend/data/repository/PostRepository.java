@@ -2,6 +2,7 @@ package com.homesharing_backend.data.repository;
 
 import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
+import com.homesharing_backend.data.dto.SearchDto;
 import com.homesharing_backend.data.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -46,4 +47,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join Rate r on r.bookingDetail.id=bd.id WHERE p.host.id =:hostID " +
             "GROUP BY p.id order by avg(r.point) desc")
     public List<PostDto> getPostDTO(@Param("hostID") Long hostID);
+
+    @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
+            " pi.imageUrl, v.nameVoucher, avg(r.point)) FROM Post p " +
+            "LEFT JOIN PostDetail pd on p.id = pd.post.id " +
+            "LEFT join PostVoucher pv on p.id = pv.post.id " +
+            "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
+            "LEFT JOIN PostImage pi on p.id = pi.post.id " +
+            "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
+            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% " +
+            "GROUP BY p.id")
+    List<SearchDto> listSearchPostByTitle(String title);
 }
