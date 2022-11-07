@@ -17,6 +17,7 @@ import java.util.List;
 public class BookingDto {
 
     private Long bookingID;
+    private Long bookingDetailID;
     private Long postID;
     private String titlePost;
     private String imagePost;
