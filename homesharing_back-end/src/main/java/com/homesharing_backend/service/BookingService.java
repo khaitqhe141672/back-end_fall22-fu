@@ -11,7 +11,7 @@ public interface BookingService {
 
     public ResponseEntity<MessageResponse> booking(BookingRequest bookingRequest, Long postID);
 
-    public ResponseEntity<MessageResponse> checkVoucher(Long voucherID, Long postID);
+    public ResponseEntity<MessageResponse> checkVoucher(String code, Long postID);
 
     public ResponseEntity<MessageResponse> editBooking(BookingRequest bookingRequest, Long bookingID);
 

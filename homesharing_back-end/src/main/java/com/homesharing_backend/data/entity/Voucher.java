@@ -6,6 +6,10 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
+@Table(name = "voucher",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "code")
+        })
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -22,8 +26,8 @@ public class Voucher {
     @JoinColumn(name = "host_id", referencedColumnName = "id")
     private Host host;
 
-    @Column(name = "name_voucher")
-    private String nameVoucher;
+    @Column(name = "code")
+    private String code;
 
     @Column(name = "description")
     private String description;
