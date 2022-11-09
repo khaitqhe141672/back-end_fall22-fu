@@ -42,7 +42,7 @@ public class VoucherServiceImpl implements VoucherService {
         for (Voucher v : vouchers) {
             VoucherDto dto = VoucherDto.builder()
                     .idVoucher(v.getId())
-                    .nameVoucher(v.getNameVoucher())
+                    .nameVoucher(v.getCode())
                     .description(v.getDescription())
                     .dueDate(v.getDueDay())
                     .percent(v.getPercent())
@@ -65,7 +65,7 @@ public class VoucherServiceImpl implements VoucherService {
 
         VoucherDto dto = VoucherDto.builder()
                 .idVoucher(voucher.getId())
-                .nameVoucher(voucher.getNameVoucher())
+                .nameVoucher(voucher.getCode())
                 .description(voucher.getDescription())
                 .dueDate(voucher.getDueDay())
                 .percent(voucher.getPercent())
@@ -88,7 +88,7 @@ public class VoucherServiceImpl implements VoucherService {
 
         voucherRequest.forEach(vp -> {
             Voucher v = Voucher.builder()
-                    .nameVoucher(vp.getName())
+                    .code(vp.getName())
                     .description(vp.getDescription())
                     .dueDay(vp.getDueDate())
                     .host(host)
@@ -114,7 +114,7 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = voucherRepository.getVoucherById(id);
 
         Voucher v = Voucher.builder()
-                .nameVoucher(voucherRequest.getName())
+                .code(voucherRequest.getName())
                 .description(voucherRequest.getDescription())
                 .dueDay(voucherRequest.getDueDate())
                 .host(voucher.getHost())
@@ -124,7 +124,7 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher vUpdate = voucherRepository.save(v);
 
         VoucherDto dto = VoucherDto.builder()
-                .nameVoucher(vUpdate.getNameVoucher())
+                .nameVoucher(vUpdate.getCode())
                 .description(vUpdate.getDescription())
                 .dueDate(vUpdate.getDueDay())
                 .percent(vUpdate.getPercent())
@@ -162,7 +162,7 @@ public class VoucherServiceImpl implements VoucherService {
             vouchers.forEach(v -> {
                 VoucherDto dto = VoucherDto.builder()
                         .idVoucher(v.getId())
-                        .nameVoucher(v.getNameVoucher())
+                        .nameVoucher(v.getCode())
                         .description(v.getDescription())
                         .dueDate(v.getDueDay())
                         .percent(v.getPercent())

@@ -50,8 +50,8 @@ public class BookingController {
     @GetMapping("/check-post-voucher")
 //    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> checkPostVoucher(@RequestParam("post-id") Long postID,
-                                              @RequestParam("post-voucher-id") Long postVoucherID) {
-        return bookingService.checkVoucher(postVoucherID, postID);
+                                              @RequestParam("code") String code) {
+        return bookingService.checkVoucher(code, postID);
     }
 
     @GetMapping("/all-booking-host")

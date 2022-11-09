@@ -149,12 +149,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> checkVoucher(Long voucherID, Long postID) {
+    public ResponseEntity<MessageResponse> checkVoucher(String code, Long postID) {
 
-        if (Objects.isNull(voucherID)) {
+        if (Objects.isNull(code)) {
             throw new NotFoundException("Voucher_id null");
         } else {
-            if (!postVoucherRepository.existsPostVoucherByIdAndPost_Id(voucherID, postID)) {
+            if (!postVoucherRepository.existsPostVoucherByVoucher_CodeAndPost_Id(code, postID)) {
                 throw new NotFoundException("Voucher_id khong ton tai");
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Voucher_id ton tai"));
