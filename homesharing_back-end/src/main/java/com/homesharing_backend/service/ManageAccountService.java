@@ -1,6 +1,7 @@
 package com.homesharing_backend.service;
 
 import com.homesharing_backend.presentation.payload.JwtResponse;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,6 @@ public interface ManageAccountService {
     public ResponseEntity<JwtResponse> getOneAccountHostByAdmin(Long hostID);
 
     public ResponseEntity<JwtResponse> getOneAccountCustomerByAdmin(Long customerID);
+
+    public ResponseEntity<MessageResponse> changeStatus(Long userID, int status);
 }

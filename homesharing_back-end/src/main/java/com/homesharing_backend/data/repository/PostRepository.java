@@ -55,7 +55,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
             "LEFT JOIN PostImage pi on p.id = pi.post.id " +
             "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
-            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% " +
+            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% OR pd.address LIKE %:title% " +
             "GROUP BY p.id")
     List<SearchDto> listSearchPostByTitle(String title);
 

@@ -15,6 +15,7 @@ import java.sql.Date;
 @NoArgsConstructor
 public class UserDto {
 
+    private Long customerID;
     private Long userID;
     private String email;
     private String username;

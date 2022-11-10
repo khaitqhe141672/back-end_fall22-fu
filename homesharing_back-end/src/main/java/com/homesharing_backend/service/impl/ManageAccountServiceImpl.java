@@ -4,11 +4,15 @@ import com.homesharing_backend.data.dto.HostDto;
 import com.homesharing_backend.data.dto.UserDto;
 import com.homesharing_backend.data.entity.Customer;
 import com.homesharing_backend.data.entity.Host;
+import com.homesharing_backend.data.entity.User;
 import com.homesharing_backend.data.repository.CustomerRepository;
 import com.homesharing_backend.data.repository.FollowHostRepository;
 import com.homesharing_backend.data.repository.HostRepository;
+import com.homesharing_backend.data.repository.UserRepository;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.exception.UpdateDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManageAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,9 @@ public class ManageAccountServiceImpl implements ManageAccountService {
     @Autowired
     private FollowHostRepository followHostRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public ResponseEntity<ResponseObject> viewAccountHost(int indexPage) {
 
@@ -54,6 +61,8 @@ public class ManageAccountServiceImpl implements ManageAccountService {
 
                     HostDto dto = HostDto.builder()
                             .hostID(h.getId())
+                            .userID(h.getUser().getId())
+                            .userDetailID(h.getUser().getUserDetail().getUserDetailId())
                             .username(h.getUser().getUsername())
                             .email(h.getUser().getEmail())
                             .urlImage(h.getUser().getUserDetail().getAvatarUrl())
@@ -97,7 +106,8 @@ public class ManageAccountServiceImpl implements ManageAccountService {
 
                 customers.forEach(c -> {
                     UserDto dto = UserDto.builder()
-                            .userID(c.getId())
+                            .customerID(c.getId())
+                            .userID(c.getUser().getId())
                             .email(c.getUser().getEmail())
                             .username(c.getUser().getUsername())
                             .userDetailID(c.getUser().getUserDetail().getUserDetailId())
@@ -136,6 +146,8 @@ public class ManageAccountServiceImpl implements ManageAccountService {
             } else {
                 HostDto dto = HostDto.builder()
                         .hostID(h.getId())
+                        .userID(h.getUser().getId())
+                        .userDetailID(h.getUser().getUserDetail().getUserDetailId())
                         .username(h.getUser().getUsername())
                         .email(h.getUser().getEmail())
                         .urlImage(h.getUser().getUserDetail().getAvatarUrl())
@@ -166,7 +178,8 @@ public class ManageAccountServiceImpl implements ManageAccountService {
                 throw new NotFoundException("customer-id not data");
             } else {
                 UserDto dto = UserDto.builder()
-                        .userID(c.getId())
+                        .customerID(c.getId())
+                        .userID(c.getUser().getId())
                         .email(c.getUser().getEmail())
                         .username(c.getUser().getUsername())
                         .userDetailID(c.getUser().getUserDetail().getUserDetailId())
@@ -180,6 +193,38 @@ public class ManageAccountServiceImpl implements ManageAccountService {
                         .status(c.getUser().getStatus())
                         .build();
                 return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));
+            }
+        }
+    }
+
+    /*
+      status = 0 chua active
+      status = 1 tai khoan hoat dong
+      status = 2 tam dung
+      status = 3 khoa tai khoan
+     */
+    @Override
+    public ResponseEntity<MessageResponse> changeStatus(Long userID, int status) {
+
+        User user = userRepository.findUserById(userID);
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("khong co data cua user_id");
+        } else {
+            if (status == 1) {
+                user.setStatus(1);
+            } else if (status == 2) {
+                user.setStatus(2);
+            } else {
+                user.setStatus(3);
+            }
+
+            User updateStatus = userRepository.save(user);
+
+            if (Objects.isNull(updateStatus)) {
+                throw new UpdateDataException("Update status cua user_id khong thanh cong");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.homesharing_backend.presentation.controller;
 
+import com.homesharing_backend.presentation.payload.request.SearchRequest;
 import com.homesharing_backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping("")
-    public ResponseEntity<?> getSearchByName(@RequestBody String nameSearch) {
+    public ResponseEntity<?> getSearchByName(@RequestBody SearchRequest nameSearch) {
         return searchService.searchByTitlePostOrLocation(nameSearch);
     }
 }
