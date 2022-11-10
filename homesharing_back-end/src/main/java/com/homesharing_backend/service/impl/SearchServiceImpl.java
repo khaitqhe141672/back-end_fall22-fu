@@ -5,6 +5,7 @@ import com.homesharing_backend.data.repository.DistrictRepository;
 import com.homesharing_backend.data.repository.PostRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
+import com.homesharing_backend.presentation.payload.request.SearchRequest;
 import com.homesharing_backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,25 +27,25 @@ public class SearchServiceImpl implements SearchService {
     private DistrictRepository districtRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(String search) {
+    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest) {
 
-        if (Objects.isNull(search)) {
+        if (Objects.isNull(searchRequest)) {
             throw new NotFoundException("Search null");
         } else {
-            List<SearchDto> searchDtoListByTitle = postRepository.listSearchPostByTitle(search);
+            List<SearchDto> searchDtoListByTitle = postRepository.listSearchPostByTitle(searchRequest.getSearchText());
 
             List<SearchDto> list = new ArrayList<>();
 
-            if (Objects.isNull(searchDtoListByTitle)) {
-                List<SearchDto> searchDtoListByProvince = postRepository.listSearchPostByProvince(search);
-                if (Objects.isNull(searchDtoListByProvince)) {
-                    throw new NotFoundException("Search not find data");
-                } else {
-                    list = searchDtoListByProvince;
-                }
-            } else {
-                list = searchDtoListByTitle;
-            }
+//            if (Objects.isNull(searchDtoListByTitle)) {
+//                List<SearchDto> searchDtoListByProvince = postRepository.listSearchPostByProvince(searchRequest.getSearchText());
+//                if (Objects.isNull(searchDtoListByProvince)) {
+//                    throw new NotFoundException("Search not find data");
+//                } else {
+//                    list = searchDtoListByProvince;
+//                }
+//            } else {
+//                list = searchDtoListByTitle;
+//            }
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                 {
                     put("search list", searchDtoListByTitle);

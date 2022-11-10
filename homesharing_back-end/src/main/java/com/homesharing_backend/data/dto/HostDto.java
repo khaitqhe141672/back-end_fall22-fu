@@ -16,6 +16,8 @@ import java.sql.Date;
 public class HostDto {
 
     private Long hostID;
+    private Long userID;
+    private Long userDetailID;
     private String username;
     private String email;
     private String urlImage;

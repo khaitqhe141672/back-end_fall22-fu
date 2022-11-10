@@ -1,12 +1,13 @@
 package com.homesharing_backend.service;
 
 import com.homesharing_backend.presentation.payload.ResponseObject;
+import com.homesharing_backend.presentation.payload.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface SearchService {
 
-    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(String search);
+    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest);
 
 }

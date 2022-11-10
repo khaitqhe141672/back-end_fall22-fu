@@ -37,4 +37,11 @@ public class ManageAccount {
     public ResponseEntity<?> getOneAccountHostByAdmin(@RequestParam("host-id") Long hostID) {
         return manageAccountService.getOneAccountHostByAdmin(hostID);
     }
+
+    @PutMapping("/update-status-account")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changeStatusAccountByAdmin(@RequestParam("user-id") Long userID,
+                                                        @RequestParam("status") int status) {
+        return manageAccountService.changeStatus(userID, status);
+    }
 }
