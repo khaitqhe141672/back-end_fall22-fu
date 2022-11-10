@@ -14,7 +14,7 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping("")
-    public ResponseEntity<?> getSearchByName(@RequestParam("name-search") String nameSearch) {
+    public ResponseEntity<?> getSearchByName(@RequestBody String nameSearch) {
         return searchService.searchByTitlePostOrLocation(nameSearch);
     }
 }
