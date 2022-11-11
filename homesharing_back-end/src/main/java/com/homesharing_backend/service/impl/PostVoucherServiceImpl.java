@@ -43,7 +43,7 @@ public class PostVoucherServiceImpl implements PostVoucherService {
                 PostVoucherDto dto = PostVoucherDto.builder()
                         .postVoucherID(v.getId())
                         .voucherID(v.getVoucher().getId())
-                        .nameVoucher(v.getVoucher().getCode())
+                        .code(v.getVoucher().getCode())
                         .description(v.getVoucher().getDescription())
                         .dueDay(v.getVoucher().getDueDay())
                         .percent(v.getVoucher().getPercent())
