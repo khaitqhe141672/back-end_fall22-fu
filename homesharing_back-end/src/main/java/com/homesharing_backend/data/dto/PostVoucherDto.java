@@ -18,7 +18,7 @@ public class PostVoucherDto {
     private Long voucherID;
     private String description;
     private int dueDay;
-    private String nameVoucher;
+    private String code;
     private int percent;
     private Date startDate;
     private Date endDate;

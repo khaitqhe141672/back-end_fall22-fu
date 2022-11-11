@@ -98,7 +98,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                         .startDate(v.getStartDate())
                         .endDate(v.getEndDate())
                         .status(v.getStatus())
-                        .nameVoucher(v.getVoucher().getCode())
+                        .code(v.getVoucher().getCode())
                         .percent(v.getVoucher().getPercent())
                         .dueDay(v.getVoucher().getDueDay())
                         .postVoucherID(v.getId())
