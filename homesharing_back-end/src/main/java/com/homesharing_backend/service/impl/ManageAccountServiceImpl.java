@@ -200,8 +200,7 @@ public class ManageAccountServiceImpl implements ManageAccountService {
     /*
       status = 0 chua active
       status = 1 tai khoan hoat dong
-      status = 2 tam dung
-      status = 3 khoa tai khoan
+      status = 2 khoa tai khoan
      */
     @Override
     public ResponseEntity<MessageResponse> changeStatus(Long userID, int status) {
@@ -215,8 +214,6 @@ public class ManageAccountServiceImpl implements ManageAccountService {
                 user.setStatus(1);
             } else if (status == 2) {
                 user.setStatus(2);
-            } else {
-                user.setStatus(3);
             }
 
             User updateStatus = userRepository.save(user);
