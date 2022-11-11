@@ -59,6 +59,14 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
             if (Objects.isNull(save)) {
                 throw new SaveDataException("Follow host khong thanh cong");
             } else {
+
+                int countFollowHost = followHostRepository.countFollowHostByHost_IdAndStatus(hostID, 1);
+
+                if (countFollowHost == 50) {
+                    host.setTypeAccount(2);
+                    hostRepository.save(host);
+                }
+
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Follow host success", new HashMap<>() {
                     {
                         put("FollowerHostID", save.getId());
@@ -91,6 +99,16 @@ public class FollowAndFavouriteServiceImpl implements FollowAndFavouriteService 
                 if (Objects.isNull(edit)) {
                     throw new UpdateDataException("edit Follow host khong thanh cong");
                 } else {
+
+                    Host host = hostRepository.getHostsById(followHost.getHost().getId());
+
+                    int countFollowHost = followHostRepository.countFollowHostByHost_IdAndStatus(host.getId(), 1);
+
+                    if (countFollowHost < 50) {
+                        host.setTypeAccount(1);
+                        hostRepository.save(host);
+                    }
+
                     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("edit Follow host success", new HashMap<>() {
                         {
                             put("FollowerHostID", edit.getId());

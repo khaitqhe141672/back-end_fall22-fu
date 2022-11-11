@@ -75,6 +75,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private FollowHostRepository followHostRepository;
+
     @Override
     public ResponseEntity<ResponseObject> register(SignupRequest signUpRequest, HttpServletRequest servletRequest) {
 
@@ -120,6 +123,7 @@ public class AuthServiceImpl implements AuthService {
                         user.setRole(hostRole);
                         Host host = Host.builder()
                                 .user(user)
+                                .typeAccount(1)
                                 .build();
 
                         hostRepository.save(host);
@@ -312,6 +316,10 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    /*
+    * typeAccount = 1 tk thuong
+    * typeAccount = 2 tk co tich xanh
+    */
     @Override
     public ResponseEntity<JwtResponse> profile() {
 
@@ -334,6 +342,13 @@ public class AuthServiceImpl implements AuthService {
                     .status(user.getStatus())
                     .role(user.getRole().getName().name())
                     .build();
+
+
+            if (user.getRole().getName().name().equals("ROLE_HOST")) {
+                Host host = hostRepository.getHostsByUser_Id(user.getId());
+                dto.setTypeAccount(host.getTypeAccount());
+            }
+
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));
         }
     }
