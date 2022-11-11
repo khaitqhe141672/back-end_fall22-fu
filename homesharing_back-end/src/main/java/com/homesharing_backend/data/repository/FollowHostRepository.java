@@ -12,4 +12,6 @@ public interface FollowHostRepository extends JpaRepository<FollowHost, Long> {
     FollowHost getFollowHostById(Long id);
 
     int countFollowHostByHost_Id(Long hostID);
+
+    int countFollowHostByHost_IdAndStatus(Long hostID, int status);
 }
