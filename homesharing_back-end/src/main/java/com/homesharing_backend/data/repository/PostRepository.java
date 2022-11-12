@@ -69,4 +69,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE pd.address LIKE %:provinceName% " +
             "GROUP BY p.id")
     List<SearchDto> listSearchPostByProvince(String provinceName);
+
 }
