@@ -11,7 +11,8 @@ import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class PostDto {
 
     private Long postID;
@@ -24,6 +25,8 @@ public class PostDto {
     private Date endDate;
     private Date startDate;
     private Double avgRate;
+
+    private int statusPostPayment;
 
     public PostDto(Long postID, String title, String urlImage, Long reportPostID,
                    Integer statusReportPost, Integer status, Integer statusPaymentPackage,
