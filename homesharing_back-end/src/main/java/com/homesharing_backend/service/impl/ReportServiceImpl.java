@@ -327,7 +327,7 @@ public class ReportServiceImpl implements ReportService {
             int size = 10;
             int page = indexPage * size - size;
 
-            Page<Post> posts = postRepository.findAll(PageRequest.of(page, size));
+            Page<ReportPostDto> posts = reportPostRepository.listAllReportPostByHost(PageRequest.of(page, size));
 
             if (Objects.isNull(posts)) {
                 throw new NotFoundException("khong post ton tai");
@@ -337,29 +337,16 @@ public class ReportServiceImpl implements ReportService {
 
                 posts.forEach(p -> {
 
-                    List<PostImage> postImages = postImageRepository.findPostImageByPost_Id(p.getId());
-                    int totalReport = reportPostRepository.countReportPostByPost_Id(p.getId());
+                    int totalReport = reportPostRepository.countReportPostByPost_Id(p.getPostID());
 
-                    ReportPostDto dto = ReportPostDto.builder()
-                            .postID(p.getId())
-                            .title(p.getTitle())
-                            .price(p.getPrice())
-                            .username(p.getHost().getUser().getUsername())
-                            .imageUserUrl(p.getHost().getUser().getUserDetail().getAvatarUrl())
-                            .typeAccount(p.getHost().getTypeAccount())
-                            .totalReport(totalReport)
-                            .status(p.getStatus())
-                            .build();
-
-                    if (postImages.size() > 0) {
-                        dto.setImagePostUrl(postImages.get(0).getImageUrl());
-                    }
-                    reportPostDtoList.add(dto);
+                    p.setTotalReport(totalReport);
+                    reportPostDtoList.add(p);
                 });
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                     {
                         put("reportPostList", reportPostDtoList);
                         put("sizePage", posts.getTotalPages());
+                        put("size", indexPage);
                     }
                 }));
             }
