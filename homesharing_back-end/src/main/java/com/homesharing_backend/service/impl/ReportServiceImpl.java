@@ -1,6 +1,8 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.ReportDto;
+import com.homesharing_backend.data.dto.ReportPostDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
@@ -53,6 +55,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private HostRepository hostRepository;
+
+    @Autowired
+    private PostImageRepository postImageRepository;
 
     @Override
     public ResponseEntity<MessageResponse> createReportRate(ReportRequest reportRequest, Long rateID) {
@@ -309,6 +314,54 @@ public class ReportServiceImpl implements ReportService {
                     reportPostDtoList.add(dto);
                 });
                 return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), reportPostDtoList));
+            }
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllReportPostByPostOfHost(int indexPage) {
+
+        if (Objects.isNull(indexPage)) {
+            throw new NotFoundException("index page null");
+        } else {
+            int size = 10;
+            int page = indexPage * size - size;
+
+            Page<Post> posts = postRepository.findAll(PageRequest.of(page, size));
+
+            if (Objects.isNull(posts)) {
+                throw new NotFoundException("khong post ton tai");
+            } else {
+
+                List<ReportPostDto> reportPostDtoList = new ArrayList<>();
+
+                posts.forEach(p -> {
+
+                    List<PostImage> postImages = postImageRepository.findPostImageByPost_Id(p.getId());
+                    int totalReport = reportPostRepository.countReportPostByPost_Id(p.getId());
+
+                    ReportPostDto dto = ReportPostDto.builder()
+                            .postID(p.getId())
+                            .title(p.getTitle())
+                            .price(p.getPrice())
+                            .username(p.getHost().getUser().getUsername())
+                            .imageUserUrl(p.getHost().getUser().getUserDetail().getAvatarUrl())
+                            .typeAccount(p.getHost().getTypeAccount())
+                            .totalReport(totalReport)
+                            .status(p.getStatus())
+                            .build();
+
+                    if (postImages.size() > 0) {
+                        dto.setImagePostUrl(postImages.get(0).getImageUrl());
+                    }
+                    reportPostDtoList.add(dto);
+                });
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                    {
+                        put("reportPostList", reportPostDtoList);
+                        put("sizePage", posts.getTotalPages());
+                    }
+                }));
             }
         }
     }

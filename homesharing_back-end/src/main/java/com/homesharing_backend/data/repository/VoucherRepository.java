@@ -1,6 +1,8 @@
 package com.homesharing_backend.data.repository;
 
 import com.homesharing_backend.data.entity.Voucher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +17,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     Optional<Voucher> findVoucherById(Long id);
 
     List<Voucher> getVoucherByHost_Id(Long hostID);
+
+    Page<Voucher> getVoucherByHost_Id(Long hostID, PageRequest pageRequest);
 
 }

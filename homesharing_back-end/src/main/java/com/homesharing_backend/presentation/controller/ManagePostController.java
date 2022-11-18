@@ -19,4 +19,17 @@ public class ManagePostController {
     public ResponseEntity<?> getAllPostByAdmin(@RequestParam("index-page") int indexPage) {
         return managePostService.getAllPostByAdmin(indexPage);
     }
+
+    @GetMapping("/view-all-post-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllPostByHost(@RequestParam("index-page") int indexPage) {
+        return managePostService.getAllPostByHost(indexPage);
+    }
+
+    @GetMapping("/all-report-post")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllReportPostByPostID(@RequestParam("post-id") Long postID,
+                                                      @RequestParam("index-page") int indexPage) {
+        return managePostService.getAllReportPostByHost(indexPage, postID);
+    }
 }
