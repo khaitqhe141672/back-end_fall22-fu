@@ -353,6 +353,47 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> getAllDetailReportPostByPostIDOfHost(Long postID, int indexPage) {
+
+        if (Objects.isNull(indexPage)) {
+            throw new NotFoundException("index page null");
+        } else {
+            int size = 10;
+            int page = indexPage * size - size;
+
+            Page<ReportPost> reportPosts = reportPostRepository.findReportPostByPost_Id(postID, PageRequest.of(page, size));
+
+            if (Objects.isNull(reportPosts)) {
+                throw new NotFoundException("khong co data");
+            } else {
+
+                List<ReportDto> reportDtoList = new ArrayList<>();
+
+                reportPosts.forEach(r -> {
+
+                    ReportDto dto = ReportDto.builder()
+                            .reportID(r.getId())
+                            .username(r.getCustomer().getUser().getUsername())
+                            .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                            .description(r.getDescription())
+                            .reportTypeID(r.getReportType().getId())
+                            .nameReportType(r.getReportType().getName())
+                            .build();
+
+                    reportDtoList.add(dto);
+                });
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                    {
+                        put("detailReportPost", reportDtoList);
+                        put("sizePage", reportPosts.getTotalPages());
+                        put("size", indexPage);
+                    }
+                }));
+            }
+        }
+    }
+
     /*status = 1 dang cho admin xu ly*/
     @Override
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportRateID) {

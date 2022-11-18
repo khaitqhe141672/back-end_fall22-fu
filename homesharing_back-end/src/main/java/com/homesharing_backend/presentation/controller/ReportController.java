@@ -76,9 +76,10 @@ public class ReportController {
         return reportService.getAllReportPostByPostOfHost(indexPage);
     }
 
-//    @GetMapping("/list-reportPost-detail-admin")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<?> getAllReportPosDetailByAdmin(@RequestParam("index-page") int indexPage) {
-//        return reportService.getAllReportPostByAdmin(indexPage);
-//    }
+    @GetMapping("/list-reportPost-detail-admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllReportPosDetailByAdmin(@RequestParam("post-id") Long postID,
+                                                          @RequestParam("index-page") int indexPage) {
+        return reportService.getAllDetailReportPostByPostIDOfHost(postID, indexPage);
+    }
 }
