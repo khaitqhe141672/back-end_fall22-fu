@@ -19,7 +19,21 @@ public class ReportPostDto {
     private String imagePostUrl;
     private String username;
     private String imageUserUrl;
-    private int typeAccount;
-    private int totalReport;
+    private Integer typeAccount;
+    private Integer totalReport;
     private int status;
+
+    public ReportPostDto(Long postID, String title,
+                         float price, String imagePostUrl,
+                         String username, String imageUserUrl,
+                         int typeAccount, int status) {
+        this.postID = postID;
+        this.title = title;
+        this.price = price;
+        this.imagePostUrl = imagePostUrl;
+        this.username = username;
+        this.imageUserUrl = imageUserUrl;
+        this.typeAccount = typeAccount;
+        this.status = status;
+    }
 }
