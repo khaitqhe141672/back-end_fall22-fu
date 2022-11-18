@@ -42,4 +42,11 @@ public class PostDto {
         this.startDate = startDate;
         this.avgRate = avgRate;
     }
+
+    public PostDto(Long postID, String title, Integer status, Double avgRate) {
+        this.postID = postID;
+        this.title = title;
+        this.status = status;
+        this.avgRate = avgRate;
+    }
 }

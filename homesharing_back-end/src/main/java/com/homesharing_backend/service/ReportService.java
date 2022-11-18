@@ -28,4 +28,6 @@ public interface ReportService {
     public ResponseEntity<ResponseObject> getAllReportPostByAdmin(int indexPage);
 
     public ResponseEntity<JwtResponse> getAllReportPostByHost(Long postID);
+
+    public ResponseEntity<ResponseObject> getAllReportPostByPostOfHost(int indexPage);
 }

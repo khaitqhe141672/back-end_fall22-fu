@@ -86,9 +86,13 @@ public class PostServiceImpl implements PostService {
                 List<PostImage> image = postImageRepository.findPostImageByPost_Id(p.getId());
                 HomeDto dto = HomeDto.builder()
                         .postID(p.getId())
-                        .urlImage(image.get(0).getImageUrl())
                         .title(p.getTitle())
                         .build();
+
+                if (image.size() > 0) {
+                    dto.setUrlImage(image.get(0).getImageUrl());
+                }
+
                 homeDtoList.add(dto);
             });
 
@@ -110,10 +114,13 @@ public class PostServiceImpl implements PostService {
                 List<PostImage> image = postImageRepository.findPostImageByPost_Id(postTopRateDtos.get(i).getId());
                 HomeDto dto = HomeDto.builder()
                         .postID(postTopRateDtos.get(i).getId())
-                        .urlImage(image.get(0).getImageUrl())
                         .title(postTopRateDtos.get(i).getTitle())
                         .star(postTopRateDtos.get(i).getAvgRate())
                         .build();
+
+                if (image.size() > 0) {
+                    dto.setUrlImage(image.get(0).getImageUrl());
+                }
                 homeDtoList.add(dto);
             }
 

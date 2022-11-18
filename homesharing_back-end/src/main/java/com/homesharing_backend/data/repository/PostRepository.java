@@ -57,7 +57,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
             "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% OR pd.address LIKE %:title% " +
             "GROUP BY p.id")
-    List<SearchDto> listSearchPostByTitle(String title);
+    List<SearchDto> listSearchPostByTitle(@Param("title") String title);
 
     @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
             " pi.imageUrl, v.code, avg(r.point)) FROM Post p " +
@@ -68,6 +68,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
             "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE pd.address LIKE %:provinceName% " +
             "GROUP BY p.id")
-    List<SearchDto> listSearchPostByProvince(String provinceName);
+    List<SearchDto> listSearchPostByProvince(@Param("provinceName") String provinceName);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostDto(p.id, p.title, p.status, avg(r.point)) from Post p " +
+            "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +
+            "LEFT JOIN BookingDetail bd ON p.id = bd.post.id " +
+            "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id WHERE p.host.id= :hostID " +
+            "GROUP BY p.id ")
+    List<PostDto> listPostByHost(@Param("hostID") Long hostID);
 
 }

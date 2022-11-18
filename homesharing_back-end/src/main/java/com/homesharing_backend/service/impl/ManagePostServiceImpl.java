@@ -2,15 +2,13 @@ package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostView;
-import com.homesharing_backend.data.entity.Host;
-import com.homesharing_backend.data.entity.Post;
-import com.homesharing_backend.data.entity.PostDetail;
-import com.homesharing_backend.data.entity.PostPayment;
-import com.homesharing_backend.data.repository.PostDetailRepository;
-import com.homesharing_backend.data.repository.PostPaymentRepository;
-import com.homesharing_backend.data.repository.PostRepository;
+import com.homesharing_backend.data.entity.*;
+import com.homesharing_backend.data.repository.*;
+import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManagePostService;
+import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +32,12 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Autowired
     private PostPaymentRepository postPaymentRepository;
+
+    @Autowired
+    private HostRepository hostRepository;
+
+    @Autowired
+    private ReportPostRepository reportPostRepository;
 
     @Override
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
@@ -70,5 +74,87 @@ public class ManagePostServiceImpl implements ManagePostService {
                 put("SizePage", postList.getTotalPages());
             }
         }));
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> checkPaymentPostByAdmin() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllPostByHost(int indexPage) {
+
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+        List<PostDto> postDtoList = postRepository.listPostByHost(host.getId());
+
+        if (Objects.isNull(postDtoList)) {
+            throw new NotFoundException("khong co data");
+        } else {
+
+            List<PostDto> postDto = new ArrayList<>();
+
+            postDtoList.forEach(p -> {
+                PostPayment postPayment = postPaymentRepository.getTimePost(p.getPostID());
+                PostDto dto = PostDto.builder()
+                        .postID(p.getPostID())
+                        .title(p.getTitle())
+                        .status(p.getStatus())
+                        .build();
+
+                if (!Objects.isNull(postPayment)) {
+                    dto.setEndDate(postPayment.getEndDate());
+                    dto.setStartDate(postPayment.getStartDate());
+                    dto.setStatusPostPayment(postPayment.getStatus());
+                } else {
+                    dto.setStatusPostPayment(0);
+                }
+
+                if (Objects.isNull(p.getAvgRate())) {
+                    dto.setAvgRate(0.0);
+                } else {
+                    dto.setAvgRate(p.getAvgRate());
+                }
+
+                postDto.add(dto);
+            });
+
+
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listPost", postDto);
+//                    put("SizePage", postList.getTotalPages());
+                }
+            }));
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllReportPostByHost(int indexPage, Long postID) {
+
+        int size = 5;
+        int page = indexPage * size - size;
+
+        Page<ReportPost> reportPosts = reportPostRepository.findReportPostByPost_Id(postID, PageRequest.of(page, size));
+
+        if (Objects.isNull(reportPosts)) {
+            throw new NotFoundException("data null");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listReportPost", reportPosts);
+                    put("SizePage", reportPosts.getTotalPages());
+                }
+            }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllCurrentBookingByHost(int indexPage) {
+
+
+
+        return null;
     }
 }
