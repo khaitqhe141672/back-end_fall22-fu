@@ -20,4 +20,6 @@ public interface PostService {
     public ResponseEntity<ResponseObject> createPosting(PostRequest postRequest);
 
     public ResponseEntity<JwtResponse> getAllPostByHost();
+
+    public ResponseEntity<ResponseObject> editPost(Long postID , PostRequest postRequest);
 }

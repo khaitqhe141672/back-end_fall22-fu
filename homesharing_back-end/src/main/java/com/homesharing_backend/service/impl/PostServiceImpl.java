@@ -267,4 +267,57 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> editPost( Long postID, PostRequest postRequest) {
+
+        Post post = postRepository.getPostById(postID);
+
+        if(Objects.isNull(post)){
+            throw new NotFoundException("khong co data post-id");
+        } else {
+            post.setTitle(postRequest.getTitle());
+            post.setPrice(postRequest.getPrice());
+
+            postRepository.save(post);
+
+            String[] addr = postRequest.getAddress().split(", ");
+
+            String[] provinceName = addr[addr.length - 2].split("\\d");
+
+            Province province = provinceRepository.getProvincesByName(" " + provinceName[0].trim());
+
+            if (Objects.isNull(province)) {
+                throw new NotFoundException("Province khong co " + provinceName[0]);
+            } else {
+
+                District district = districtRepository.getSearchDistrict(addr[addr.length - 3], province.getId());
+
+                if (Objects.isNull(district)) {
+                    throw new NotFoundException("Dictrict khong co" + addr[addr.length - 3] + province.getName() + province.getId());
+                } else {
+                    RoomType roomType = roomTypeRepository.findRoomTypeById(postRequest.getRoomTypeID())
+                            .orElseThrow(() -> new NotFoundException("RoomType_id khong ton tai"));
+
+                    PostDetail postDetail = postDetailRepository.getPostDetailByPost_Id(post.getId());
+
+                    postDetail.setAddress(postRequest.getAddress());
+                    postDetail.setDescription(postRequest.getDescription());
+                    postDetail.setGuestNumber(postRequest.getGuestNumber());
+                    postDetail.setLatitude(postRequest.getLatitude());
+                    postDetail.setLongitude(postRequest.getLongitude());
+                    postDetail.setNumberOfBathroom(postRequest.getNumberOfBathrooms());
+                    postDetail.setNumberOfBedrooms(postRequest.getNumberOfBedrooms());
+                    postDetail.setNumberOfBeds(postRequest.getNumberOfBeds());
+                    postDetail.setDistrict(district);
+                    postDetail.setRoomType(roomType);
+
+                    postDetailRepository.save(postDetail);
+
+                }
+            }
+        }
+
+        return null;
+    }
+
 }
