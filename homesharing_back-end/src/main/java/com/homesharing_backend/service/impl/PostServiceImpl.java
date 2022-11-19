@@ -313,6 +313,15 @@ public class PostServiceImpl implements PostService {
 
                     postDetailRepository.save(postDetail);
 
+                    List<PostUtility> postUtilities = postUtilityRepository.findPostUtilitiesByPost_Id(post.getId());
+
+                    postRequest.getUtilityRequests().forEach(u ->{
+                        PostUtility postUtility = postUtilityRepository.getPostUtilityByPost_IdAndUtility_Id(post.getId(), u);
+
+                        if(Objects.isNull(postUtility)){
+
+                        }
+                    });
                 }
             }
         }
