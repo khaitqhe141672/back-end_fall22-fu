@@ -63,4 +63,11 @@ public class PostingController {
         Page<Post> posts = postRepository.findAll(PageRequest.of(page, 2));
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), posts.getTotalPages()));
     }
+
+    @PutMapping("/edit-post")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> editPost(@RequestParam("post-id") Long postID,
+                                      @RequestBody PostRequest postRequest) {
+        return postService.editPost(postID, postRequest);
+    }
 }

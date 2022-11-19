@@ -335,17 +335,89 @@ public class PostServiceImpl implements PostService {
                                         .status(1)
                                         .build();
                                 postUtilityRepository.save(pu);
-                            } else {
-                                postUtility.setStatus(1);
-                                postUtilityRepository.save(postUtility);
                             }
+                        } else {
+                            postUtility.setStatus(1);
+                            postUtilityRepository.save(postUtility);
+                        }
+                    });
+
+                    List<PostServices> postServicesList = postServiceRepository.getPostServicesByPost_Id(post.getId());
+
+                    if (!Objects.isNull(postServicesList)) {
+                        postServicesList.forEach(s -> {
+                            s.setStatus(2);
+                            postServiceRepository.save(s);
+                        });
+                    }
+
+                    postRequest.getPostServiceRequests().forEach(s -> {
+                        PostServices services = postServiceRepository.getPostServicesByServices_IdAndPost_Id(s.getServiceID(), post.getId());
+
+                        if (Objects.isNull(services)) {
+                            Services sv = servicesRepository.getServicesById(s.getServiceID());
+
+                            if (!Objects.isNull(sv)) {
+                                PostServices postServices = PostServices.builder()
+                                        .post(post)
+                                        .services(sv)
+                                        .price(s.getPrice())
+                                        .status(1)
+                                        .build();
+                                postServiceRepository.save(postServices);
+                            }
+                        } else {
+                            services.setStatus(1);
+                            postServiceRepository.save(services);
+                        }
+                    });
+
+                    List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_Id(post.getId());
+
+                    if (!Objects.isNull(postVouchers)) {
+                        postVouchers.forEach(v -> {
+                            v.setStatus(2);
+                            postVoucherRepository.save(v);
+                        });
+                    }
+
+                    LocalDateTime localDateTime = LocalDateTime.now();
+                    LocalDate localDate = localDateTime.toLocalDate();
+
+
+                    Date dateStart = Date.valueOf(localDate);
+
+                    postRequest.getVoucherList().forEach(pv -> {
+
+                        PostVoucher v = postVoucherRepository.getPostVoucherByPost_IdAndVoucher_Id(post.getId(), pv);
+
+                        if (Objects.isNull(v)) {
+                            Voucher voucher = voucherRepository.getVoucherById(pv);
+
+                            if (!Objects.isNull(voucher)) {
+                                PostVoucher postVoucher = PostVoucher.builder()
+                                        .startDate(dateStart)
+                                        .endDate(Date.valueOf(localDate.plusDays(voucher.getDueDay())))
+                                        .post(post)
+                                        .voucher(voucher)
+                                        .status(1)
+                                        .build();
+                                postVoucherRepository.save(postVoucher);
+                            }
+                        }else {
+                            v.setStatus(1);
+                            postVoucherRepository.save(v);
                         }
                     });
                 }
             }
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.toString(), new HashMap<>() {
+                {
+                    put("postID", post.getId());
+                    put("Message", "Edit posting thanh cong");
+                }
+            }));
         }
-
-        return null;
     }
 
 }
