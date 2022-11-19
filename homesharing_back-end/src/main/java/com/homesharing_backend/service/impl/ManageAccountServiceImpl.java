@@ -49,7 +49,7 @@ public class ManageAccountServiceImpl implements ManageAccountService {
             throw new NotFoundException("Index page null");
         } else {
             int size = 10;
-            int page = indexPage * size - size;
+            int page = indexPage - 1;
             Page<Host> hosts = hostRepository.findAll(PageRequest.of(page, size));
 
             if (Objects.isNull(hosts)) {
@@ -95,7 +95,7 @@ public class ManageAccountServiceImpl implements ManageAccountService {
             throw new NotFoundException("Index page null");
         } else {
             int size = 10;
-            int page = indexPage * size - size;
+            int page = indexPage - 1;
 
             Page<Customer> customers = customerRepository.findAll(PageRequest.of(page, size));
 

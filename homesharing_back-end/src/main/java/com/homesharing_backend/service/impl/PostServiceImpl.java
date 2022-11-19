@@ -268,11 +268,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> editPost( Long postID, PostRequest postRequest) {
+    public ResponseEntity<ResponseObject> editPost(Long postID, PostRequest postRequest) {
 
         Post post = postRepository.getPostById(postID);
 
-        if(Objects.isNull(post)){
+        if (Objects.isNull(post)) {
             throw new NotFoundException("khong co data post-id");
         } else {
             post.setTitle(postRequest.getTitle());
@@ -315,11 +315,30 @@ public class PostServiceImpl implements PostService {
 
                     List<PostUtility> postUtilities = postUtilityRepository.findPostUtilitiesByPost_Id(post.getId());
 
-                    postRequest.getUtilityRequests().forEach(u ->{
+                    if (!Objects.isNull(postUtilities)) {
+                        postUtilities.forEach(u -> {
+                            u.setStatus(2);
+                            postUtilityRepository.save(u);
+                        });
+                    }
+
+                    postRequest.getUtilityRequests().forEach(u -> {
                         PostUtility postUtility = postUtilityRepository.getPostUtilityByPost_IdAndUtility_Id(post.getId(), u);
 
-                        if(Objects.isNull(postUtility)){
+                        if (Objects.isNull(postUtility)) {
+                            Utility utility = utilityRepository.getUtilityById(u);
 
+                            if (!Objects.isNull(utility)) {
+                                PostUtility pu = PostUtility.builder()
+                                        .utility(utility)
+                                        .post(post)
+                                        .status(1)
+                                        .build();
+                                postUtilityRepository.save(pu);
+                            } else {
+                                postUtility.setStatus(1);
+                                postUtilityRepository.save(postUtility);
+                            }
                         }
                     });
                 }

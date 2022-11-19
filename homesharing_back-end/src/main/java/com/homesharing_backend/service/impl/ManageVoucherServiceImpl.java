@@ -34,7 +34,7 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
     public ResponseEntity<ResponseObject> getAllVoucherByHost(int indexPage) {
 
         int size = 10;
-        int page = indexPage * size - size;
+        int page = indexPage - 1;
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
         Page<Voucher> vouchers = voucherRepository.getVoucherByHost_Id(host.getId(), PageRequest.of(page, size));

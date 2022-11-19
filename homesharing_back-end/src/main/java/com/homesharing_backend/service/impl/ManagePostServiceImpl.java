@@ -43,7 +43,7 @@ public class ManagePostServiceImpl implements ManagePostService {
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
 
         int size = 10;
-        int page = indexPage * size - size;
+        int page = indexPage - 1;
 
         Page<Post> postList = postRepository.findAll(PageRequest.of(page, size));
         List<PostView> postDtoList = new ArrayList<>();
@@ -86,7 +86,10 @@ public class ManagePostServiceImpl implements ManagePostService {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        List<PostDto> postDtoList = postRepository.listPostByHost(host.getId());
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<PostDto> postDtoList = postRepository.listPostByHost(host.getId(), PageRequest.of(page, size));
 
         if (Objects.isNull(postDtoList)) {
             throw new NotFoundException("khong co data");
@@ -123,7 +126,8 @@ public class ManagePostServiceImpl implements ManagePostService {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                 {
                     put("listPost", postDto);
-//                    put("SizePage", postList.getTotalPages());
+                    put("SizePage", postDtoList.getTotalPages());
+                    put("indexPage", indexPage);
                 }
             }));
         }
@@ -134,7 +138,7 @@ public class ManagePostServiceImpl implements ManagePostService {
     public ResponseEntity<ResponseObject> getAllReportPostByHost(int indexPage, Long postID) {
 
         int size = 5;
-        int page = indexPage * size - size;
+        int page = indexPage - 1;
 
         Page<ReportPost> reportPosts = reportPostRepository.findReportPostByPost_Id(postID, PageRequest.of(page, size));
 
@@ -152,7 +156,6 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Override
     public ResponseEntity<ResponseObject> getAllCurrentBookingByHost(int indexPage) {
-
 
 
         return null;
