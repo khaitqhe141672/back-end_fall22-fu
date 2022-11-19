@@ -1,7 +1,10 @@
 package com.homesharing_backend.presentation.controller;
 
+import com.homesharing_backend.data.entity.PostImage;
 import com.homesharing_backend.data.entity.Province;
+import com.homesharing_backend.data.repository.PostImageRepository;
 import com.homesharing_backend.data.repository.ProvinceRepository;
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.impl.AWSService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class Test {
 
     @Autowired
     private ProvinceRepository provinceRepository;
+
+    @Autowired
+    private PostImageRepository postImageRepository;
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> testD(@RequestParam("file") MultipartFile file) {
@@ -64,5 +70,15 @@ public class Test {
                     }
                 }
         ));
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<JwtResponse> download(@RequestParam("post-image-id") Long id){
+
+        PostImage postImage = postImageRepository.getPostImageById(id);
+
+        List<String> list = List.of(postImage.getImageUrl().split("/"));
+
+        return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), awsService.download(list.get(3))));
     }
 }

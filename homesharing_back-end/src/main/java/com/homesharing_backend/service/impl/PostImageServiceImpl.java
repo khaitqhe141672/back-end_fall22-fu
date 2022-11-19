@@ -6,6 +6,7 @@ import com.homesharing_backend.data.repository.PostImageRepository;
 import com.homesharing_backend.data.repository.PostRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.PostImageService;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,7 +86,57 @@ public class PostImageServiceImpl implements PostImageService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> editPostImageByPostImageID(Long postID, List<MultipartFile> multipartFile) {
-        return null;
+    public ResponseEntity<MessageResponse> editPostImageByPostImageID(Long postID, List<MultipartFile> multipartFile) {
+
+        if (!postRepository.existsPostById(postID)) {
+            throw new NotFoundException("post-id khong ton tai");
+        } else {
+            List<PostImage> postImages = postImageRepository.findPostImageByPost_Id(postID);
+
+            postImages.forEach(i -> {
+
+                List<String> stringList = List.of(i.getImageUrl().split("/"));
+                awsService.delete(stringList.get(3));
+
+                multipartFile.forEach(file -> {
+                    String fileName = awsService.upload(file);
+                    i.setImageUrl(fileName);
+                });
+                postImageRepository.save(i);
+            });
+
+            for (int i = 0; i < postImages.size() - 1; i++) {
+                List<String> stringList = List.of(postImages.get(i).getImageUrl().split("/"));
+                awsService.delete(stringList.get(3));
+                String fileName = awsService.upload(multipartFile.get(i));
+                postImages.get(i).setImageUrl(fileName);
+                postImageRepository.save(postImages.get(i));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Edit image thanh cong"));
+        }
+
     }
+
+    @Override
+    public ResponseEntity<JwtResponse> downloadImage(Long postID) {
+
+        if (!postRepository.existsPostById(postID)) {
+            throw new NotFoundException("post-id khong ton tai");
+        } else {
+
+            List<byte[]> bytes = new ArrayList<>();
+
+            List<PostImage> postImages = postImageRepository.findPostImageByPost_Id(postID);
+
+            postImages.forEach(p -> {
+
+                List<String> list = List.of(p.getImageUrl().split("/"));
+                byte[] b = awsService.download(list.get(3));
+
+                bytes.add(b);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), bytes));
+        }
+    }
+
 }

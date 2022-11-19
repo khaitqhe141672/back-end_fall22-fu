@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostImageRepository extends JpaRepository<PostImage,Long> {
+public interface PostImageRepository extends JpaRepository<PostImage, Long> {
 
     Optional<PostImage> getPostImageByPost_Id(Long postID);
 
     List<PostImage> findPostImageByPost_Id(Long postID);
+
+    PostImage getPostImageById(Long id);
 }
