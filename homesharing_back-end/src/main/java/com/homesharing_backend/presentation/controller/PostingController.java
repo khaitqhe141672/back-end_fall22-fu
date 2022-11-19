@@ -70,4 +70,17 @@ public class PostingController {
                                       @RequestBody PostRequest postRequest) {
         return postService.editPost(postID, postRequest);
     }
+
+    @GetMapping("/download-image")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> downloadImage(@RequestParam("post-id") Long postID) {
+        return postImageService.downloadImage(postID);
+    }
+
+    @PutMapping("/edit-image")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> editImage(@RequestParam("post-id") Long postID,
+                                       @RequestParam("file") List<MultipartFile> multipartFiles) {
+        return postImageService.editPostImageByPostImageID(postID, multipartFiles);
+    }
 }

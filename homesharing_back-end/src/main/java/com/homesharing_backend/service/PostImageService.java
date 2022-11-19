@@ -1,5 +1,6 @@
 package com.homesharing_backend.service;
 
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import org.springframework.http.ResponseEntity;
@@ -17,5 +18,8 @@ public interface PostImageService {
 
     public ResponseEntity<MessageResponse> insertPostImageOneByPostID(MultipartFile multipartFile, Long postID);
 
-    public ResponseEntity<ResponseObject> editPostImageByPostImageID(Long postID, List<MultipartFile> multipartFile);
+    public ResponseEntity<MessageResponse> editPostImageByPostImageID(Long postID, List<MultipartFile> multipartFile);
+
+    public ResponseEntity<JwtResponse> downloadImage(Long postID);
+
 }
