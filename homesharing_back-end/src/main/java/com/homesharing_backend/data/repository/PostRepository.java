@@ -4,6 +4,8 @@ import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
 import com.homesharing_backend.data.dto.SearchDto;
 import com.homesharing_backend.data.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -75,6 +77,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN BookingDetail bd ON p.id = bd.post.id " +
             "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id WHERE p.host.id= :hostID " +
             "GROUP BY p.id ")
-    List<PostDto> listPostByHost(@Param("hostID") Long hostID);
+    Page<PostDto> listPostByHost(@Param("hostID") Long hostID, PageRequest pageRequest);
 
 }
