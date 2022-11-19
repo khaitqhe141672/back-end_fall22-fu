@@ -374,7 +374,8 @@ public class ReportServiceImpl implements ReportService {
 
                     ReportDto dto = ReportDto.builder()
                             .reportID(r.getId())
-                            .username(r.getCustomer().getUser().getUserDetail().getFullName())
+                            .fullName(r.getCustomer().getUser().getUserDetail().getFullName())
+                            .username(r.getCustomer().getUser().getUsername())
                             .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
                             .description(r.getDescription())
                             .reportTypeID(r.getReportType().getId())

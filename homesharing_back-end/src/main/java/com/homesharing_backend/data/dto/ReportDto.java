@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class ReportDto {
 
     private Long reportID;
+    private String fullName;
     private String username;
     private String imageUrl;
     private String description;
