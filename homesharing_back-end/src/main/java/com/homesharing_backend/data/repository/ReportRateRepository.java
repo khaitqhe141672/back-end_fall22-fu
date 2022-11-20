@@ -12,4 +12,6 @@ public interface ReportRateRepository extends JpaRepository<ReportRate, Long> {
 
     ReportRate getReportRateById(Long id);
 
+    int countReportRateByRate_BookingDetail_Post_Id(Long postID);
+
 }
