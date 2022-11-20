@@ -19,4 +19,11 @@ public class ManageVoucherController {
     public ResponseEntity<?> getAllVoucherByHost(@RequestParam("index-page") int indexPage) {
         return manageVoucherService.getAllVoucherByHost(indexPage);
     }
+
+    @PutMapping("/update-status-voucher")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> updateVoucherByHost(@RequestParam("status") int status,
+                                                 @RequestParam("voucher-id") Long voucherID) {
+        return manageVoucherService.updateVoucher(status, voucherID);
+    }
 }

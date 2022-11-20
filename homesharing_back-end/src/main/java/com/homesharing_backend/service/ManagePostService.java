@@ -16,5 +16,5 @@ public interface ManagePostService {
 
     public ResponseEntity<ResponseObject> getAllReportPostByHost(int indexPage, Long postID);
 
-    public ResponseEntity<ResponseObject> getAllCurrentBookingByHost(int indexPage);
+    public ResponseEntity<ResponseObject> getAllBookingByHost(int indexPage, int status);
 }
