@@ -1,7 +1,6 @@
 package com.homesharing_backend.service.impl;
 
-import com.homesharing_backend.data.dto.PostDto;
-import com.homesharing_backend.data.dto.PostView;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
@@ -38,6 +37,9 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Autowired
     private ReportPostRepository reportPostRepository;
+
+    @Autowired
+    private BookingServiceRepository bookingServiceRepository;
 
     @Override
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
@@ -155,9 +157,38 @@ public class ManagePostServiceImpl implements ManagePostService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> getAllCurrentBookingByHost(int indexPage) {
+    public ResponseEntity<ResponseObject> getAllBookingByHost(int indexPage, int status) {
 
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        return null;
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<ViewBookingDto> viewBookingDtoPage = postRepository.getAllCurrentBooking(status, host.getId(), PageRequest.of(page, size));
+
+        if (Objects.isNull(viewBookingDtoPage)) {
+            throw new NotFoundException("khong co phong nao book hnay");
+        } else {
+
+            List<CurrentBookingDto> dtoList = new ArrayList<>();
+
+            viewBookingDtoPage.forEach(v -> {
+
+                List<BookingServiceDto> list = bookingServiceRepository.getAllBookingService(v.getBookingID());
+                CurrentBookingDto dto = CurrentBookingDto.builder()
+                        .viewBookingDto(v)
+                        .bookingServiceDtos(list)
+                        .build();
+
+                dtoList.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listBooking", dtoList);
+                    put("sizePage", viewBookingDtoPage.getTotalPages());
+                }
+            }));
+        }
     }
+
 }

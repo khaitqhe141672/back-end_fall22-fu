@@ -20,4 +20,5 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     Page<Voucher> getVoucherByHost_Id(Long hostID, PageRequest pageRequest);
 
+    Voucher getVoucherByIdAndHost_Id(Long voucherID, Long hostID);
 }

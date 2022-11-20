@@ -32,4 +32,12 @@ public class ManagePostController {
                                                       @RequestParam("index-page") int indexPage) {
         return managePostService.getAllReportPostByHost(indexPage, postID);
     }
+
+    @GetMapping("/all-booking-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getCurrentBookingByHost(@RequestParam("index-page") int indexPage,
+                                                     @RequestParam("status") int status) {
+        return managePostService.getAllBookingByHost(indexPage, status);
+    }
+
 }

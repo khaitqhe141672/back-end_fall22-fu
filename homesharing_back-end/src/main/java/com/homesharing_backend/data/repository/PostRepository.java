@@ -3,6 +3,7 @@ package com.homesharing_backend.data.repository;
 import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
 import com.homesharing_backend.data.dto.SearchDto;
+import com.homesharing_backend.data.dto.ViewBookingDto;
 import com.homesharing_backend.data.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -79,4 +80,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "GROUP BY p.id ")
     Page<PostDto> listPostByHost(@Param("hostID") Long hostID, PageRequest pageRequest);
 
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.ViewBookingDto(b.id, bd.id, p.id, p.title, bd.startDate, " +
+            "bd.endDate, b.totalMoney, bd.totalPerson, bd.totalService, b.note, b.status) FROM Booking b\n" +
+            "left join BookingDetail bd on b.id = bd.booking.id\n" +
+            "left join Post p on bd.post.id = p.id where b.status = :status and p.host.id= :hostID \n" +
+            "group by b.id\n")
+    Page<ViewBookingDto> getAllCurrentBooking(@Param("status") int status, @Param("hostID") Long hostID, PageRequest pageRequest);
 }

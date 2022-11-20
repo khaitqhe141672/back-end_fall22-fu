@@ -6,6 +6,7 @@ import com.homesharing_backend.data.entity.Voucher;
 import com.homesharing_backend.data.repository.HostRepository;
 import com.homesharing_backend.data.repository.VoucherRepository;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManageVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
@@ -62,6 +63,23 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
                     put("sizePage", vouchers.getTotalPages());
                 }
             }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> updateVoucher(int status, Long voucherID) {
+
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+        Voucher voucher = voucherRepository.getVoucherByIdAndHost_Id(voucherID, host.getId());
+
+        if (Objects.isNull(voucher)) {
+            throw new NotFoundException("khong co voucher theo host_id");
+        } else {
+
+            voucher.setStatus(status);
+            voucherRepository.save(voucher);
+
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Update voucher thanh cong"));
         }
     }
 }
