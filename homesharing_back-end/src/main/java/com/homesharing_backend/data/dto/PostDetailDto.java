@@ -38,4 +38,6 @@ public class PostDetailDto {
     private List<PostVoucherDto> postVoucherDtoList;
     private Double avgRate;
     private int status;
+    private String latitude;
+    private String longitude;
 }
