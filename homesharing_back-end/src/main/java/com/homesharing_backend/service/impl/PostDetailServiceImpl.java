@@ -130,6 +130,8 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .districtDto(districtDto)
                     .status(postDetail.getPost().getStatus())
                     .postVoucherDtoList(postVoucherDtoList)
+                    .latitude(postDetail.getLatitude())
+                    .longitude(postDetail.getLongitude())
                     .build();
 
             if (Objects.isNull(postTopRateDto.getAvgRate())) {
