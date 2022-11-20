@@ -86,4 +86,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join Post p on bd.post.id = p.id where b.status = :status and p.host.id= :hostID \n" +
             "group by b.id\n")
     Page<ViewBookingDto> getAllCurrentBooking(@Param("status") int status, @Param("hostID") Long hostID, PageRequest pageRequest);
+
+    Page<Post> getPostByHost_Id(Long hostID, PageRequest pageRequest);
 }
