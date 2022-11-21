@@ -4,12 +4,13 @@ import com.homesharing_backend.data.dto.ListDetailRateDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
 import com.homesharing_backend.data.dto.ViewDetailRateDto;
 import com.homesharing_backend.data.dto.ViewRateHostDto;
-import com.homesharing_backend.data.entity.Host;
-import com.homesharing_backend.data.entity.Post;
-import com.homesharing_backend.data.entity.Rate;
+import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.exception.SaveDataException;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
+import com.homesharing_backend.presentation.payload.request.ReportRequest;
 import com.homesharing_backend.service.ManageRateService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class ManageRateServiceImpl implements ManageRateService {
 
     @Autowired
     private LikesDislikesRepository likesDislikesRepository;
+
+    @Autowired
+    private ReportTypeRepository reportTypeRepository;
 
     @Override
     public ResponseEntity<ResponseObject> getAllRateByHost(int indexPage) {
@@ -137,6 +141,40 @@ public class ManageRateServiceImpl implements ManageRateService {
                         put("sizePage", ratePage.getTotalPages());
                     }
                 }));
+            }
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> createReportRateByHost(Long rateID, ReportRequest reportRequest) {
+        Rate rate = rateRepository.getRateById(rateID);
+
+        if (Objects.isNull(rate)) {
+            throw new NotFoundException("Rate_id khong ton tai");
+        } else {
+            Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+            ReportType reportType = reportTypeRepository.getReportTypeById(reportRequest.getReportTypeID());
+
+            if (Objects.isNull(reportType)) {
+                throw new NotFoundException("ReportType-id khong ton tai");
+            } else {
+
+                ReportRate reportRate = ReportRate.builder()
+                        .rate(rate)
+                        .host(host)
+                        .reportType(reportType)
+                        .description(reportRequest.getDescription())
+                        .status(1)
+                        .build();
+
+                ReportRate saveReportRate = reportRateRepository.save(reportRate);
+
+                if (Objects.isNull(saveReportRate)) {
+                    throw new SaveDataException("report rate khong thanh cong");
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "report rate thanh cong"));
+                }
             }
         }
     }

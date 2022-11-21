@@ -13,4 +13,5 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
     @Query(value = "SELECT * FROM demo.post_payment where post_id = :postID Order by id desc limit 1", nativeQuery = true)
     PostPayment getTimePost(Long postID);
 
+    PostPayment getPostPaymentByPost_IdAndStatus(Long postID, int status);
 }

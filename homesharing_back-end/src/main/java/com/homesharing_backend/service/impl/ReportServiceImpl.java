@@ -62,36 +62,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ResponseEntity<MessageResponse> createReportRate(ReportRequest reportRequest, Long rateID) {
 
-        Rate rate = rateRepository.getRateById(rateID);
-
-        if (Objects.isNull(rate)) {
-            throw new NotFoundException("Rate_id khong ton tai");
-        } else {
-            Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
-
-            ReportType reportType = reportTypeRepository.getReportTypeById(reportRequest.getReportTypeID());
-
-            if (Objects.isNull(reportType)) {
-                throw new NotFoundException("ReportType-id khong ton tai");
-            } else {
-
-                ReportRate reportRate = ReportRate.builder()
-                        .rate(rate)
-                        .customer(customer)
-                        .reportType(reportType)
-                        .description(reportRequest.getDescription())
-                        .status(1)
-                        .build();
-
-                ReportRate saveReportRate = reportRateRepository.save(reportRate);
-
-                if (Objects.isNull(saveReportRate)) {
-                    throw new SaveDataException("report rate khong thanh cong");
-                } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "report rate thanh cong"));
-                }
-            }
-        }
+        return null;
     }
 
     @Override
@@ -231,8 +202,8 @@ public class ReportServiceImpl implements ReportService {
                             .reportID(r.getId())
                             .description(r.getDescription())
                             .nameReportType(r.getReportType().getName())
-                            .username(r.getCustomer().getUser().getUsername())
-                            .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                            .username(r.getHost().getUser().getUsername())
+                            .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
                             .status(r.getStatus())
                             .build();
 

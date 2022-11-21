@@ -368,6 +368,7 @@ public class PostServiceImpl implements PostService {
                             }
                         } else {
                             services.setStatus(1);
+                            services.setPrice(postRequest.getPrice());
                             postServiceRepository.save(services);
                         }
                     });

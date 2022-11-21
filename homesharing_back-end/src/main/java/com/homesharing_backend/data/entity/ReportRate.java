@@ -23,8 +23,8 @@ public class ReportRate {
     private ReportType reportType;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    private Customer customer;
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rate_id", referencedColumnName = "id")

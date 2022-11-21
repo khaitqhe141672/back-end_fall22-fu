@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface SearchService {
 
-    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest);
+    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest, int indexPage);
 
 }
