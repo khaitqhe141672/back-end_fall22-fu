@@ -229,4 +229,20 @@ public class ManagePostServiceImpl implements ManagePostService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> getTotalBookingStatusByHost() {
+
+        int totalCurrentBooking = bookingRepository.countBookingByStatus(3);
+        int totalComingBooking = bookingRepository.countBookingByStatus(2);
+        int totalConfirmBooking = bookingRepository.countBookingByStatus(1);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+            {
+                put("totalCurrentBooking", totalCurrentBooking);
+                put("totalComingBooking", totalComingBooking);
+                put("totalConfirmBooking", totalConfirmBooking);
+            }
+        }));
+    }
+
 }
