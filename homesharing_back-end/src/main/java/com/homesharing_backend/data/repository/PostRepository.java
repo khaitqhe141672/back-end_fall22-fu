@@ -85,7 +85,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join BookingDetail bd on b.id = bd.booking.id\n" +
             "left join Post p on bd.post.id = p.id where b.status = :status and p.host.id= :hostID \n" +
             "group by b.id\n")
-    Page<ViewBookingDto> getAllCurrentBooking(@Param("status") int status, @Param("hostID") Long hostID, PageRequest pageRequest);
+    Page<ViewBookingDto> getAllStatusBooking(@Param("status") int status, @Param("hostID") Long hostID, PageRequest pageRequest);
 
     Page<Post> getPostByHost_Id(Long hostID, PageRequest pageRequest);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.ViewBookingDto(b.id, bd.id, p.id, p.title, bd.startDate, " +
+            "bd.endDate, b.totalMoney, bd.totalPerson, bd.totalService, b.note, b.status) FROM Booking b " +
+            "LEFT JOIN BookingDetail bd on b.id = bd.booking.id " +
+            "LEFT JOIN Post p on bd.post.id = p.id WHERE p.host.id= :hostID AND b.status= 2 AND (current_date() between bd.startDate AND bd.endDate)")
+    Page<ViewBookingDto> getAllCurrentBooking(@Param("hostID") Long hostID, PageRequest pageRequest);
 }

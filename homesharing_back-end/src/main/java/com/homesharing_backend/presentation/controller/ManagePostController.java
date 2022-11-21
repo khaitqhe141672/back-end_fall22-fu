@@ -35,8 +35,8 @@ public class ManagePostController {
 
     @GetMapping("/all-booking-host")
     @PreAuthorize("hasRole('ROLE_HOST')")
-    public ResponseEntity<?> getCurrentBookingByHost(@RequestParam("index-page") int indexPage,
-                                                     @RequestParam("status") int status) {
+    public ResponseEntity<?> getStatusBookingByHost(@RequestParam("index-page") int indexPage,
+                                                    @RequestParam("status") int status) {
         return managePostService.getAllBookingByHost(indexPage, status);
     }
 
@@ -50,5 +50,11 @@ public class ManagePostController {
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> getTotalStatusBookingByHost() {
         return managePostService.getTotalBookingStatusByHost();
+    }
+
+    @GetMapping("/all-current-booking-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllCurrentBookingByHost(@RequestParam("index-page") int indexPage) {
+        return managePostService.getCurrentBooking(indexPage);
     }
 }
