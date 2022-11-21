@@ -17,4 +17,6 @@ public interface PostUtilityRepository extends JpaRepository<PostUtility, Long> 
     PostUtility getPostUtilityById(Long id);
 
     PostUtility getPostUtilityByPost_IdAndUtility_Id(Long postID, Long utilityID);
+
+    List<PostUtility> getPostUtilityByPost_IdAndStatus(Long postID, int status);
 }

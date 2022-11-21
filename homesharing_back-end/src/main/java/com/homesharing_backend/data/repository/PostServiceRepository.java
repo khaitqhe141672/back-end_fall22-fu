@@ -14,4 +14,6 @@ public interface PostServiceRepository extends JpaRepository<PostServices, Long>
     PostServices getPostServicesByIdAndPost_Id(Long id, Long postID);
 
     PostServices getPostServicesByServices_IdAndPost_Id(Long serviceID, Long postID);
+
+    List<PostServices> getPostServicesByPost_IdAndStatus(Long postID, int status);
 }

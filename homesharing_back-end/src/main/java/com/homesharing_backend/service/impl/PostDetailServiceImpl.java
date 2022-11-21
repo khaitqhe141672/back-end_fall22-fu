@@ -59,7 +59,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                 postImageDtoList.add(new PostImageDto(postImage.getId(), postImage.getImageUrl()));
             });
 
-            List<PostUtility> postUtilities = postUtilityRepository.findPostUtilitiesByPost_Id(postID);
+            List<PostUtility> postUtilities = postUtilityRepository.getPostUtilityByPost_IdAndStatus(postID, 1);
 
             List<PostUtilityDto> utilityDtoList = new ArrayList<>();
             postUtilities.forEach(postUtility -> {
@@ -73,7 +73,7 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             List<PostServiceDto> serviceDtoList = new ArrayList<>();
 
-            List<PostServices> postServices = postServiceRepository.getPostServicesByPost_Id(postID);
+            List<PostServices> postServices = postServiceRepository.getPostServicesByPost_IdAndStatus(postID, 1);
             if (!Objects.isNull(postServices)) {
                 postServices.forEach(s -> {
                     PostServiceDto dto = PostServiceDto.builder()
@@ -90,7 +90,7 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             List<PostVoucherDto> postVoucherDtoList = new ArrayList<>();
 
-            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_Id(postID);
+            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_IdAndStatus(postID, 1);
 
             postVouchers.forEach(v -> {
                 PostVoucherDto dto = PostVoucherDto.builder()
