@@ -1,5 +1,6 @@
 package com.homesharing_backend.presentation.controller;
 
+import com.homesharing_backend.presentation.payload.request.ReportRequest;
 import com.homesharing_backend.service.ManageRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +26,12 @@ public class ManageRateController {
     public ResponseEntity<?> getAllDetailRate(@RequestParam("post-id") Long postID,
                                               @RequestParam("index-page") int indexPage) {
         return manageRateService.getAllDetailRateByHost(postID, indexPage);
+    }
+
+    @PostMapping("/create-report-rate")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> createReportRate(@RequestParam("rate-id") Long rateID,
+                                              @RequestBody ReportRequest reportRequest) {
+        return manageRateService.createReportRateByHost(rateID, reportRequest);
     }
 }

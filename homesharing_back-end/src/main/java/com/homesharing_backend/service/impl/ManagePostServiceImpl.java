@@ -15,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +83,27 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Override
     public ResponseEntity<MessageResponse> checkPaymentPostByAdmin() {
-        return null;
+
+        List<Post> postList = postRepository.findAll();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDate localDate = localDateTime.toLocalDate();
+        Date nowDate = Date.valueOf(localDate);
+
+        if (Objects.isNull(postList)) {
+            throw new NotFoundException("khong co post nao");
+        } else {
+            postList.forEach(p -> {
+                PostPayment postPayment = postPaymentRepository.getPostPaymentByPost_IdAndStatus(p.getId(), 1);
+                if (!Objects.isNull(postPayment)) {
+                    if (nowDate.after(postPayment.getEndDate())) {
+                        postPayment.setStatus(2);
+                        postPaymentRepository.save(postPayment);
+                    }
+                }
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "check post-payment success"));
+        }
     }
 
     @Override

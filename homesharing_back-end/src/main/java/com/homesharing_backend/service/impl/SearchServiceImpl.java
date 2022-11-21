@@ -8,6 +8,8 @@ import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.SearchRequest;
 import com.homesharing_backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,15 @@ public class SearchServiceImpl implements SearchService {
     private DistrictRepository districtRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest) {
+    public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
 
         if (Objects.isNull(searchRequest)) {
             throw new NotFoundException("Search null");
         } else {
-            List<SearchDto> searchDtoListByTitle = postRepository.listSearchPostByTitle(searchRequest.getSearchText());
+            Page<SearchDto> searchDtoListByTitle = postRepository.listSearchPostByTitle(searchRequest.getSearchText(), PageRequest.of(page, size));
 
             List<SearchDto> list = new ArrayList<>();
 
@@ -48,7 +53,8 @@ public class SearchServiceImpl implements SearchService {
 //            }
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                 {
-                    put("search list", searchDtoListByTitle);
+                    put("searchList", searchDtoListByTitle);
+                    put("sizePage", searchDtoListByTitle.getTotalPages());
                 }
             }));
         }

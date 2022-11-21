@@ -40,4 +40,9 @@ public class ManagePostController {
         return managePostService.getAllBookingByHost(indexPage, status);
     }
 
+    @PutMapping("/check-post-payment")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> checkPostPaymentByAdmin() {
+        return managePostService.checkPaymentPostByAdmin();
+    }
 }
