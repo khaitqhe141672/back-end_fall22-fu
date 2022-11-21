@@ -223,6 +223,7 @@ public class ManagePostServiceImpl implements ManagePostService {
                 {
                     put("listBooking", dtoList);
                     put("sizePage", viewBookingDtoPage.getTotalPages());
+                    put("totalBooking", viewBookingDtoPage.getTotalElements());
                 }
             }));
         }
