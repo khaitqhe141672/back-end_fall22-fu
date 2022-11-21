@@ -45,4 +45,10 @@ public class ManagePostController {
     public ResponseEntity<?> checkPostPaymentByAdmin() {
         return managePostService.checkPaymentPostByAdmin();
     }
+
+    @GetMapping("/total-status")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getTotalStatusBookingByHost() {
+        return managePostService.getTotalBookingStatusByHost();
+    }
 }
