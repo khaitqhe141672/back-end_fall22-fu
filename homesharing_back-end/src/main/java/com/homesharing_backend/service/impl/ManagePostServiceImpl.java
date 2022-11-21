@@ -44,6 +44,9 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Autowired
     private BookingServiceRepository bookingServiceRepository;
 
+    @Autowired
+    private BookingRepository bookingRepository;
+
     @Override
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
 
@@ -197,10 +200,21 @@ public class ManagePostServiceImpl implements ManagePostService {
 
             viewBookingDtoPage.forEach(v -> {
 
+                Booking b = bookingRepository.getBookingById(v.getBookingID());
+
+                UserBookingDto bookingDto = UserBookingDto.builder()
+                        .customerID(b.getCustomer().getId())
+                        .userID(b.getCustomer().getUser().getId())
+                        .fullName(b.getCustomer().getUser().getUserDetail().getFullName())
+                        .urlImage(b.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                        .username(b.getCustomer().getUser().getUsername())
+                        .build();
+
                 List<BookingServiceDto> list = bookingServiceRepository.getAllBookingService(v.getBookingID());
                 CurrentBookingDto dto = CurrentBookingDto.builder()
                         .viewBookingDto(v)
                         .bookingServiceDtos(list)
+                        .userBookingDto(bookingDto)
                         .build();
 
                 dtoList.add(dto);
