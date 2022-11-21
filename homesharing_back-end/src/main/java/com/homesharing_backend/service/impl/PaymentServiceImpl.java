@@ -4,6 +4,8 @@ import com.homesharing_backend.config.PaymentConfig;
 import com.homesharing_backend.data.entity.PaymentPackage;
 import com.homesharing_backend.data.repository.PaymentPackageRepository;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.JwtResponse;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.PaymentRequest;
 import com.homesharing_backend.service.PaymentService;
@@ -30,14 +32,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> createPayment(PaymentRequest paymentRequest) {
+    public ResponseEntity<ResponseObject> createPayment(PaymentRequest paymentRequest) throws UnsupportedEncodingException {
 
         PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(paymentRequest.getPaymentPackageID());
 
         if (Objects.isNull(paymentPackage)) {
             throw new NotFoundException("khong tim thay payment-packate-id");
         } else {
-            float price = paymentRequest.getPrice();
+            int price = paymentRequest.getPrice() * 100;
 
             String paymentID = PaymentConfig.getRandomNumber(6);
 
@@ -48,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
             vnp_Params.put("vnp_Amount", String.valueOf(price));
             vnp_Params.put("vnp_CurrCode", "VND");
             vnp_Params.put("vnp_TxnRef", paymentID);
-
+            vnp_Params.put("vnp_OrderInfo", "HomeSharing - Thanh toan hoa don");
             vnp_Params.put("vnp_OrderType", PaymentConfig.ORDER_TYPE);
             vnp_Params.put("vnp_Locale", "vn");
             vnp_Params.put("vnp_ReturnUrl", PaymentConfig.vnp_ReturnUrl);
@@ -71,23 +73,11 @@ public class PaymentServiceImpl implements PaymentService {
                     //Build hash data
                     hashData.append(fieldName);
                     hashData.append('=');
-                    try {
-                        hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
+                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
                     //Build query
-                    try {
-                        query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
+                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
                     query.append('=');
-                    try {
-                        query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
+                    query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
                     if (itr.hasNext()) {
                         query.append('&');
                         hashData.append('&');
@@ -108,5 +98,17 @@ public class PaymentServiceImpl implements PaymentService {
             }));
         }
 
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> paymentResult(String responseCode, String status, String payDate, String orderID) {
+
+        String mess = "";
+        if ("00".equals(responseCode)) {
+            mess = "thanh toan thanh cong";
+        } else {
+            mess = "thanh toan khong thanh cong";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), mess));
     }
 }
