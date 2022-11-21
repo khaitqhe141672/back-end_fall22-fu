@@ -6,16 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class CurrentBookingDto {
+public class UserBookingDto {
 
-    private ViewBookingDto viewBookingDto;
-    private UserBookingDto userBookingDto;
-    private List<BookingServiceDto> bookingServiceDtos;
+    private Long userID;
+    private Long customerID;
+    private String username;
+    private String fullName;
+    private String urlImage;
 }
