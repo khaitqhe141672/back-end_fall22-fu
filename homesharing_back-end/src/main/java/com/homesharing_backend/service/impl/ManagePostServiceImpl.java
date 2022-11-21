@@ -190,7 +190,7 @@ public class ManagePostServiceImpl implements ManagePostService {
         int size = 10;
         int page = indexPage - 1;
 
-        Page<ViewBookingDto> viewBookingDtoPage = postRepository.getAllCurrentBooking(status, host.getId(), PageRequest.of(page, size));
+        Page<ViewBookingDto> viewBookingDtoPage = postRepository.getAllStatusBooking(status, host.getId(), PageRequest.of(page, size));
 
         if (Objects.isNull(viewBookingDtoPage)) {
             throw new NotFoundException("khong co phong nao book hnay");
@@ -243,6 +243,53 @@ public class ManagePostServiceImpl implements ManagePostService {
                 put("totalConfirmBooking", totalConfirmBooking);
             }
         }));
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getCurrentBooking(int indexPage) {
+
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<ViewBookingDto> viewBookingDtoPage = postRepository.getAllCurrentBooking(host.getId(), PageRequest.of(page, size));
+
+        if (Objects.isNull(viewBookingDtoPage)) {
+            throw new NotFoundException("khong co phong nao book hnay");
+        } else {
+
+            List<CurrentBookingDto> dtoList = new ArrayList<>();
+
+            viewBookingDtoPage.forEach(v -> {
+
+                Booking b = bookingRepository.getBookingById(v.getBookingID());
+
+                UserBookingDto bookingDto = UserBookingDto.builder()
+                        .customerID(b.getCustomer().getId())
+                        .userID(b.getCustomer().getUser().getId())
+                        .fullName(b.getCustomer().getUser().getUserDetail().getFullName())
+                        .urlImage(b.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                        .username(b.getCustomer().getUser().getUsername())
+                        .build();
+
+                List<BookingServiceDto> list = bookingServiceRepository.getAllBookingService(v.getBookingID());
+                CurrentBookingDto dto = CurrentBookingDto.builder()
+                        .viewBookingDto(v)
+                        .bookingServiceDtos(list)
+                        .userBookingDto(bookingDto)
+                        .build();
+
+                dtoList.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listBooking", dtoList);
+                    put("sizePage", viewBookingDtoPage.getTotalPages());
+                    put("totalBooking", viewBookingDtoPage.getTotalElements());
+                }
+            }));
+        }
     }
 
 }
