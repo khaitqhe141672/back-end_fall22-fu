@@ -281,14 +281,19 @@ public class BookingServiceImpl implements BookingService {
 
     /* status = 2 xác nhận thuê thành công */
     @Override
-    public ResponseEntity<MessageResponse> confirmBooking(Long bookingID) {
+    public ResponseEntity<MessageResponse> confirmBooking(Long bookingID, int type) {
 
         Booking booking = bookingRepository.getBookingById(bookingID);
 
         if (Objects.isNull(booking)) {
             throw new NotFoundException("Booking_id khong ton tai");
         } else {
-            booking.setStatus(2);
+
+            if(type == 1){
+                booking.setStatus(2);
+            } else {
+                booking.setStatus(5);
+            }
 
             Booking b = bookingRepository.save(booking);
 

@@ -62,8 +62,9 @@ public class BookingController {
 
     @PutMapping("/confirm-booking")
     @PreAuthorize("hasRole('ROLE_HOST')")
-    public ResponseEntity<?> confirmBooking(@RequestParam("booking-id") Long bookingID) {
-        return bookingService.confirmBooking(bookingID);
+    public ResponseEntity<?> confirmBooking(@RequestParam("booking-id") Long bookingID,
+                                            @RequestParam("type") int type) {
+        return bookingService.confirmBooking(bookingID, type);
     }
 
     @GetMapping("/all-booking-admin")
