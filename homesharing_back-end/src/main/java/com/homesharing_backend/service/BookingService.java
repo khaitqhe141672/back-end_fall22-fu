@@ -21,7 +21,7 @@ public interface BookingService {
 
     public ResponseEntity<MessageResponse> cancelBooking(Long bookingID);
 
-    public ResponseEntity<MessageResponse> confirmBooking(Long bookingID);
+    public ResponseEntity<MessageResponse> confirmBooking(Long bookingID, int type);
 
     public ResponseEntity<JwtResponse> getOneBookingOfCustomerByBookingID(Long bookingID);
 
