@@ -533,6 +533,20 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Override
+    public ResponseEntity<MessageResponse> updateStatusReportPost(Long reportPostID, int status) {
+
+        ReportPost reportPost = reportPostRepository.getReportPostById(reportPostID);
+
+        if (Objects.isNull(reportPost)) {
+            throw new NotFoundException("report-post-id khong ton tai");
+        } else {
+            reportPost.setStatus(status);
+            reportPostRepository.save(reportPost);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
+        }
+    }
+
     /*status = 1 dang cho admin xu ly*/
     @Override
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportRateID) {

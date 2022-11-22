@@ -40,4 +40,6 @@ public interface ReportService {
     public ResponseEntity<ResponseObject> getAllComplaintPostByHost(int indexPage);
 
     public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID, int status);
+
+    public ResponseEntity<MessageResponse> updateStatusReportPost(Long reportPostID, int status);
 }
