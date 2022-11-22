@@ -1,5 +1,6 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.dto.ComplaintDto;
 import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.ReportDto;
 import com.homesharing_backend.data.dto.ReportPostDto;
@@ -140,6 +141,7 @@ public class ReportServiceImpl implements ReportService {
             ComplaintPost complaintPost = ComplaintPost.builder()
                     .reportPost(reportPost)
                     .description(complaintRequest.getDescription())
+                    .host(host)
                     .status(1)
                     .build();
 
@@ -213,7 +215,7 @@ public class ReportServiceImpl implements ReportService {
             throw new NotFoundException("IndexPage null");
         } else {
             int size = 10;
-            int page = indexPage * size - size;
+            int page = indexPage - 1;
 
             Page<ReportRate> reportRates = reportRateRepository.findAll(PageRequest.of(page, size));
 
@@ -253,7 +255,7 @@ public class ReportServiceImpl implements ReportService {
             throw new NotFoundException("index page null");
         } else {
             int size = 10;
-            int page = indexPage * size - size;
+            int page = indexPage - 1;
 
             Page<ReportPost> reportPosts = reportPostRepository.findAll(PageRequest.of(page, size));
 
@@ -323,7 +325,7 @@ public class ReportServiceImpl implements ReportService {
             throw new NotFoundException("index page null");
         } else {
             int size = 10;
-            int page = indexPage * size - size;
+            int page = indexPage - 1;
 
             Page<ReportPostDto> posts = reportPostRepository.listAllReportPostByHost(PageRequest.of(page, size));
 
@@ -358,7 +360,7 @@ public class ReportServiceImpl implements ReportService {
             throw new NotFoundException("index page null");
         } else {
             int size = 10;
-            int page = indexPage * size - size;
+            int page = indexPage - 1;
 
             Page<ReportPost> reportPosts = reportPostRepository.findReportPostByPost_Id(postID, PageRequest.of(page, size));
 
@@ -393,6 +395,87 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> getAllComplaintRateByAdmin(int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<ComplaintRate> complaintRates = complaintRateRepository.findAll(PageRequest.of(page, size));
+
+        if (Objects.isNull(complaintRates)) {
+            throw new NotFoundException("khong co data khieu nai");
+        } else {
+            List<ComplaintDto> complaintDtoList = new ArrayList<>();
+
+            complaintRates.forEach(r -> {
+
+                ReportRate rate = reportRateRepository.getReportRateById(r.getReportRate().getId());
+
+                ComplaintDto dto = ComplaintDto.builder()
+                        .reportID(rate.getId())
+                        .reportTypeID(rate.getReportType().getId())
+                        .fullName(r.getHost().getUser().getUserDetail().getFullName())
+                        .username(r.getHost().getUser().getUsername())
+                        .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
+                        .description(r.getDescription())
+                        .nameReportType(rate.getReportType().getName())
+                        .statusComplaint(r.getStatus())
+                        .build();
+
+                complaintDtoList.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listComplaint", complaintDtoList);
+                    put("sizePage", complaintRates.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllComplaintPostByPost(int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<ComplaintPost> complaintPosts = complaintPostRepository.findAll(PageRequest.of(page, size));
+
+        if (Objects.isNull(complaintPosts)) {
+            throw new NotFoundException("khong co data khieu nai");
+        } else {
+
+            List<ComplaintDto> complaintDtoList = new ArrayList<>();
+
+            complaintPosts.forEach(r -> {
+
+                ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
+
+                ComplaintDto dto = ComplaintDto.builder()
+                        .reportID(post.getId())
+                        .reportTypeID(post.getReportType().getId())
+                        .fullName(r.getHost().getUser().getUserDetail().getFullName())
+                        .username(r.getHost().getUser().getUsername())
+                        .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
+                        .description(r.getDescription())
+                        .nameReportType(post.getReportType().getName())
+                        .statusComplaint(r.getStatus())
+                        .build();
+
+                complaintDtoList.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listComplaint", complaintDtoList);
+                    put("sizePage", complaintPosts.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
+        }
+    }
+
     /*status = 1 dang cho admin xu ly*/
     @Override
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportRateID) {
@@ -410,6 +493,7 @@ public class ReportServiceImpl implements ReportService {
                 ComplaintRate complaintRate = ComplaintRate.builder()
                         .reportRate(reportRate)
                         .description(complaintRequest.getDescription())
+                        .host(host)
                         .status(1)
                         .build();
 

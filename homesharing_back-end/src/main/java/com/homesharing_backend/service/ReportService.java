@@ -32,4 +32,8 @@ public interface ReportService {
     public ResponseEntity<ResponseObject> getAllReportPostByPostOfHost(int indexPage);
 
     public ResponseEntity<ResponseObject> getAllDetailReportPostByPostIDOfHost(Long postID, int indexPage);
+
+    public ResponseEntity<ResponseObject> getAllComplaintRateByAdmin(int indexPage);
+
+    public ResponseEntity<ResponseObject> getAllComplaintPostByPost(int indexPage);
 }
