@@ -21,12 +21,14 @@ public class ReportPostDto {
     private String imageUserUrl;
     private Integer typeAccount;
     private Integer totalReport;
-    private int status;
+    private int statusPost;
+
+    private int statusReportPost;
 
     public ReportPostDto(Long postID, String title,
                          float price, String imagePostUrl,
                          String username, String imageUserUrl,
-                         int typeAccount, int status) {
+                         int typeAccount, int statusPost, int statusReportPost) {
         this.postID = postID;
         this.title = title;
         this.price = price;
@@ -34,6 +36,7 @@ public class ReportPostDto {
         this.username = username;
         this.imageUserUrl = imageUserUrl;
         this.typeAccount = typeAccount;
-        this.status = status;
+        this.statusPost = statusPost;
+        this.statusReportPost = statusReportPost;
     }
 }
