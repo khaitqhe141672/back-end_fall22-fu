@@ -23,7 +23,7 @@ public interface ReportPostRepository extends JpaRepository<ReportPost, Long> {
     int countReportPostByPost_Id(Long postID);
 
     @Query(value = "SELECT DISTINCT new com.homesharing_backend.data.dto.ReportPostDto(p.id, p.title, p.price, pi.imageUrl," +
-            " h.user.username, h.user.userDetail.avatarUrl, h.typeAccount, p.status) FROM ReportPost rp " +
+            " h.user.username, h.user.userDetail.avatarUrl, h.typeAccount, p.status, rp.status) FROM ReportPost rp " +
             "LEFT JOIN Post p ON rp.post.id = p.id " +
             "LEFT JOIN PostImage pi ON p.id = pi.post.id " +
             "LEFT JOIN Host h ON p.host.id = h.id " +
