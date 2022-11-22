@@ -82,4 +82,16 @@ public class ReportController {
                                                           @RequestParam("index-page") int indexPage) {
         return reportService.getAllDetailReportPostByPostIDOfHost(postID, indexPage);
     }
+
+    @GetMapping("/all-complaint-post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllComplaintPostByAdmin( @RequestParam("index-page") int indexPage){
+        return reportService.getAllComplaintPostByPost(indexPage);
+    }
+
+    @GetMapping("/all-complaint-rate")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllComplaintRateByAdmin( @RequestParam("index-page") int indexPage){
+        return reportService.getAllComplaintRateByAdmin(indexPage);
+    }
 }
