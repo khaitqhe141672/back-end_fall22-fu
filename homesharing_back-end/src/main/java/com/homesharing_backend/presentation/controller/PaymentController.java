@@ -27,7 +27,8 @@ public class PaymentController {
     public ResponseEntity<?> paymentResult(@RequestParam(value = "vnp_ResponseCode") String responseCode,
                                            @RequestParam(value = "vnp_TransactionStatus", required = false) String status,
                                            @RequestParam(value = "vnp_PayDate", required = false) String payDate,
-                                           @RequestParam(value = "vnp_OrderInfo", required = false) String orderInfo) {
-        return paymentService.paymentResult(responseCode, status, payDate, orderInfo);
+                                           @RequestParam(value = "vnp_OrderInfo", required = false) String orderInfo,
+                                           @RequestParam(value = "vnp_TxnRef", required = false) String id) {
+        return paymentService.paymentResult(responseCode, status, payDate, orderInfo, id);
     }
 }

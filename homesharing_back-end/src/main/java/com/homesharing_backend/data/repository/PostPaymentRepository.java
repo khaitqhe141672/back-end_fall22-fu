@@ -14,4 +14,6 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
     PostPayment getTimePost(Long postID);
 
     PostPayment getPostPaymentByPost_IdAndStatus(Long postID, int status);
+
+    PostPayment getPostPaymentByIdAndPost_IdAndPaymentPackage_Id(Long id, Long postID, Long paymentPackageID);
 }
