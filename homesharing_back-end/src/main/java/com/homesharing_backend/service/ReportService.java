@@ -38,4 +38,6 @@ public interface ReportService {
     public ResponseEntity<ResponseObject> getAllComplaintPostByAdmin(int indexPage);
 
     public ResponseEntity<ResponseObject> getAllComplaintPostByHost(int indexPage);
+
+    public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID, int status);
 }

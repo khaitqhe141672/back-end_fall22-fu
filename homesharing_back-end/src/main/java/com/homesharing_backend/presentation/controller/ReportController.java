@@ -100,4 +100,11 @@ public class ReportController {
     public ResponseEntity<?> getAllComplaintPostByHost(@RequestParam("index-page") int indexPage) {
         return reportService.getAllComplaintPostByHost(indexPage);
     }
+
+    @PutMapping("/update-status")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-post-id") Long reportRateID,
+                                                           @RequestParam("status") int status) {
+        return reportService.updateStatusReportRate(reportRateID, status);
+    }
 }
