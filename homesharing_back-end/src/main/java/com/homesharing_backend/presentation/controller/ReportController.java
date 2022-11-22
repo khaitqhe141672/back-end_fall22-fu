@@ -17,8 +17,8 @@ public class ReportController {
     private ReportService reportService;
 
     @PostMapping("/create-reportRate")
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    public ResponseEntity<?> createReportRateByCustomer(@RequestBody ReportRequest reportRequest,
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> createReportRateByHost(@RequestBody ReportRequest reportRequest,
                                                         @RequestParam("rate-id") Long rateID) {
         return reportService.createReportRate(reportRequest, rateID);
     }
