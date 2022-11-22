@@ -11,4 +11,5 @@ public interface ManageVoucherService {
     public ResponseEntity<ResponseObject> getAllVoucherByHost(int indexPage);
 
     public ResponseEntity<MessageResponse> updateVoucher(int status, Long voucherID);
+
 }

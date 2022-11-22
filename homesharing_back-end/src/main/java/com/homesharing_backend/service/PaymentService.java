@@ -16,5 +16,6 @@ public interface PaymentService {
 
     public ResponseEntity<ResponseObject> createPayment(PaymentRequest paymentRequest) throws UnsupportedEncodingException;
 
-    public ResponseEntity<MessageResponse> paymentResult(String responseCode, String status, String payDate, String orderID);
+    public ResponseEntity<MessageResponse> paymentResult(String responseCode, String status,
+                                                         String payDate, String orderID, String id);
 }

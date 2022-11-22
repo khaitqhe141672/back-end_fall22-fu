@@ -2,7 +2,9 @@ package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.config.PaymentConfig;
 import com.homesharing_backend.data.entity.PaymentPackage;
+import com.homesharing_backend.data.entity.PostPayment;
 import com.homesharing_backend.data.repository.PaymentPackageRepository;
+import com.homesharing_backend.data.repository.PostPaymentRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
@@ -17,7 +19,10 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -25,6 +30,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private PaymentPackageRepository paymentPackageRepository;
+
+    @Autowired
+    private PostPaymentRepository postPaymentRepository;
 
     @Override
     public ResponseEntity<ResponseObject> rePayment(Long paymentPackageID) {
@@ -41,7 +49,8 @@ public class PaymentServiceImpl implements PaymentService {
         } else {
             int price = paymentRequest.getPrice() * 100;
 
-            String paymentID = PaymentConfig.getRandomNumber(6);
+            String paymentID = paymentRequest.getPaymentPackageID() + "-"
+                    + paymentRequest.getPostID() + "-" + paymentRequest.getPostPaymentID() + "-" + PaymentConfig.getRandomNumber(6);
 
             Map vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", PaymentConfig.VERSION);
@@ -101,13 +110,41 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> paymentResult(String responseCode, String status, String payDate, String orderID) {
+    public ResponseEntity<MessageResponse> paymentResult(String responseCode, String status,
+                                                         String payDate, String orderID, String id) {
+
+
+        List<String> list = List.of(id.split("-"));
+        Long paymentPackageID = Long.valueOf(list.get(0));
+        Long postID = Long.valueOf(list.get(1));
+        Long postPaymentID = Long.valueOf(list.get(2));
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDate localDate = localDateTime.toLocalDate();
+
+        Date dateNow = Date.valueOf(localDate);
+        System.out.println(paymentPackageID);
+        System.out.println(postID);
+        System.out.println(postPaymentID);
+
+        PostPayment postPayment = postPaymentRepository.
+                getPostPaymentByIdAndPost_IdAndPaymentPackage_Id(postPaymentID, postID, paymentPackageID);
+        PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(paymentPackageID);
 
         String mess = "";
-        if ("00".equals(responseCode)) {
-            mess = "thanh toan thanh cong";
+        if (Objects.isNull(postPayment)) {
+            throw new NotFoundException("khong co post-payment nao");
         } else {
-            mess = "thanh toan khong thanh cong";
+            if ("00".equals(responseCode)) {
+                postPayment.setStatus(1);
+                postPayment.setStartDate(dateNow);
+                postPayment.setEndDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())));
+                postPaymentRepository.save(postPayment);
+
+                mess = "thanh toan thanh cong";
+            } else {
+                mess = "thanh toan khong thanh cong";
+            }
         }
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), mess));
     }

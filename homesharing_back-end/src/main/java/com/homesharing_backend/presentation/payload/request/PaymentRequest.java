@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PaymentRequest {
 
     private Long postID;
+    private Long postPaymentID;
     private Long paymentPackageID;
     private int price;
 }
