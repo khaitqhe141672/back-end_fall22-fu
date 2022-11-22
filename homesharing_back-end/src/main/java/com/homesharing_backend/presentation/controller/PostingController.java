@@ -95,4 +95,11 @@ public class PostingController {
                                                      @RequestBody PostVoucherRequest postVoucherRequest) {
         return postVoucherService.insertPostVoucher(postID, postVoucherRequest);
     }
+
+    @PutMapping("/insert-post-voucher")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateStatusPostByAdmin(@RequestParam("post-id") Long postID,
+                                                     @RequestParam("status") int status) {
+        return postService.updateStatus(postID, status);
+    }
 }

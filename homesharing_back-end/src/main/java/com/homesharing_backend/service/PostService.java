@@ -22,4 +22,6 @@ public interface PostService {
     public ResponseEntity<JwtResponse> getAllPostByHost();
 
     public ResponseEntity<ResponseObject> editPost(Long postID , PostRequest postRequest);
+
+    public ResponseEntity<MessageResponse> updateStatus(Long postID, int status);
 }

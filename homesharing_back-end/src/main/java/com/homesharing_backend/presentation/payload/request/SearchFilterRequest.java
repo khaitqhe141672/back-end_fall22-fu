@@ -17,4 +17,10 @@ public class SearchFilterRequest {
     private List<Long> roomTypeID;
     private Date startDate;
     private Date endDate;
+    private float minPrice;
+    private float maxPrice;
+    private int minStar;
+    private int maxStar;
+    private int statusSortPrice;
+    private int numberOfGuest;
 }

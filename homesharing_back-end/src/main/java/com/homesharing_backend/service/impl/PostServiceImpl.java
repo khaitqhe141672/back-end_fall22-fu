@@ -405,7 +405,7 @@ public class PostServiceImpl implements PostService {
                                         .build();
                                 postVoucherRepository.save(postVoucher);
                             }
-                        }else {
+                        } else {
                             v.setStatus(1);
                             postVoucherRepository.save(v);
                         }
@@ -418,6 +418,20 @@ public class PostServiceImpl implements PostService {
                     put("Message", "Edit posting thanh cong");
                 }
             }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> updateStatus(Long postID, int status) {
+
+        Post post = postRepository.getPostById(postID);
+
+        if (Objects.isNull(post)) {
+            throw new NotFoundException("khong co data post-id");
+        } else {
+            post.setStatus(status);
+            postRepository.save(post);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
         }
     }
 

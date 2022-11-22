@@ -230,6 +230,7 @@ public class ReportServiceImpl implements ReportService {
                             .reportTypeID(r.getReportType().getId())
                             .reportID(r.getId())
                             .description(r.getDescription())
+                            .fullName(r.getHost().getUser().getUserDetail().getFullName())
                             .nameReportType(r.getReportType().getName())
                             .username(r.getHost().getUser().getUsername())
                             .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
@@ -486,7 +487,7 @@ public class ReportServiceImpl implements ReportService {
 
         Page<ComplaintPost> complaintPosts = complaintPostRepository.getComplaintPostByHost_Id(host.getId(), PageRequest.of(page, size));
 
-        if(Objects.isNull(complaintPosts)){
+        if (Objects.isNull(complaintPosts)) {
             throw new NotFoundException("khong co khieu nai nao cua host");
         } else {
             List<ComplaintDto> complaintDtoList = new ArrayList<>();
@@ -515,6 +516,20 @@ public class ReportServiceImpl implements ReportService {
                     put("size", indexPage);
                 }
             }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID, int status) {
+
+        ReportRate reportRate = reportRateRepository.getReportRateById(reportRateID);
+
+        if (Objects.isNull(reportRate)) {
+            throw new NotFoundException("report-rate-id khong ton tai");
+        } else {
+            reportRate.setStatus(status);
+            reportRateRepository.save(reportRate);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
         }
     }
 
