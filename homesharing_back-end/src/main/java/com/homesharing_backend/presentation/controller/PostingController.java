@@ -4,8 +4,10 @@ import com.homesharing_backend.data.entity.Post;
 import com.homesharing_backend.data.repository.PostRepository;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.request.PostRequest;
+import com.homesharing_backend.presentation.payload.request.PostVoucherRequest;
 import com.homesharing_backend.service.PostImageService;
 import com.homesharing_backend.service.PostService;
+import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,9 @@ public class PostingController {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private PostVoucherService postVoucherService;
 
     @PostMapping(value = "/create-posting")
     @PreAuthorize("hasRole('ROLE_HOST')")
@@ -82,5 +87,12 @@ public class PostingController {
     public ResponseEntity<?> editImage(@RequestParam("post-id") Long postID,
                                        @RequestParam("file") List<MultipartFile> multipartFiles) {
         return postImageService.editPostImageByPostImageID(postID, multipartFiles);
+    }
+
+    @PostMapping("/insert-post-voucher")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> insertPostVoucherByHost(@RequestParam("post-id") Long postID,
+                                                     @RequestBody PostVoucherRequest postVoucherRequest) {
+        return postVoucherService.insertPostVoucher(postID, postVoucherRequest);
     }
 }

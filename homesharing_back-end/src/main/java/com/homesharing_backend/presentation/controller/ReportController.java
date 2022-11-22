@@ -19,7 +19,7 @@ public class ReportController {
     @PostMapping("/create-reportRate")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> createReportRateByHost(@RequestBody ReportRequest reportRequest,
-                                                        @RequestParam("rate-id") Long rateID) {
+                                                    @RequestParam("rate-id") Long rateID) {
         return reportService.createReportRate(reportRequest, rateID);
     }
 
@@ -85,13 +85,19 @@ public class ReportController {
 
     @GetMapping("/all-complaint-post")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllComplaintPostByAdmin( @RequestParam("index-page") int indexPage){
-        return reportService.getAllComplaintPostByPost(indexPage);
+    public ResponseEntity<?> getAllComplaintPostByAdmin(@RequestParam("index-page") int indexPage) {
+        return reportService.getAllComplaintPostByAdmin(indexPage);
     }
 
     @GetMapping("/all-complaint-rate")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllComplaintRateByAdmin( @RequestParam("index-page") int indexPage){
+    public ResponseEntity<?> getAllComplaintRateByAdmin(@RequestParam("index-page") int indexPage) {
         return reportService.getAllComplaintRateByAdmin(indexPage);
+    }
+
+    @GetMapping("/all-complaint-post-host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllComplaintPostByHost(@RequestParam("index-page") int indexPage) {
+        return reportService.getAllComplaintPostByHost(indexPage);
     }
 }

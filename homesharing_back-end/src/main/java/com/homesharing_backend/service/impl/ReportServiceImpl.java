@@ -436,7 +436,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> getAllComplaintPostByPost(int indexPage) {
+    public ResponseEntity<ResponseObject> getAllComplaintPostByAdmin(int indexPage) {
 
         int size = 10;
         int page = indexPage - 1;
@@ -447,6 +447,48 @@ public class ReportServiceImpl implements ReportService {
             throw new NotFoundException("khong co data khieu nai");
         } else {
 
+            List<ComplaintDto> complaintDtoList = new ArrayList<>();
+
+            complaintPosts.forEach(r -> {
+
+                ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
+
+                ComplaintDto dto = ComplaintDto.builder()
+                        .reportID(post.getId())
+                        .reportTypeID(post.getReportType().getId())
+                        .fullName(r.getHost().getUser().getUserDetail().getFullName())
+                        .username(r.getHost().getUser().getUsername())
+                        .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
+                        .description(r.getDescription())
+                        .nameReportType(post.getReportType().getName())
+                        .statusComplaint(r.getStatus())
+                        .build();
+
+                complaintDtoList.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listComplaint", complaintDtoList);
+                    put("sizePage", complaintPosts.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllComplaintPostByHost(int indexPage) {
+
+        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<ComplaintPost> complaintPosts = complaintPostRepository.getComplaintPostByHost_Id(host.getId(), PageRequest.of(page, size));
+
+        if(Objects.isNull(complaintPosts)){
+            throw new NotFoundException("khong co khieu nai nao cua host");
+        } else {
             List<ComplaintDto> complaintDtoList = new ArrayList<>();
 
             complaintPosts.forEach(r -> {
