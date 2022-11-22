@@ -101,10 +101,17 @@ public class ReportController {
         return reportService.getAllComplaintPostByHost(indexPage);
     }
 
-    @PutMapping("/update-status")
+    @PutMapping("/update-status-report-rate")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-post-id") Long reportRateID,
+    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-rate-id") Long reportRateID,
                                                            @RequestParam("status") int status) {
         return reportService.updateStatusReportRate(reportRateID, status);
+    }
+
+    @PutMapping("/update-status-report-post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestParam("report-post-id") Long reportPostID,
+                                                           @RequestParam("status") int status) {
+        return reportService.updateStatusReportPost(reportPostID, status);
     }
 }
