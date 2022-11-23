@@ -26,7 +26,7 @@ public class PaymentPackage {
     private int dueMonth;
 
     @Column(name = "price")
-    private float price;
+    private int price;
 
     @Column(name = "status")
     private int status;
