@@ -144,6 +144,7 @@ public class PostServiceImpl implements PostService {
                 .price(postRequest.getPrice())
                 .host(host)
                 .createDate(dateStart)
+                .statusReport(1)
                 .status(0)
                 .build();
 

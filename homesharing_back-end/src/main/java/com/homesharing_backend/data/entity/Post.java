@@ -34,4 +34,7 @@ public class Post {
     @Column(name = "status")
     private int status;
 
+    @Column(name = "status_report")
+    private int statusReport;
+
 }

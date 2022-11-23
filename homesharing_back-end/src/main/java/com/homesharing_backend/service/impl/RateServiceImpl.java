@@ -151,7 +151,7 @@ public class RateServiceImpl implements RateService {
         if (Objects.isNull(rate)) {
             throw new NotFoundException("Rate_id khong ton tai trong rate");
         } else {
-            rate.setStatus(2);
+            rate.setStatus(3);
 
             Rate deleteRate = rateRepository.save(rate);
 

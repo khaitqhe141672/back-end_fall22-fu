@@ -5,8 +5,11 @@ import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ComplaintRequest;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
+import com.homesharing_backend.presentation.payload.request.UpdateReportPostRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface ReportService {
@@ -41,5 +44,5 @@ public interface ReportService {
 
     public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID, int status);
 
-    public ResponseEntity<MessageResponse> updateStatusReportPost(Long reportPostID, int status);
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, int status);
 }

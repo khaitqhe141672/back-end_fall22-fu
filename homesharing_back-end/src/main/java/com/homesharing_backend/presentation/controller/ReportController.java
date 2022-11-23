@@ -2,6 +2,7 @@ package com.homesharing_backend.presentation.controller;
 
 import com.homesharing_backend.presentation.payload.request.ComplaintRequest;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
+import com.homesharing_backend.presentation.payload.request.UpdateReportPostRequest;
 import com.homesharing_backend.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -110,8 +111,8 @@ public class ReportController {
 
     @PutMapping("/update-status-report-post")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestParam("report-post-id") Long reportPostID,
+    public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestBody UpdateReportPostRequest updateReportPostRequest,
                                                            @RequestParam("status") int status) {
-        return reportService.updateStatusReportPost(reportPostID, status);
+        return reportService.updateStatusReportPost(updateReportPostRequest, status);
     }
 }
