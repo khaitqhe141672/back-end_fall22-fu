@@ -555,6 +555,15 @@ public class ReportServiceImpl implements ReportService {
             if (Objects.isNull(reportPost) && Objects.isNull(post)) {
                 throw new NotFoundException("report-post-id khong ton tai");
             } else {
+
+                if (status == 2) {
+                    HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
+                            .statusReport(2)
+                            .statusPost(2)
+                            .post(post)
+                            .reportPost(reportPost)
+                            .build();
+                }
                 reportPost.setStatus(status);
                 post.setStatus(status);
                 reportPostRepository.save(reportPost);
