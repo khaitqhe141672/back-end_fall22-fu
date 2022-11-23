@@ -13,6 +13,7 @@ import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ComplaintRequest;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
+import com.homesharing_backend.presentation.payload.request.UpdateReportPostRequest;
 import com.homesharing_backend.service.ReportService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -534,17 +535,24 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateStatusReportPost(Long reportPostID, int status) {
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, int status) {
 
-        ReportPost reportPost = reportPostRepository.getReportPostById(reportPostID);
+        updateReportPostRequest.getListReportPostID().forEach(r -> {
 
-        if (Objects.isNull(reportPost)) {
-            throw new NotFoundException("report-post-id khong ton tai");
-        } else {
-            reportPost.setStatus(status);
-            reportPostRepository.save(reportPost);
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
-        }
+            ReportPost reportPost = reportPostRepository.getReportPostById(r);
+            Post post = postRepository.getPostById(reportPost.getPost().getId());
+
+            if (Objects.isNull(reportPost) && Objects.isNull(post)) {
+                throw new NotFoundException("report-post-id khong ton tai");
+            } else {
+                reportPost.setStatus(status);
+                post.setStatus(status);
+                reportPostRepository.save(reportPost);
+                postRepository.save(post);
+            }
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
     }
 
     /*status = 1 dang cho admin xu ly*/
