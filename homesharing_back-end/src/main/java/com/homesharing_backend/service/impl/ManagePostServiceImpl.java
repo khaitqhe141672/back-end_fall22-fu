@@ -4,6 +4,7 @@ import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManagePostService;
@@ -289,6 +290,20 @@ public class ManagePostServiceImpl implements ManagePostService {
                     put("totalBooking", viewBookingDtoPage.getTotalElements());
                 }
             }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> updateStatusPostByHost(Long postID, int status) {
+
+        Post post = postRepository.getPostById(postID);
+
+        if(Objects.isNull(post)){
+            throw new NotFoundException("khong co post-id nao");
+        } else {
+            post.setStatus(status);
+            postRepository.save(post);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update thanh cong"));
         }
     }
 
