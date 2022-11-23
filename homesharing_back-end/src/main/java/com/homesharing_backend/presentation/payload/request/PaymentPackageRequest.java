@@ -15,5 +15,5 @@ public class PaymentPackageRequest {
 
     private String name;
     private int dueMonth;
-    private float price;
+    private int price;
 }
