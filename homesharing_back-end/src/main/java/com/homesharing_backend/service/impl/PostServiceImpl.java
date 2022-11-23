@@ -217,18 +217,6 @@ public class PostServiceImpl implements PostService {
                         }
                     });
 
-                    PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(postRequest.getPaymentPackageID());
-                    if (!Objects.isNull(paymentPackage)) {
-                        PostPayment postPayment = PostPayment.builder()
-                                .post(savePost)
-                                .paymentPackage(paymentPackage)
-                                .startDate(dateStart)
-                                .endDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())))
-                                .status(0)
-                                .build();
-                        postPaymentRepository.save(postPayment);
-                    }
-
                     postRequest.getPostServiceRequests().forEach(s -> {
                         Services services = servicesRepository.getServicesById(s.getServiceID());
 
