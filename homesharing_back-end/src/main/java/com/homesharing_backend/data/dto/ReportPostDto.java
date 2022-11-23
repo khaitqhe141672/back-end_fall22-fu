@@ -28,12 +28,13 @@ public class ReportPostDto {
 
     private int statusReportPost;
 
-    private List<ReportType> reportTypes;
+    private List<Long> listReportPostID;
 
     public ReportPostDto(Long postID, String title,
                          float price, String imagePostUrl,
                          String username, String imageUserUrl,
-                         int typeAccount, int statusPost, int statusReportPost) {
+                         int typeAccount, int statusPost,
+                         int statusReportPost) {
         this.postID = postID;
         this.title = title;
         this.price = price;

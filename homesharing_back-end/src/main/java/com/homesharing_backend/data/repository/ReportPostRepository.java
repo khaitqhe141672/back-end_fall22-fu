@@ -31,4 +31,7 @@ public interface ReportPostRepository extends JpaRepository<ReportPost, Long> {
     Page<ReportPostDto> listAllReportPostByHost(PageRequest pageRequest);
 
     Page<ReportPost> findReportPostByPost_IdAndStatus(Long postID, int status, PageRequest pageRequest);
+
+
+    List<ReportPost> getReportPostByPost_IdAndStatus(Long postID, int status);
 }
