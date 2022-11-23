@@ -8,6 +8,7 @@ import com.homesharing_backend.data.repository.PaymentPackageRepository;
 import com.homesharing_backend.data.repository.PostPaymentRepository;
 import com.homesharing_backend.data.repository.PostRepository;
 import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
@@ -115,7 +116,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> paymentResult(Long postID, Long packagePaymentID) {
+    public ResponseEntity<JwtResponse> paymentResult(Long postID, Long packagePaymentID) {
 
 
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -124,24 +125,33 @@ public class PaymentServiceImpl implements PaymentService {
         Date dateNow = Date.valueOf(localDate);
 
         PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(packagePaymentID);
-
-        String mess = "";
-
+  
         Post post = postRepository.getPostById(postID);
 
-        if (!Objects.isNull(post)) {
-            PostPayment postPayment = new PostPayment();
-            postPayment.setStatus(1);
-            postPayment.setStartDate(dateNow);
-            postPayment.setEndDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())));
-            postPayment.setPaymentPackage(paymentPackage);
-            postPayment.setPost(post);
-            postPaymentRepository.save(postPayment);
+        int status = 0;
 
-            post.setStatus(1);
-            postRepository.save(post);
+        if (!Objects.isNull(post)) {
+
+            PostPayment pp = postPaymentRepository.getPostPaymentByPost_IdAndStatusAndPaymentPackage_Id(post.getId(), 1, paymentPackage.getId());
+
+            if (Objects.isNull(pp)) {
+                PostPayment postPayment = new PostPayment();
+                postPayment.setStatus(1);
+                postPayment.setStartDate(dateNow);
+                postPayment.setEndDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())));
+                postPayment.setPaymentPackage(paymentPackage);
+                postPayment.setPost(post);
+                postPaymentRepository.save(postPayment);
+
+                post.setStatus(1);
+                postRepository.save(post);
+                status = 1;
+            } else {
+                status = 0;
+                throw new SaveDataException("da duoc thanh toan");
+            }
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Add post-payment thanh cong"));
+        return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), status));
     }
 }

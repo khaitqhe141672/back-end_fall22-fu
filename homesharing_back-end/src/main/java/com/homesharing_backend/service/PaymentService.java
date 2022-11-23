@@ -16,5 +16,5 @@ public interface PaymentService {
 
     public ResponseEntity<ResponseObject> createPayment(PaymentRequest paymentRequest) throws UnsupportedEncodingException;
 
-    public ResponseEntity<MessageResponse> paymentResult(Long postID, Long packagePaymentID);
+    public ResponseEntity<JwtResponse> paymentResult(Long postID, Long packagePaymentID);
 }
