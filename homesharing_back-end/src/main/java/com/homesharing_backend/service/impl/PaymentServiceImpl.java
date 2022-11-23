@@ -137,6 +137,9 @@ public class PaymentServiceImpl implements PaymentService {
             postPayment.setPaymentPackage(paymentPackage);
             postPayment.setPost(post);
             postPaymentRepository.save(postPayment);
+
+            post.setStatus(1);
+            postRepository.save(post);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Add post-payment thanh cong"));
