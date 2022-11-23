@@ -19,7 +19,7 @@ public class PaymentConfig {
     public static String COMMAND = "pay";
     public static String ORDER_TYPE = "130006";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/api/payment/payment-result";
+    public static String vnp_ReturnUrl = "http://localhost:4200/payment-success";
     public static String vnp_TmnCode = "XWSIYU2B";
     public static String vnp_HashSecret = "IUUVEFLBGLIRHVGOHVROSTGGUJJDIZBL";
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/merchant.html";

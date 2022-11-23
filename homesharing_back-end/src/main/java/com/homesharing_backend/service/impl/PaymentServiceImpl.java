@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (Objects.isNull(paymentPackage)) {
             throw new NotFoundException("khong tim thay payment-packate-id");
         } else {
-            int price = paymentPackage.getPrice() * 100;
+            int price = paymentPackage.getPrice();
 
             String paymentID = paymentRequest.getPaymentPackageID() + "-"
                     + paymentRequest.getPostID() + "-" + PaymentConfig.getRandomNumber(6);
@@ -115,40 +115,30 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> paymentResult(String responseCode, String status,
-                                                         String payDate, String orderID, String id) {
+    public ResponseEntity<MessageResponse> paymentResult(Long postID, Long packagePaymentID) {
 
-        List<String> list = List.of(id.split("-"));
-        Long paymentPackageID = Long.valueOf(list.get(0));
-        Long postID = Long.valueOf(list.get(1));
 
         LocalDateTime localDateTime = LocalDateTime.now();
         LocalDate localDate = localDateTime.toLocalDate();
 
         Date dateNow = Date.valueOf(localDate);
-        System.out.println(paymentPackageID);
-        System.out.println(postID);
 
-        PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(paymentPackageID);
+        PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(packagePaymentID);
 
         String mess = "";
 
-        if ("00".equals(responseCode)) {
-            Post post = postRepository.getPostById(postID);
+        Post post = postRepository.getPostById(postID);
 
-            if (!Objects.isNull(post)) {
-                PostPayment postPayment = new PostPayment();
-                postPayment.setStatus(1);
-                postPayment.setStartDate(dateNow);
-                postPayment.setEndDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())));
-                postPayment.setPost(post);
-                postPaymentRepository.save(postPayment);
-            }
-
-            mess = "thanh toan thanh cong";
-        } else {
-            mess = "thanh toan khong thanh cong";
+        if (!Objects.isNull(post)) {
+            PostPayment postPayment = new PostPayment();
+            postPayment.setStatus(1);
+            postPayment.setStartDate(dateNow);
+            postPayment.setEndDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())));
+            postPayment.setPaymentPackage(paymentPackage);
+            postPayment.setPost(post);
+            postPaymentRepository.save(postPayment);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), mess));
+
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Add post-payment thanh cong"));
     }
 }
