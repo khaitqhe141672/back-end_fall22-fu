@@ -13,5 +13,4 @@ public class PaymentRequest {
 
     private Long postID;
     private Long paymentPackageID;
-    private int price;
 }
