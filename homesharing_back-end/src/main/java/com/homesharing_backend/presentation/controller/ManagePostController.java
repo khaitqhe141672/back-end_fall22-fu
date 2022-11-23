@@ -57,4 +57,10 @@ public class ManagePostController {
     public ResponseEntity<?> getAllCurrentBookingByHost(@RequestParam("index-page") int indexPage) {
         return managePostService.getCurrentBooking(indexPage);
     }
+
+    @PutMapping("/update-status-post-host")
+    public ResponseEntity<?> updateStatusPostByHost(@RequestParam("post-id") Long postID,
+                                                    @RequestParam("status") int status) {
+        return managePostService.updateStatusPostByHost(postID, status);
+    }
 }

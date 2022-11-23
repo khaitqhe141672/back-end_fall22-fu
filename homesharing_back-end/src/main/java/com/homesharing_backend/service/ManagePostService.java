@@ -21,4 +21,7 @@ public interface ManagePostService {
     public ResponseEntity<ResponseObject> getTotalBookingStatusByHost();
 
     public ResponseEntity<ResponseObject> getCurrentBooking(int indexPage);
+
+    public ResponseEntity<MessageResponse> updateStatusPostByHost(Long postID, int status);
+
 }
