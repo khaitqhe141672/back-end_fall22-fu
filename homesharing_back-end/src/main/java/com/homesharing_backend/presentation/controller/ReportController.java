@@ -115,4 +115,11 @@ public class ReportController {
                                                            @RequestParam("status") int status) {
         return reportService.updateStatusReportPost(updateReportPostRequest, status);
     }
+
+    @GetMapping("/all-report-post-done")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllReportPostDonePostByHost(@RequestParam("post-id") Long postID,
+                                                            @RequestParam("index-page") int indexPage) {
+        return reportService.getAllReportPostStatusDoneByHost(indexPage, postID);
+    }
 }

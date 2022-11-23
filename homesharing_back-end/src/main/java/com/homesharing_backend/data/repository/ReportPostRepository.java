@@ -29,4 +29,6 @@ public interface ReportPostRepository extends JpaRepository<ReportPost, Long> {
             "LEFT JOIN Host h ON p.host.id = h.id " +
             "GROUP BY rp.id")
     Page<ReportPostDto> listAllReportPostByHost(PageRequest pageRequest);
+
+    Page<ReportPost> findReportPostByPost_IdAndStatus(Long postID, int status, PageRequest pageRequest);
 }

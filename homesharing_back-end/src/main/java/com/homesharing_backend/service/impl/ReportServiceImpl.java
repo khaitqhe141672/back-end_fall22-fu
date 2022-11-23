@@ -557,6 +557,49 @@ public class ReportServiceImpl implements ReportService {
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> getAllReportPostStatusDoneByHost(int indexPage, Long postID) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Post post = postRepository.getPostById(postID);
+
+        if (Objects.isNull(post)) {
+            throw new NotFoundException("post null");
+        } else {
+
+            Page<ReportPost> reportPosts = reportPostRepository.findReportPostByPost_IdAndStatus(post.getId(), 2, PageRequest.of(page, size));
+
+            if(Objects.isNull(reportPosts)){
+                throw new NotFoundException("post null");
+            } else{
+                List<ReportDto> reportPostDtoList = new ArrayList<>();
+
+                reportPosts.forEach(r -> {
+                    ReportDto dto = ReportDto.builder()
+                            .reportID(r.getId())
+                            .username(r.getCustomer().getUser().getUsername())
+                            .imageUrl(r.getCustomer().getUser().getUserDetail().getAvatarUrl())
+                            .description(r.getDescription())
+                            .reportTypeID(r.getReportType().getId())
+                            .nameReportType(r.getReportType().getName())
+                            .status(r.getStatus())
+                            .build();
+
+                    reportPostDtoList.add(dto);
+                });
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                    {
+                        put("listReportPost", reportPostDtoList);
+                        put("sizePage", reportPosts.getTotalPages());
+                        put("size", indexPage);
+                    }
+                }));
+            }
+        }
+    }
+
     /*status = 1 dang cho admin xu ly*/
     @Override
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportRateID) {
