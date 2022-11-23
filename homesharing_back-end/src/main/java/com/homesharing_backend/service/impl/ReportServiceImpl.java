@@ -336,14 +336,22 @@ public class ReportServiceImpl implements ReportService {
             } else {
 
                 List<ReportPostDto> reportPostDtoList = new ArrayList<>();
-                List<ReportType> reportTypes = reportTypeRepository.getReportTypeByStatus(1);
 
                 posts.forEach(p -> {
+
+                    List<Long> list = new ArrayList<>();
+
+                    List<ReportPost> reportPosts = reportPostRepository.getReportPostByPost_IdAndStatus(p.getPostID(), 1);
+                    if (!Objects.isNull(reportPosts)) {
+                        reportPosts.forEach(rp -> {
+                            list.add(rp.getId());
+                        });
+                    }
 
                     int totalReport = reportPostRepository.countReportPostByPost_Id(p.getPostID());
 
                     p.setTotalReport(totalReport);
-                    p.setReportTypes(reportTypes);
+                    p.setListReportPostID(list);
                     reportPostDtoList.add(p);
                 });
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
@@ -571,9 +579,9 @@ public class ReportServiceImpl implements ReportService {
 
             Page<ReportPost> reportPosts = reportPostRepository.findReportPostByPost_IdAndStatus(post.getId(), 2, PageRequest.of(page, size));
 
-            if(Objects.isNull(reportPosts)){
+            if (Objects.isNull(reportPosts)) {
                 throw new NotFoundException("post null");
-            } else{
+            } else {
                 List<ReportDto> reportPostDtoList = new ArrayList<>();
 
                 reportPosts.forEach(r -> {
