@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (Objects.isNull(paymentPackage)) {
             throw new NotFoundException("khong tim thay payment-packate-id");
         } else {
-            int price = paymentPackage.getPrice();
+            int price = paymentPackage.getPrice() * 100;
 
             String paymentID = paymentRequest.getPaymentPackageID() + "-"
                     + paymentRequest.getPostID() + "-" + PaymentConfig.getRandomNumber(6);

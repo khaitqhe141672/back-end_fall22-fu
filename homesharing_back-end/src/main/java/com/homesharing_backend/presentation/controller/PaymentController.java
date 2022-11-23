@@ -23,7 +23,7 @@ public class PaymentController {
         return paymentService.createPayment(paymentRequest);
     }
 
-    @GetMapping("/payment-result")
+    @PostMapping("/payment-result")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> paymentResult(@RequestParam(value = "post-id") Long postID,
                                            @RequestParam(value = "payment-package-id") Long paymentPackageID) {
