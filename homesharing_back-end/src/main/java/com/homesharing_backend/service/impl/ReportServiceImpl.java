@@ -336,12 +336,14 @@ public class ReportServiceImpl implements ReportService {
             } else {
 
                 List<ReportPostDto> reportPostDtoList = new ArrayList<>();
+                List<ReportType> reportTypes = reportTypeRepository.getReportTypeByStatus(1);
 
                 posts.forEach(p -> {
 
                     int totalReport = reportPostRepository.countReportPostByPost_Id(p.getPostID());
 
                     p.setTotalReport(totalReport);
+                    p.setReportTypes(reportTypes);
                     reportPostDtoList.add(p);
                 });
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
