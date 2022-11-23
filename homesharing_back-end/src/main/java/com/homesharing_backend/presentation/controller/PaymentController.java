@@ -24,11 +24,9 @@ public class PaymentController {
     }
 
     @GetMapping("/payment-result")
-    public ResponseEntity<?> paymentResult(@RequestParam(value = "vnp_ResponseCode") String responseCode,
-                                           @RequestParam(value = "vnp_TransactionStatus", required = false) String status,
-                                           @RequestParam(value = "vnp_PayDate", required = false) String payDate,
-                                           @RequestParam(value = "vnp_OrderInfo", required = false) String orderInfo,
-                                           @RequestParam(value = "vnp_TxnRef", required = false) String id) {
-        return paymentService.paymentResult(responseCode, status, payDate, orderInfo, id);
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> paymentResult(@RequestParam(value = "post-id") Long postID,
+                                           @RequestParam(value = "payment-package-id") Long paymentPackageID) {
+        return paymentService.paymentResult(postID, paymentPackageID);
     }
 }
