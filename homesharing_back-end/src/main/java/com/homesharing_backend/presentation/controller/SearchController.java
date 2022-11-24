@@ -1,5 +1,6 @@
 package com.homesharing_backend.presentation.controller;
 
+import com.homesharing_backend.presentation.payload.request.SearchFilterRequest;
 import com.homesharing_backend.presentation.payload.request.SearchRequest;
 import com.homesharing_backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,11 @@ public class SearchController {
     public ResponseEntity<?> getSearchByName(@RequestBody SearchRequest nameSearch,
                                              @RequestParam("index-page") int indexPage) {
         return searchService.searchByTitlePostOrLocation(nameSearch, indexPage);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> getSearchFilter(@RequestBody SearchFilterRequest SearchFilterRequest,
+                                             @RequestParam("index-page") int indexPage) {
+        return searchService.searchFilter(SearchFilterRequest, indexPage);
     }
 }

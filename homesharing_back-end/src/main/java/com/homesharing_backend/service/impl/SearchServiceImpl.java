@@ -5,6 +5,7 @@ import com.homesharing_backend.data.repository.DistrictRepository;
 import com.homesharing_backend.data.repository.PostRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
+import com.homesharing_backend.presentation.payload.request.SearchFilterRequest;
 import com.homesharing_backend.presentation.payload.request.SearchRequest;
 import com.homesharing_backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,22 +42,69 @@ public class SearchServiceImpl implements SearchService {
 
             List<SearchDto> list = new ArrayList<>();
 
-//            if (Objects.isNull(searchDtoListByTitle)) {
-//                List<SearchDto> searchDtoListByProvince = postRepository.listSearchPostByProvince(searchRequest.getSearchText());
-//                if (Objects.isNull(searchDtoListByProvince)) {
-//                    throw new NotFoundException("Search not find data");
-//                } else {
-//                    list = searchDtoListByProvince;
-//                }
-//            } else {
-//                list = searchDtoListByTitle;
-//            }
+            if (Objects.isNull(searchDtoListByTitle)) {
+                throw new NotFoundException("search khong co data");
+            } else {
+                searchDtoListByTitle.forEach(s -> {
+                    SearchDto dto = SearchDto.builder()
+                            .postID(s.getPostID())
+                            .title(s.getTitle())
+                            .address(s.getAddress())
+                            .imageUrl(s.getImageUrl())
+                            .price(s.getPrice())
+                            .fullName(s.getFullName())
+                            .nameVoucher(s.getNameVoucher())
+                            .typeAccount(s.getTypeAccount())
+                            .avgStar(s.getAvgStar())
+                            .build();
+                    list.add(dto);
+                });
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                 {
-                    put("searchList", searchDtoListByTitle);
+                    put("searchList", list);
                     put("sizePage", searchDtoListByTitle.getTotalPages());
                 }
             }));
         }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> searchFilter(SearchFilterRequest searchFilterRequest, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<SearchDto> searchDtos = postRepository.getSearchFilter(searchFilterRequest.getVoucherPercent(),
+                searchFilterRequest.getMinPrice(), searchFilterRequest.getMaxPrice(), searchFilterRequest.getRoomTypeID(),
+                searchFilterRequest.getNumberOfGuest(), searchFilterRequest.getRoomTypeID(), searchFilterRequest.getMinStar(),
+                searchFilterRequest.getMaxStar(), searchFilterRequest.getStartDate(), PageRequest.of(page, size));
+
+        List<SearchDto> list = new ArrayList<>();
+
+        if (Objects.isNull(searchDtos)) {
+            throw new NotFoundException("search khong co data");
+        } else {
+            searchDtos.forEach(s -> {
+                SearchDto dto = SearchDto.builder()
+                        .postID(s.getPostID())
+                        .title(s.getTitle())
+                        .address(s.getAddress())
+                        .imageUrl(s.getImageUrl())
+                        .price(s.getPrice())
+                        .fullName(s.getFullName())
+                        .nameVoucher(s.getNameVoucher())
+                        .typeAccount(s.getTypeAccount())
+                        .avgStar(s.getAvgStar())
+                        .build();
+                list.add(dto);
+            });
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+            {
+                put("searchList", searchDtos);
+                put("sizePage", searchDtos.getTotalPages());
+            }
+        }));
     }
 }

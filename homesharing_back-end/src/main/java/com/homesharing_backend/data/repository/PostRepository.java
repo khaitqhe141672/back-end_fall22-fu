@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +53,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public List<PostDto> getPostDTO(@Param("hostID") Long hostID);
 
     @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
-            " pi.imageUrl, v.code, avg(r.point)) FROM Post p " +
+            " pi.imageUrl, v.code, avg(r.point), p.host.typeAccount) FROM Post p " +
             "LEFT JOIN PostDetail pd on p.id = pd.post.id " +
             "LEFT join PostVoucher pv on p.id = pv.post.id " +
             "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
@@ -63,7 +64,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<SearchDto> listSearchPostByTitle(@Param("title") String title, PageRequest pageRequest);
 
     @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
-            " pi.imageUrl, v.code, avg(r.point)) FROM Post p " +
+            " pi.imageUrl, v.code, avg(r.point), p.host.typeAccount) FROM Post p " +
             "LEFT JOIN PostDetail pd on p.id = pd.post.id " +
             "LEFT join PostVoucher pv on p.id = pv.post.id " +
             "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
@@ -94,4 +95,25 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN BookingDetail bd on b.id = bd.booking.id " +
             "LEFT JOIN Post p on bd.post.id = p.id WHERE p.host.id= :hostID AND b.status= 2 AND (current_date() between bd.startDate AND bd.endDate)")
     Page<ViewBookingDto> getAllCurrentBooking(@Param("hostID") Long hostID, PageRequest pageRequest);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price, pi.imageUrl, v.description, " +
+            "avg(r.point), h.typeAccount, h.user.userDetail.fullName) FROM Post p " +
+            "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +
+            "LEFT JOIN PostImage pi ON p.id = pi.post.id " +
+            "LEFT JOIN PostServices ps ON p.id = ps.post.id " +
+            "LEFT JOIN PostVoucher pv ON p.id = pv.post.id " +
+            "LEFT JOIN Voucher v ON pv.voucher.id = v.id " +
+            "LEFT JOIN Host h ON p.host.id = h.id " +
+            "LEFT JOIN User u ON h.user.id = u.id " +
+            "LEFT JOIN UserDetail ud ON u.userDetail.userDetailId = ud.userDetailId " +
+            "LEFT JOIN BookingDetail bd ON p.id = bd.post.id " +
+            "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id " +
+            "WHERE (v.percent IN :percent) AND (p.price BETWEEN :minPrice AND :maxPrice) " +
+            "AND (pd.roomType.id IN :listRoomTypeID) AND (pd.guestNumber = :guestNumber) " +
+            "AND (ps.services.id IN :listServiceID) AND (bd.startDate <> :starDate) GROUP BY p.id " +
+            "HAVING (avg(r.point) BETWEEN :minStar AND :maxStar)")
+    Page<SearchDto> getSearchFilter(@Param("percent") List<Integer> percent, @Param("minPrice") float minPrice, @Param("maxPrice") float maxPrice,
+                                    @Param("listRoomTypeID") List<Long> listRoomTypeID, @Param("guestNumber") int guestNumber,
+                                    @Param("listServiceID") List<Long> listServiceID, @Param("minStar") double minStar, @Param("maxStar") double maxStar,
+                                    @Param("starDate") Date starDate, PageRequest pageRequest);
 }

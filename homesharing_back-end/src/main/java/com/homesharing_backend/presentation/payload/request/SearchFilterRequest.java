@@ -13,14 +13,13 @@ import java.util.List;
 public class SearchFilterRequest {
 
     private List<Integer> voucherPercent;
-    private List<String> service;
+    private List<Long> service;
     private List<Long> roomTypeID;
     private Date startDate;
-    private Date endDate;
     private float minPrice;
     private float maxPrice;
-    private int minStar;
-    private int maxStar;
+    private double minStar;
+    private double maxStar;
     private int statusSortPrice;
     private int numberOfGuest;
 }
