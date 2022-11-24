@@ -149,15 +149,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> checkVoucher(String code, Long postID) {
+    public ResponseEntity<JwtResponse> checkVoucher(String code, Long postID) {
 
         if (Objects.isNull(code)) {
             throw new NotFoundException("Voucher_id null");
         } else {
-            if (!postVoucherRepository.existsPostVoucherByVoucher_CodeAndPost_Id(code, postID)) {
-                throw new NotFoundException("Voucher_id khong ton tai");
+            PostVoucher postVoucher = postVoucherRepository.getPostVoucherByPost_IdAndVoucher_Code(postID, code);
+            if (Objects.isNull(postVoucher)) {
+                return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(21 + "", "Voucher_id khong ton tai"));
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Voucher_id ton tai"));
+                return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(20 + "", postVoucher.getVoucher().getPercent()));
             }
         }
     }
@@ -289,7 +290,7 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Booking_id khong ton tai");
         } else {
 
-            if(type == 1){
+            if (type == 1) {
                 booking.setStatus(2);
             } else {
                 booking.setStatus(5);
