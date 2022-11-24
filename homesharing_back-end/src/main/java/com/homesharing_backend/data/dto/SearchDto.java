@@ -20,10 +20,13 @@ public class SearchDto {
     private String imageUrl;
     private String nameVoucher;
     private Double avgStar;
+    private int typeAccount;
+    private String fullName;
+
 
     public SearchDto(Long postID, String title, String address,
                      float price, String imageUrl, String nameVoucher,
-                     Double avgStar) {
+                     Double avgStar, int typeAccount) {
         this.postID = postID;
         this.title = title;
         this.address = address;
@@ -31,5 +34,20 @@ public class SearchDto {
         this.imageUrl = imageUrl;
         this.nameVoucher = nameVoucher;
         this.avgStar = avgStar;
+        this.typeAccount = typeAccount;
+    }
+
+    public SearchDto(Long postID, String title, String address,
+                     float price, String imageUrl, String nameVoucher,
+                     Double avgStar, int typeAccount, String fullName) {
+        this.postID = postID;
+        this.title = title;
+        this.address = address;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.nameVoucher = nameVoucher;
+        this.avgStar = avgStar;
+        this.typeAccount = typeAccount;
+        this.fullName = fullName;
     }
 }
