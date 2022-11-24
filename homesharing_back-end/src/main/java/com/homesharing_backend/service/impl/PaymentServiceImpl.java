@@ -125,7 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
         Date dateNow = Date.valueOf(localDate);
 
         PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(packagePaymentID);
-  
+
         Post post = postRepository.getPostById(postID);
 
         int status = 0;

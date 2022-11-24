@@ -99,6 +99,7 @@ public class PostVoucherServiceImpl implements PostVoucherService {
                             .endDate(Date.valueOf(localDate.plusDays(voucher.getDueDay())))
                             .status(1)
                             .post(post)
+                            .voucher(voucher)
                             .build();
                     postVoucherRepository.save(pv);
                 } else {
