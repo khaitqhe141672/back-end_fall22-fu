@@ -1,9 +1,6 @@
 package com.homesharing_backend.service.impl;
 
-import com.homesharing_backend.data.dto.ComplaintDto;
-import com.homesharing_backend.data.dto.PostDto;
-import com.homesharing_backend.data.dto.ReportDto;
-import com.homesharing_backend.data.dto.ReportPostDto;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
@@ -60,6 +57,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private PostImageRepository postImageRepository;
+
+    @Autowired
+    private HistoryHandleReportPostRepository historyHandleReportPostRepository;
 
     @Override
     public ResponseEntity<MessageResponse> createReportRate(ReportRequest reportRequest, Long rateID) {
@@ -561,6 +561,7 @@ public class ReportServiceImpl implements ReportService {
                             .statusReport(2)
                             .statusPost(2)
                             .post(post)
+                            .statusHistory(1)
                             .reportPost(reportPost)
                             .build();
                 }
@@ -615,6 +616,46 @@ public class ReportServiceImpl implements ReportService {
                 }));
             }
         }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllHistoryReportPost(Long postID, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<HistoryHandleReportPost> historyHandleReportPosts =
+                historyHandleReportPostRepository.getHistoryHandleReportPostByPost_Id(postID, PageRequest.of(page, size));
+
+        List<HistoryReportPostDto> reportPostDtoList = new ArrayList<>();
+        if (Objects.isNull(historyHandleReportPosts)) {
+            throw new NotFoundException("Khong co data cua history");
+        } else {
+
+
+            historyHandleReportPosts.forEach(h -> {
+                HistoryReportPostDto dto = HistoryReportPostDto.builder()
+                        .statusReport(h.getStatusReport())
+                        .postID(h.getPost().getId())
+                        .title(h.getPost().getTitle())
+                        .statusHistory(h.getStatusHistory())
+                        .statusPost(h.getStatusPost())
+                        .reportPostID(h.getReportPost().getId())
+                        .reportTypeName(h.getReportPost().getReportType().getName())
+                        .reportTypeID(h.getReportPost().getReportType().getId())
+                        .description(h.getReportPost().getDescription())
+                        .build();
+
+                reportPostDtoList.add(dto);
+            });
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+            {
+                put("listHistoryReportPost", reportPostDtoList);
+                put("sizePage", historyHandleReportPosts.getTotalPages());
+                put("size", indexPage);
+            }
+        }));
     }
 
     /*status = 1 dang cho admin xu ly*/
