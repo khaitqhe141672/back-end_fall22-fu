@@ -18,7 +18,6 @@ public class ServicesController {
     private ServicesService servicesService;
 
     @GetMapping("/all-list")
-    @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> getAllServiceByHost() {
         return servicesService.getAllServiceByHost();
     }
