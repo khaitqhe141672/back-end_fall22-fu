@@ -37,6 +37,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +77,12 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private FollowHostRepository followHostRepository;
 
+    @Autowired
+    private UserDetailRepository userDetailRepository;
+
+    @Autowired
+    private AWSService awsService;
+
     @Override
     public ResponseEntity<ResponseObject> register(SignupRequest signUpRequest, HttpServletRequest servletRequest) {
 
@@ -91,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
             userDetail.setDob(signUpRequest.getDob());
             userDetail.setAddress(signUpRequest.getAddress());
             userDetail.setMobile(signUpRequest.getMobile());
-            userDetail.setAvatarUrl("https://home-sharing.s3.ap-southeast-1.amazonaws.com/1665851455149_avatar.png");
+            userDetail.setAvatarUrl("https://home-sharing.s3.ap-southeast-1.amazonaws.com/avatar.png");
             user.setUserDetail(userDetail);
             String strRoles = signUpRequest.getRole();
             Role roles = new Role();
@@ -165,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
 
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
-            String text = baseUrl + "/api/auth/confirm-account?token=" + otp;
+            String text = "http://localhost:4200/auth/confirm-account?otp=" + otp;
             new JavaMail().sentEmail(toEmail, subject, text);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("User registered successfully!", new HashMap<>() {
                 {
@@ -396,7 +403,7 @@ public class AuthServiceImpl implements AuthService {
                     .toUriString();
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
-            String text = baseUrl + "/api/auth/forgot-password?token=" + resetPassword;
+            String text = "http://localhost:4200/auth/forgot-password?otp=" + resetPassword;
             user.setCodeActive(resetPassword);
             userRepository.save(user);
             new JavaMail().sentEmail(toEmail, subject, text);
@@ -427,6 +434,34 @@ public class AuthServiceImpl implements AuthService {
             user.setPassword(passwordEncoder.encode(forgotPasswordRequest.getPassword()));
             userRepository.save(user);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "reset-password success"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> editAvatar(MultipartFile file) {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("user khong ton tai");
+        } else {
+
+            UserDetail userDetail = userDetailRepository.getUserDetailByUserDetailId(user.getUserDetail().getUserDetailId());
+
+            List<String> list = List.of(userDetail.getAvatarUrl().split("/"));
+
+            String nameFile = awsService.upload(file);
+
+            String urlImage = "https://home-sharing.s3.ap-southeast-1.amazonaws.com/avatar.png";
+
+            if (userDetail.getAvatarUrl().equalsIgnoreCase(urlImage)) {
+                userDetail.setAvatarUrl(nameFile);
+            } else {
+                awsService.delete(list.get(3));
+                userDetail.setAvatarUrl(nameFile);
+            }
+            userDetailRepository.save(userDetail);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "edit avatar thanh cong"));
         }
     }
 }
