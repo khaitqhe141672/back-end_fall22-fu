@@ -96,6 +96,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price, pi.imageUrl, v.description, " +
             "avg(r.point), h.typeAccount, h.user.userDetail.fullName) FROM Post p " +
             "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +
+            "LEFT JOIN District d ON pd.district.id = d.id " +
+            "LEFT JOIN Province pr ON d.province.id = pr.id " +
             "LEFT JOIN PostImage pi ON p.id = pi.post.id " +
             "LEFT JOIN PostServices ps ON p.id = ps.post.id " +
             "LEFT JOIN PostVoucher pv ON p.id = pv.post.id " +
@@ -107,12 +109,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id " +
             "WHERE (v.percent IN :percent) AND (p.price BETWEEN :minPrice AND :maxPrice) " +
             "AND (pd.roomType.id IN :listRoomTypeID) AND (pd.guestNumber = :guestNumber) " +
+            "AND (pr.id= :provinceID)" +
             "AND (ps.services.id IN :listServiceID) AND (bd.startDate <> :starDate) GROUP BY p.id " +
             "HAVING (avg(r.point) BETWEEN :minStar AND :maxStar)")
     Page<SearchDto> getSearchFilter(@Param("percent") List<Integer> percent, @Param("minPrice") float minPrice, @Param("maxPrice") float maxPrice,
                                     @Param("listRoomTypeID") List<Long> listRoomTypeID, @Param("guestNumber") int guestNumber,
                                     @Param("listServiceID") List<Long> listServiceID, @Param("minStar") double minStar, @Param("maxStar") double maxStar,
-                                    @Param("starDate") Date starDate, PageRequest pageRequest);
+                                    @Param("starDate") Date starDate, @Param("provinceID") Long provinceID, PageRequest pageRequest);
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.FillSearchDto(p.id, p.title, pi.imageUrl, p.price, pv.name) FROM Post p " +
             "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +

@@ -325,6 +325,7 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Login success full!"));

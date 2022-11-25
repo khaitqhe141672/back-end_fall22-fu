@@ -22,4 +22,5 @@ public class SearchFilterRequest {
     private double maxStar;
     private int statusSortPrice;
     private int numberOfGuest;
+    private Long provinceID;
 }
