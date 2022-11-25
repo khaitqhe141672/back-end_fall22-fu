@@ -123,10 +123,18 @@ public class SearchServiceImpl implements SearchService {
 
         List<Province> provinceList = provinceRepository.getSearchNameProvince(searchRequest.getSearchText());
 
+        List<FillSearchDto> list = new ArrayList<>();
+        List<Province> provinces = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            list.add(postList.get(i));
+            provinces.add(provinceList.get(i));
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
             {
-                put("listPost", postList);
-                put("listProvince", provinceList);
+                put("listPost", list);
+                put("listProvince", provinces);
             }
         }));
     }
