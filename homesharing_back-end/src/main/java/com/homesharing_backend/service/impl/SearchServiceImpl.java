@@ -19,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -86,13 +83,20 @@ public class SearchServiceImpl implements SearchService {
         Page<SearchDto> searchDtos = postRepository.getSearchFilter(searchFilterRequest.getVoucherPercent(),
                 searchFilterRequest.getMinPrice(), searchFilterRequest.getMaxPrice(), searchFilterRequest.getRoomTypeID(),
                 searchFilterRequest.getNumberOfGuest(), searchFilterRequest.getRoomTypeID(), searchFilterRequest.getMinStar(),
-                searchFilterRequest.getMaxStar(), searchFilterRequest.getStartDate(), PageRequest.of(page, size));
+                searchFilterRequest.getMaxStar(), searchFilterRequest.getStartDate(), searchFilterRequest.getProvinceID(), PageRequest.of(page, size));
 
         List<SearchDto> list = new ArrayList<>();
 
         if (Objects.isNull(searchDtos)) {
             throw new NotFoundException("search khong co data");
         } else {
+
+            if (searchFilterRequest.getStatusSortPrice() == 1) {
+                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice));
+            } else if (searchFilterRequest.getStatusSortPrice() == 2) {
+                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed());
+            }
+
             searchDtos.forEach(s -> {
                 SearchDto dto = SearchDto.builder()
                         .postID(s.getPostID())
@@ -107,6 +111,7 @@ public class SearchServiceImpl implements SearchService {
                         .build();
                 list.add(dto);
             });
+
         }
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
             {
@@ -125,7 +130,7 @@ public class SearchServiceImpl implements SearchService {
 
         List<FillSearchDto> list = new ArrayList<>();
 
-        postList.forEach(p ->{
+        postList.forEach(p -> {
             FillSearchDto dto = FillSearchDto.builder()
                     .province(p.getProvince())
                     .urlImage(p.getUrlImage())
