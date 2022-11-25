@@ -119,22 +119,27 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseEntity<ResponseObject> getTextSearch(SearchRequest searchRequest) {
 
-        List<FillSearchDto> postList = postRepository.searchPostByTitle(searchRequest.getSearchText());
+        List<FillSearchDto> postList = postRepository.searchPostByTitle(searchRequest.getSearchText(), PageRequest.of(0, 5));
 
         List<Province> provinceList = provinceRepository.getSearchNameProvince(searchRequest.getSearchText());
 
         List<FillSearchDto> list = new ArrayList<>();
-        List<Province> provinces = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
-            list.add(postList.get(i));
-            provinces.add(provinceList.get(i));
-        }
+        postList.forEach(p ->{
+            FillSearchDto dto = FillSearchDto.builder()
+                    .province(p.getProvince())
+                    .urlImage(p.getUrlImage())
+                    .postID(p.getPostID())
+                    .price(p.getPrice())
+                    .title(p.getTitle())
+                    .build();
+            list.add(dto);
+        });
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
             {
                 put("listPost", list);
-                put("listProvince", provinces);
+                put("listProvince", provinceList);
             }
         }));
     }

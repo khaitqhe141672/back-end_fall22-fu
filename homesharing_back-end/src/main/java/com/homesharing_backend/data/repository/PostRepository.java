@@ -121,5 +121,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN Province pv ON d.province.id = pv.id " +
             "where p.title like %:title% " +
             "GROUP BY p.id")
-    List<FillSearchDto> searchPostByTitle(@Param("title") String title);
+    List<FillSearchDto> searchPostByTitle(@Param("title") String title, PageRequest pageRequest);
 }
