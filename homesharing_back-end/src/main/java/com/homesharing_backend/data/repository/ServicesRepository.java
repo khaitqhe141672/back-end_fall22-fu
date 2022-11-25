@@ -11,5 +11,4 @@ public interface ServicesRepository extends JpaRepository<Services, Long> {
 
     Services getServicesById(Long id);
 
-    List<Services> getServicesByHost_Id(Long hostID);
 }

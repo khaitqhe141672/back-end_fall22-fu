@@ -30,9 +30,7 @@ public class ServicesServiceImpl implements ServicesService {
     @Override
     public ResponseEntity<JwtResponse> getAllServiceByHost() {
 
-        Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
-
-        List<Services> services = servicesRepository.getServicesByHost_Id(host.getId());
+        List<Services> services = servicesRepository.findAll();
 
         if (Objects.isNull(services)) {
             throw new NotFoundException("Khong co service lien quan den host_id nay");
