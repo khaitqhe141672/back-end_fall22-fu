@@ -26,4 +26,9 @@ public class SearchController {
                                              @RequestParam("index-page") int indexPage) {
         return searchService.searchFilter(SearchFilterRequest, indexPage);
     }
+
+    @GetMapping("/input")
+    public ResponseEntity<?> getSearch(@RequestBody SearchRequest nameSearch) {
+        return searchService.getTextSearch(nameSearch);
+    }
 }

@@ -13,4 +13,6 @@ public interface SearchService {
 
     public ResponseEntity<ResponseObject> searchFilter(SearchFilterRequest searchFilterRequest, int indexPage);
 
+    public ResponseEntity<ResponseObject> getTextSearch(SearchRequest searchRequest);
+
 }
