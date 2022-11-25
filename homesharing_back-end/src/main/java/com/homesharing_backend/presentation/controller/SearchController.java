@@ -15,19 +15,19 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-    @GetMapping("")
+    @PostMapping("")
     public ResponseEntity<?> getSearchByName(@RequestBody SearchRequest nameSearch,
                                              @RequestParam("index-page") int indexPage) {
         return searchService.searchByTitlePostOrLocation(nameSearch, indexPage);
     }
 
-    @GetMapping("/test")
+    @PostMapping("/filter-search")
     public ResponseEntity<?> getSearchFilter(@RequestBody SearchFilterRequest SearchFilterRequest,
                                              @RequestParam("index-page") int indexPage) {
         return searchService.searchFilter(SearchFilterRequest, indexPage);
     }
 
-    @GetMapping("/input")
+    @PostMapping("/fill-search")
     public ResponseEntity<?> getSearch(@RequestBody SearchRequest nameSearch) {
         return searchService.getTextSearch(nameSearch);
     }
