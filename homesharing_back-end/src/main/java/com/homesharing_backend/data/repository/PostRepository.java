@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query(value = "SELECT * FROM Post order by id DESC LIMIT 4", nativeQuery = true)
+    @Query(value = "SELECT * FROM Post p WHERE p.status = 1 AND ((p.status_report IS NULL) OR (p.status_report = 1)) order by p.id DESC LIMIT 4", nativeQuery = true)
     List<Post> getPostTop();
 
     Post getPostById(Long id);
@@ -27,9 +27,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point) , p.title) FROM Post p" +
             " left join PostImage pi on p.id = pi.post.id left join BookingDetail bd" +
-            " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id " +
-            " group by p.id order by avg(r.point) desc ")
-    List<PostTopRateDto> getTopPostByRate();
+            " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id WHERE p.status = 1 AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) " +
+            "group by p.id order by avg(r.point) desc ")
+    Page<PostTopRateDto> getTopPostByRate(PageRequest pageRequest);
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point) , p.title) FROM Post p" +
             " left join PostImage pi on p.id = pi.post.id left join BookingDetail bd" +

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @GetMapping("/confirm-account")
-    public ResponseEntity<?> confirmAccount(@RequestParam("token") String otp) {
+    public ResponseEntity<?> confirmAccount(@RequestParam("otp") String otp) {
         return authService.confirmAccount(otp);
     }
 
@@ -73,19 +74,25 @@ public class AuthController {
         return authService.changePassword(changePasswordRequest);
     }
 
-    @PutMapping("/forgot-password")
+    @GetMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam("email") String email,
                                             HttpServletRequest servletRequest) {
         return authService.forgotPassword(email, servletRequest);
     }
 
     @GetMapping("/confirm-forgot-password")
-    public ResponseEntity<?> confirmForgotPassword(@RequestParam("token") String otp) {
+    public ResponseEntity<?> confirmForgotPassword(@RequestParam("otp") String otp) {
         return authService.confirmResetPassword(otp);
     }
 
     @PutMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         return authService.resetPassword(forgotPasswordRequest);
+    }
+
+    @PutMapping("/edit-avatar")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> editAvatar(@RequestParam("file") MultipartFile file) {
+        return authService.editAvatar(file);
     }
 }

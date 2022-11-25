@@ -9,6 +9,7 @@ import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,4 +28,5 @@ public interface AuthService {
     public ResponseEntity<MessageResponse> forgotPassword(String email, HttpServletRequest servletRequest);
     public ResponseEntity<MessageResponse> confirmResetPassword(String token);
     public ResponseEntity<MessageResponse> resetPassword(ForgotPasswordRequest forgotPasswordRequest);
+    public ResponseEntity<MessageResponse> editAvatar(MultipartFile file);
 }

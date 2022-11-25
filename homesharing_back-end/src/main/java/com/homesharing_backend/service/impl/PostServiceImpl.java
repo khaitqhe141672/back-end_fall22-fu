@@ -14,6 +14,8 @@ import com.homesharing_backend.presentation.payload.request.PostRequest;
 import com.homesharing_backend.service.PostService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -83,7 +85,7 @@ public class PostServiceImpl implements PostService {
             List<HomeDto> homeDtoList = new ArrayList<>();
 
             postList.forEach(p -> {
-                List<PostImage> image = postImageRepository.findPostImageByPost_Id(p.getId());
+                List<PostImage> image = postImageRepository.getPostImageByPost_Id(p.getId(), PageRequest.of(0, 1));
                 HomeDto dto = HomeDto.builder()
                         .postID(p.getId())
                         .title(p.getTitle())
@@ -103,26 +105,26 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<JwtResponse> getTopPostByRate() {
 
-        List<PostTopRateDto> postTopRateDtos = postRepository.getTopPostByRate();
+        Page<PostTopRateDto> postTopRateDtos = postRepository.getTopPostByRate(PageRequest.of(0, 7));
 
         if (postTopRateDtos.isEmpty()) {
             throw new NotFoundException("không có dữ liệu");
         } else {
             List<HomeDto> homeDtoList = new ArrayList<>();
 
-            for (int i = 0; i <= 7; i++) {
-                List<PostImage> image = postImageRepository.findPostImageByPost_Id(postTopRateDtos.get(i).getId());
+            postTopRateDtos.forEach(p ->{
+                List<PostImage> image = postImageRepository.getPostImageByPost_Id(p.getId(), PageRequest.of(0, 1));
                 HomeDto dto = HomeDto.builder()
-                        .postID(postTopRateDtos.get(i).getId())
-                        .title(postTopRateDtos.get(i).getTitle())
-                        .star(postTopRateDtos.get(i).getAvgRate())
+                        .postID(p.getId())
+                        .title(p.getTitle())
+                        .star(p.getAvgRate())
                         .build();
 
                 if (image.size() > 0) {
                     dto.setUrlImage(image.get(0).getImageUrl());
                 }
                 homeDtoList.add(dto);
-            }
+            });
 
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), homeDtoList));
         }
