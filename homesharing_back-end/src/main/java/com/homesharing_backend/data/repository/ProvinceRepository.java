@@ -3,6 +3,7 @@ package com.homesharing_backend.data.repository;
 import com.homesharing_backend.data.entity.Province;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface ProvinceRepository extends JpaRepository<Province, Long> {
     List<Province> getRecommendedPlacesByProvinces();
 
     Province getProvincesByName(String name);
+
+    @Query(value = "SELECT * FROM Province p WHERE p.name LIKE %:name%", nativeQuery = true)
+    List<Province> getSearchNameProvince(@Param("name") String name);
 }

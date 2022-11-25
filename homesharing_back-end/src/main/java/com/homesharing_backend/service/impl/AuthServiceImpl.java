@@ -4,6 +4,7 @@ import com.homesharing_backend.data.dto.LoginDto;
 import com.homesharing_backend.data.dto.UserDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
+import com.homesharing_backend.exception.AuthException;
 import com.homesharing_backend.exception.BadRequestAlertException;
 import com.homesharing_backend.exception.ConflictException;
 import com.homesharing_backend.exception.NotFoundException;
@@ -56,9 +57,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -179,40 +177,52 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseObject> login(LoginRequest signInRequest) {
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
-                        signInRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.getUserByUsername(signInRequest.getUsername());
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority()).collect(Collectors.toList());
+        if (Objects.isNull(user)) {
+            throw new AuthException("Tai Khoan khong hop le");
+        } else {
 
-        LoginDto userDto = LoginDto.builder()
-                .email(userDetails.getEmail())
-                .username(userDetails.getUsername()).role(roles.get(0)).build();
-        Map data = new HashMap<String, Object>();
+            if (passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
+                Authentication authentication =
+                        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
+                                signInRequest.getPassword()));
 
-        if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
-            Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
-            data.put("customerID", customer.getId());
-            System.out.println(customer.getId());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+                List<String> roles = userDetails.getAuthorities().stream()
+                        .map(item -> item.getAuthority()).collect(Collectors.toList());
+
+                LoginDto userDto = LoginDto.builder()
+                        .email(userDetails.getEmail())
+                        .username(userDetails.getUsername()).role(roles.get(0)).build();
+                Map data = new HashMap<String, Object>();
+
+                if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
+                    Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
+                    data.put("customerID", customer.getId());
+                    System.out.println(customer.getId());
+                }
+                if (roles.contains(ERole.ROLE_HOST.name())) {
+                    Host teacher = hostRepository.getHostsByUser_Username(userDto.getUsername());
+                    data.put("hostID", teacher.getId());
+                }
+                if (roles.contains(ERole.ROLE_ADMIN.name())) {
+                    Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
+                    data.put("adminId", admin.getId());
+                }
+                data.put("userID", userDetails.getId());
+                data.put("user", userDto);
+                data.put("token", "Bearer " + jwt);
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Sign in successfully", data));
+
+            } else {
+                throw new BadRequestAlertException("mat khau current khong khop");
+            }
         }
-        if (roles.contains(ERole.ROLE_HOST.name())) {
-            Host teacher = hostRepository.getHostsByUser_Username(userDto.getUsername());
-            data.put("hostID", teacher.getId());
-        }
-        if (roles.contains(ERole.ROLE_ADMIN.name())) {
-            Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
-            data.put("adminId", admin.getId());
-        }
-        data.put("userID", userDetails.getId());
-        data.put("user", userDto);
-        data.put("token", "Bearer " + jwt);
-
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Sign in successfully", data));
     }
 
     @Override
@@ -317,9 +327,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /*
-    * typeAccount = 1 tk thuong
-    * typeAccount = 2 tk co tich xanh
-    */
+     * typeAccount = 1 tk thuong
+     * typeAccount = 2 tk co tich xanh
+     */
     @Override
     public ResponseEntity<JwtResponse> profile() {
 

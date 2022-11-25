@@ -1,9 +1,6 @@
 package com.homesharing_backend.data.repository;
 
-import com.homesharing_backend.data.dto.PostDto;
-import com.homesharing_backend.data.dto.PostTopRateDto;
-import com.homesharing_backend.data.dto.SearchDto;
-import com.homesharing_backend.data.dto.ViewBookingDto;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -116,4 +113,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                     @Param("listRoomTypeID") List<Long> listRoomTypeID, @Param("guestNumber") int guestNumber,
                                     @Param("listServiceID") List<Long> listServiceID, @Param("minStar") double minStar, @Param("maxStar") double maxStar,
                                     @Param("starDate") Date starDate, PageRequest pageRequest);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.FillSearchDto(p.id, p.title, pi.imageUrl, p.price, pv.name) FROM Post p " +
+            "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +
+            "LEFT JOIN PostImage pi ON p.id = pi.post.id " +
+            "LEFT JOIN District d ON pd.district.id = d.id " +
+            "LEFT JOIN Province pv ON d.province.id = pv.id " +
+            "where p.title like %:title% " +
+            "GROUP BY p.id")
+    List<FillSearchDto> searchPostByTitle(@Param("title") String title);
 }

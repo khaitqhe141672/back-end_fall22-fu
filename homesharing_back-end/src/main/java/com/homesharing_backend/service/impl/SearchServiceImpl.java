@@ -1,8 +1,12 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.dto.FillSearchDto;
 import com.homesharing_backend.data.dto.SearchDto;
+import com.homesharing_backend.data.entity.Post;
+import com.homesharing_backend.data.entity.Province;
 import com.homesharing_backend.data.repository.DistrictRepository;
 import com.homesharing_backend.data.repository.PostRepository;
+import com.homesharing_backend.data.repository.ProvinceRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.SearchFilterRequest;
@@ -29,6 +33,9 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     private DistrictRepository districtRepository;
 
+    @Autowired
+    private ProvinceRepository provinceRepository;
+
     @Override
     public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest, int indexPage) {
 
@@ -38,6 +45,7 @@ public class SearchServiceImpl implements SearchService {
         if (Objects.isNull(searchRequest)) {
             throw new NotFoundException("Search null");
         } else {
+
             Page<SearchDto> searchDtoListByTitle = postRepository.listSearchPostByTitle(searchRequest.getSearchText(), PageRequest.of(page, size));
 
             List<SearchDto> list = new ArrayList<>();
@@ -104,6 +112,21 @@ public class SearchServiceImpl implements SearchService {
             {
                 put("searchList", searchDtos);
                 put("sizePage", searchDtos.getTotalPages());
+            }
+        }));
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getTextSearch(SearchRequest searchRequest) {
+
+        List<FillSearchDto> postList = postRepository.searchPostByTitle(searchRequest.getSearchText());
+
+        List<Province> provinceList = provinceRepository.getSearchNameProvince(searchRequest.getSearchText());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+            {
+                put("listPost", postList);
+                put("listProvince", provinceList);
             }
         }));
     }
