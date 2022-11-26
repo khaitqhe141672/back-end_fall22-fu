@@ -146,6 +146,7 @@ public class ReportServiceImpl implements ReportService {
                     .reportPost(reportPost)
                     .description(complaintRequest.getDescription())
                     .host(host)
+                    .post(reportPost.getPost())
                     .status(1)
                     .build();
 
@@ -433,7 +434,7 @@ public class ReportServiceImpl implements ReportService {
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
-                        .description(r.getDescription())
+                        .descriptionComplaint(r.getDescription())
                         .nameReportType(rate.getReportType().getName())
                         .statusComplaint(r.getStatus())
                         .build();
@@ -469,12 +470,15 @@ public class ReportServiceImpl implements ReportService {
                 ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
 
                 ComplaintDto dto = ComplaintDto.builder()
+                        .postID(r.getPost().getId())
+                        .title(r.getPost().getTitle())
+                        .complaintPostID(r.getId())
                         .reportID(post.getId())
                         .reportTypeID(post.getReportType().getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
-                        .description(r.getDescription())
+                        .descriptionComplaint(r.getDescription())
                         .nameReportType(post.getReportType().getName())
                         .statusComplaint(r.getStatus())
                         .build();
@@ -516,7 +520,7 @@ public class ReportServiceImpl implements ReportService {
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
-                        .description(r.getDescription())
+                        .descriptionComplaint(r.getDescription())
                         .nameReportType(post.getReportType().getName())
                         .statusComplaint(r.getStatus())
                         .build();
@@ -549,15 +553,16 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest,
-                                                                  Long postID, int status) {
+                                                                  Long postID, Long complaintPostID) {
 
         Post post = postRepository.getPostById(postID);
 
         if (!Objects.isNull(post)) {
             HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
                     .statusReport(2)
-                    .statusPost(2)
+                    .statusPost(updateReportPostRequest.getStatusPost())
                     .post(post)
+                    .complaintPost(complaintPostRepository.getComplaintPostByIdAndPost_Id(post.getId(), complaintPostID))
                     .build();
             HistoryHandleReportPost saveHistory = historyHandleReportPostRepository.save(historyHandleReportPost);
 
@@ -575,7 +580,7 @@ public class ReportServiceImpl implements ReportService {
 
                     historyHandleReportPostDetailRepository.save(historyHandleReportPostDetail);
                     reportPost.setStatus(2);
-                    post.setStatus(status);
+                    post.setStatus(updateReportPostRequest.getStatusPost());
                     post.setStatusReport(2);
                     reportPostRepository.save(reportPost);
                     postRepository.save(post);

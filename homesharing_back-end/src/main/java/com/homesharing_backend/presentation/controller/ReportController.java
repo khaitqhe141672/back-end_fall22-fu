@@ -111,8 +111,9 @@ public class ReportController {
     @PutMapping("/update-status-report-post")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestBody UpdateReportPostRequest updateReportPostRequest,
-                                                           @RequestParam("post-id") Long postID, @RequestParam("status") int status) {
-        return reportService.updateStatusReportPost(updateReportPostRequest, postID, status);
+                                                           @RequestParam("post-id") Long postID,
+                                                           @RequestParam("complaint-post-id") Long complaintPostD) {
+        return reportService.updateStatusReportPost(updateReportPostRequest, postID, complaintPostD);
     }
 
     @GetMapping("/all-report-post-done")

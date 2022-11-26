@@ -45,7 +45,7 @@ public interface ReportService {
     public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID);
 
     public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest,
-                                                                  Long postID, int status);
+                                                                  Long postID, Long complaintPostID);
 
     public ResponseEntity<ResponseObject> getAllReportPostStatusDoneByHost(int indexPage, Long postID);
 

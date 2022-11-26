@@ -13,12 +13,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ComplaintDto {
 
+    private Long postID;
+    private String title;
+    private Long complaintPostID;
+    private String descriptionComplaint;
     private Long reportID;
     private Long reportTypeID;
     private String fullName;
     private String username;
     private String imageUrl;
-    private String description;
     private String nameReportType;
     private int statusComplaint;
 }
