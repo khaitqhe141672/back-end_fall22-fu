@@ -111,14 +111,17 @@ public class SearchServiceImpl implements SearchService {
                         .build();
                 list.add(dto);
             });
-
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
-            {
-                put("searchList", searchDtos);
-                put("sizePage", searchDtos.getTotalPages());
+            if (Objects.isNull(list)) {
+                throw new NotFoundException("khong co data search");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+                    {
+                        put("searchList", list);
+                        put("sizePage", searchDtos.getTotalPages());
+                    }
+                }));
             }
-        }));
+        }
     }
 
     @Override
