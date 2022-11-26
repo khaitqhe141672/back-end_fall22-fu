@@ -118,4 +118,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.title like %:title% " +
             "GROUP BY p.id")
     List<FillSearchDto> searchPostByTitle(@Param("title") String title, PageRequest pageRequest);
+
 }
