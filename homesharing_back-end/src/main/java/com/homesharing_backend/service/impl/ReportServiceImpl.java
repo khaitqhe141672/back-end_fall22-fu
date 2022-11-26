@@ -562,9 +562,9 @@ public class ReportServiceImpl implements ReportService {
 
             updateReportPostRequest.getListReportPostID().forEach(r -> {
 
-                ReportPost reportPost = reportPostRepository.getReportPostById(r);
+                ReportPost reportPost = reportPostRepository.getReportPostByIdAndPost_Id(r, post.getId());
 
-                if (!Objects.isNull(reportPost) && Objects.isNull(post)) {
+                if (!Objects.isNull(reportPost)) {
 
                     HistoryHandleReportPostDetail historyHandleReportPostDetail = HistoryHandleReportPostDetail.builder()
                             .historyHandleReportPost(saveHistory)
