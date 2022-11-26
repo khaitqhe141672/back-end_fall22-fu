@@ -104,9 +104,8 @@ public class ReportController {
 
     @PutMapping("/update-status-report-rate")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-rate-id") Long reportRateID,
-                                                           @RequestParam("status") int status) {
-        return reportService.updateStatusReportRate(reportRateID, status);
+    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-rate-id") Long reportRateID) {
+        return reportService.updateStatusReportRate(reportRateID);
     }
 
     @PutMapping("/update-status-report-post")
