@@ -548,7 +548,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, Long postID) {
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest,
+                                                                  Long postID, int status) {
 
         Post post = postRepository.getPostById(postID);
 
@@ -574,7 +575,7 @@ public class ReportServiceImpl implements ReportService {
 
                     historyHandleReportPostDetailRepository.save(historyHandleReportPostDetail);
                     reportPost.setStatus(2);
-                    post.setStatus(3);
+                    post.setStatus(status);
                     post.setStatusReport(2);
                     reportPostRepository.save(reportPost);
                     postRepository.save(post);
