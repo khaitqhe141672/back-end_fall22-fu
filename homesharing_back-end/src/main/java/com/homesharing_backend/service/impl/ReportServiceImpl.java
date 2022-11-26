@@ -545,7 +545,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, int status) {
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest) {
 
         updateReportPostRequest.getListReportPostID().forEach(r -> {
 
@@ -556,19 +556,17 @@ public class ReportServiceImpl implements ReportService {
                 throw new NotFoundException("report-post-id khong ton tai");
             } else {
 
-                if (status == 2) {
-                    HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
-                            .statusReport(2)
-                            .statusPost(2)
-                            .post(post)
-                            .statusHistory(1)
-                            .reportPost(reportPost)
-                            .build();
-                    historyHandleReportPostRepository.save(historyHandleReportPost);
-                }
-                reportPost.setStatus(status);
+                HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
+                        .statusReport(2)
+                        .statusPost(2)
+                        .post(post)
+                        .statusHistory(1)
+                        .reportPost(reportPost)
+                        .build();
+                historyHandleReportPostRepository.save(historyHandleReportPost);
+                reportPost.setStatus(2);
                 post.setStatus(3);
-                post.setStatusReport(status);
+                post.setStatusReport(2);
                 reportPostRepository.save(reportPost);
                 postRepository.save(post);
             }
