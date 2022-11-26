@@ -80,10 +80,7 @@ public class SearchServiceImpl implements SearchService {
         int size = 10;
         int page = indexPage - 1;
 
-        Page<SearchDto> searchDtos = postRepository.getSearchFilter(searchFilterRequest.getVoucherPercent(),
-                searchFilterRequest.getMinPrice(), searchFilterRequest.getMaxPrice(), searchFilterRequest.getRoomTypeID(),
-                searchFilterRequest.getNumberOfGuest(), searchFilterRequest.getRoomTypeID(), searchFilterRequest.getMinStar(),
-                searchFilterRequest.getMaxStar(), searchFilterRequest.getStartDate(), searchFilterRequest.getProvinceID(), PageRequest.of(page, size));
+        Page<SearchDto> searchDtos = postRepository.getSearchFilter(PageRequest.of(page, size));
 
         List<SearchDto> list = new ArrayList<>();
 
