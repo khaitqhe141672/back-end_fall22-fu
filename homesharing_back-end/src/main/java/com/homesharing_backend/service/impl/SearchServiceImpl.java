@@ -80,7 +80,7 @@ public class SearchServiceImpl implements SearchService {
         int size = 10;
         int page = indexPage - 1;
 
-        Page<SearchDto> searchDtos = postRepository.getSearchFilter(PageRequest.of(page, size));
+        List<SearchDto> searchDtos = postRepository.getSearchFilter();
 
         List<SearchDto> list = new ArrayList<>();
 
@@ -88,11 +88,13 @@ public class SearchServiceImpl implements SearchService {
             throw new NotFoundException("search khong co data");
         } else {
 
-            if (searchFilterRequest.getStatusSortPrice() == 1) {
-                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice));
-            } else if (searchFilterRequest.getStatusSortPrice() == 2) {
-                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed());
-            }
+
+
+//            if (searchFilterRequest.getStatusSortPrice() == 1) {
+//                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice));
+//            } else if (searchFilterRequest.getStatusSortPrice() == 2) {
+//                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed());
+//            }
 
             searchDtos.forEach(s -> {
                 SearchDto dto = SearchDto.builder()
@@ -114,7 +116,6 @@ public class SearchServiceImpl implements SearchService {
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                     {
                         put("searchList", list);
-                        put("sizePage", searchDtos.getTotalPages());
                     }
                 }));
             }

@@ -568,6 +568,7 @@ public class ReportServiceImpl implements ReportService {
                 }
                 reportPost.setStatus(status);
                 post.setStatus(status);
+                post.setStatusReport(status);
                 reportPostRepository.save(reportPost);
                 postRepository.save(post);
             }

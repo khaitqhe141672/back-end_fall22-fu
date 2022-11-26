@@ -108,7 +108,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN BookingDetail bd ON p.id = bd.post.id " +
             "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id " +
             "GROUP BY p.id")
-    Page<SearchDto> getSearchFilter(PageRequest pageRequest);
+    List<SearchDto> getSearchFilter();
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.FillSearchDto(p.id, p.title, pi.imageUrl, p.price, pv.name) FROM Post p " +
             "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +
