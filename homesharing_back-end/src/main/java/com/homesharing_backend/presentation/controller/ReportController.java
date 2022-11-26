@@ -123,7 +123,7 @@ public class ReportController {
     }
 
     @PutMapping("/all-history-report-post")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllHistoryReportPostByAdmin(@RequestParam("post-id") Long postID,
                                                             @RequestParam("index-page") int indexPage) {
         return reportService.getAllHistoryReportPost(postID, indexPage);

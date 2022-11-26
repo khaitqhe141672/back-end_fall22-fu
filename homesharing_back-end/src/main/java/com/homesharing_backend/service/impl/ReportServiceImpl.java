@@ -627,16 +627,13 @@ public class ReportServiceImpl implements ReportService {
         Page<HistoryHandleReportPost> historyHandleReportPosts =
                 historyHandleReportPostRepository.getHistoryHandleReportPostByPost_Id(postID, PageRequest.of(page, size));
 
-        List<HistoryReportPostDto> reportPostDtoList = new ArrayList<>();
         if (Objects.isNull(historyHandleReportPosts)) {
             throw new NotFoundException("Khong co data cua history");
         } else {
-
-
+            List<ListHistoryHandleReportDto> list = new ArrayList<>();
             historyHandleReportPosts.forEach(h -> {
-                HistoryReportPostDto dto = HistoryReportPostDto.builder()
+                ListHistoryHandleReportDto dto = ListHistoryHandleReportDto.builder()
                         .statusReport(h.getStatusReport())
-                        .postID(h.getPost().getId())
                         .title(h.getPost().getTitle())
                         .statusHistory(h.getStatusHistory())
                         .statusPost(h.getStatusPost())
@@ -646,16 +643,21 @@ public class ReportServiceImpl implements ReportService {
                         .description(h.getReportPost().getDescription())
                         .build();
 
-                reportPostDtoList.add(dto);
+                list.add(dto);
             });
+            HistoryReportPostDto historyReportPostDto = HistoryReportPostDto.builder()
+                    .postID(postID)
+                    .list(list)
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listHistoryReportPost", historyReportPostDto);
+                    put("sizePage", historyHandleReportPosts.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
-            {
-                put("listHistoryReportPost", reportPostDtoList);
-                put("sizePage", historyHandleReportPosts.getTotalPages());
-                put("size", indexPage);
-            }
-        }));
+
     }
 
     /*status = 1 dang cho admin xu ly*/

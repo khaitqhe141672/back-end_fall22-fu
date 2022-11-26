@@ -6,15 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class HistoryReportPostDto {
+public class ListHistoryHandleReportDto {
 
-    private Long postID;
-    private List<ListHistoryHandleReportDto> list;
+    private Long reportPostID;
+    private String title;
+    private int statusPost;
+    private int statusReport;
+    private int statusHistory;
+    private String description;
+    private String reportTypeName;
+    private Long reportTypeID;
 }
