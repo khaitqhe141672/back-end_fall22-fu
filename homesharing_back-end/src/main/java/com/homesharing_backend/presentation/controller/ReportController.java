@@ -111,8 +111,9 @@ public class ReportController {
 
     @PutMapping("/update-status-report-post")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestBody UpdateReportPostRequest updateReportPostRequest) {
-        return reportService.updateStatusReportPost(updateReportPostRequest);
+    public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestBody UpdateReportPostRequest updateReportPostRequest,
+                                                           @RequestParam("post-id") Long postID) {
+        return reportService.updateStatusReportPost(updateReportPostRequest, postID);
     }
 
     @GetMapping("/all-report-post-done")
@@ -122,10 +123,17 @@ public class ReportController {
         return reportService.getAllReportPostStatusDoneByHost(indexPage, postID);
     }
 
-    @PutMapping("/all-history-report-post")
+    @GetMapping("/all-history-report-post")
     @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllHistoryReportPostByAdmin(@RequestParam("post-id") Long postID,
                                                             @RequestParam("index-page") int indexPage) {
         return reportService.getAllHistoryReportPost(postID, indexPage);
+    }
+
+    @GetMapping("/all-detail-history-report-post")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllDetailHistoryReportPostByAdmin(@RequestParam("history-id") Long historyID,
+                                                                  @RequestParam("index-page") int indexPage) {
+        return reportService.getAllHistoryReportPostDetail(historyID, indexPage);
     }
 }

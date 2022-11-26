@@ -61,6 +61,9 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private HistoryHandleReportPostRepository historyHandleReportPostRepository;
 
+    @Autowired
+    private HistoryHandleReportPostDetailRepository historyHandleReportPostDetailRepository;
+
     @Override
     public ResponseEntity<MessageResponse> createReportRate(ReportRequest reportRequest, Long rateID) {
 
@@ -545,34 +548,43 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest) {
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, Long postID) {
 
-        updateReportPostRequest.getListReportPostID().forEach(r -> {
+        Post post = postRepository.getPostById(postID);
 
-            ReportPost reportPost = reportPostRepository.getReportPostById(r);
-            Post post = postRepository.getPostById(reportPost.getPost().getId());
+        if (!Objects.isNull(post)) {
+            HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
+                    .statusReport(2)
+                    .statusPost(2)
+                    .post(post)
+                    .build();
+            HistoryHandleReportPost saveHistory = historyHandleReportPostRepository.save(historyHandleReportPost);
 
-            if (Objects.isNull(reportPost) && Objects.isNull(post)) {
-                throw new NotFoundException("report-post-id khong ton tai");
-            } else {
+            updateReportPostRequest.getListReportPostID().forEach(r -> {
 
-                HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
-                        .statusReport(2)
-                        .statusPost(2)
-                        .post(post)
-                        .statusHistory(1)
-                        .reportPost(reportPost)
-                        .build();
-                historyHandleReportPostRepository.save(historyHandleReportPost);
-                reportPost.setStatus(2);
-                post.setStatus(3);
-                post.setStatusReport(2);
-                reportPostRepository.save(reportPost);
-                postRepository.save(post);
-            }
-        });
+                ReportPost reportPost = reportPostRepository.getReportPostById(r);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
+                if (!Objects.isNull(reportPost) && Objects.isNull(post)) {
+
+                    HistoryHandleReportPostDetail historyHandleReportPostDetail = HistoryHandleReportPostDetail.builder()
+                            .historyHandleReportPost(saveHistory)
+                            .reportPost(reportPost)
+                            .statusHistory(1)
+                            .build();
+
+                    historyHandleReportPostDetailRepository.save(historyHandleReportPostDetail);
+                    reportPost.setStatus(2);
+                    post.setStatus(3);
+                    post.setStatusReport(2);
+                    reportPostRepository.save(reportPost);
+                    postRepository.save(post);
+                }
+            });
+
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
+        } else {
+            throw new NotFoundException("khong co post-id nay");
+        }
     }
 
     @Override
@@ -630,34 +642,67 @@ public class ReportServiceImpl implements ReportService {
         if (Objects.isNull(historyHandleReportPosts)) {
             throw new NotFoundException("Khong co data cua history");
         } else {
-            List<ListHistoryHandleReportDto> list = new ArrayList<>();
+            List<HistoryReportPostDto> list = new ArrayList<>();
             historyHandleReportPosts.forEach(h -> {
-                ListHistoryHandleReportDto dto = ListHistoryHandleReportDto.builder()
-                        .statusReport(h.getStatusReport())
-                        .title(h.getPost().getTitle())
-                        .statusHistory(h.getStatusHistory())
+
+                int totalReport = historyHandleReportPostDetailRepository.countHistoryHandleReportPostDetailByHistoryHandleReportPost_Id(h.getId());
+
+                HistoryReportPostDto dto = HistoryReportPostDto.builder()
+                        .historyHandleReportPostID(h.getId())
+                        .statusReportPost(h.getStatusReport())
                         .statusPost(h.getStatusPost())
-                        .reportPostID(h.getReportPost().getId())
-                        .reportTypeName(h.getReportPost().getReportType().getName())
-                        .reportTypeID(h.getReportPost().getReportType().getId())
-                        .description(h.getReportPost().getDescription())
+                        .postID(h.getPost().getId())
+                        .title(h.getPost().getTitle())
+                        .totalReportPost(totalReport)
                         .build();
 
                 list.add(dto);
             });
-            HistoryReportPostDto historyReportPostDto = HistoryReportPostDto.builder()
-                    .postID(postID)
-                    .list(list)
-                    .build();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                 {
-                    put("listHistoryReportPost", historyReportPostDto);
+                    put("listHistoryReportPost", list);
                     put("sizePage", historyHandleReportPosts.getTotalPages());
                     put("size", indexPage);
                 }
             }));
         }
 
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllHistoryReportPostDetail(Long historyID, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<HistoryHandleReportPostDetail> details =
+                historyHandleReportPostDetailRepository.getHistoryHandleReportPostDetailByHistoryHandleReportPost_Id(historyID, PageRequest.of(page, size));
+
+        if (Objects.isNull(details)) {
+            throw new NotFoundException("history-id khogn co data");
+        } else {
+
+            List<ListHistoryHandleReportDto> list = new ArrayList<>();
+
+            details.forEach(d -> {
+                ListHistoryHandleReportDto dto = ListHistoryHandleReportDto.builder()
+                        .reportPostID(d.getReportPost().getId())
+                        .statusHistory(d.getStatusHistory())
+                        .reportTypeName(d.getReportPost().getReportType().getName())
+                        .reportTypeID(d.getReportPost().getReportType().getId())
+                        .description(d.getReportPost().getDescription())
+                        .build();
+
+                list.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listDetailHistoryReportPost", list);
+                    put("sizePage", details.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
+        }
     }
 
     /*status = 1 dang cho admin xu ly*/

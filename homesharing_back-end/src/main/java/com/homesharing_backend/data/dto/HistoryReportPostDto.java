@@ -16,5 +16,9 @@ import java.util.List;
 public class HistoryReportPostDto {
 
     private Long postID;
-    private List<ListHistoryHandleReportDto> list;
+    private String title;
+    private Long historyHandleReportPostID;
+    private int statusPost;
+    private int statusReportPost;
+    private int totalReportPost;
 }
