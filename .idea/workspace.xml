@@ -4,14 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="0b83b8c5-2656-407b-97a4-f7fb01fc6687" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
     </list>
+=======
+    <list default="true" id="836bc91f-2c96-4fce-b934-3c2fe25ef0a4" name="Changes" comment="" />
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< Updated upstream
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -37,10 +42,15 @@
         <entry key="com.haulmont.jpb.jpaStructure" value="false" />
       </map>
     </option>
+=======
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+>>>>>>> Stashed changes
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+<<<<<<< Updated upstream
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -52,10 +62,15 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
+=======
+  <component name="ProjectId" id="2GaF49fXXmOKvg8gkxOFURFDrpU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+>>>>>>> Stashed changes
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< Updated upstream
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RequestMappingsPanelOrder0": "0",
@@ -91,25 +106,53 @@
         <option name="region" />
         <option name="useCurrentConnection" value="false" />
       </extension>
+=======
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;9b81db18e0ffd0bb6e9720bb2d36484f&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="backend-end_fall22-fu" />
+>>>>>>> Stashed changes
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< Updated upstream
     <configuration name="HomesharingBackEndApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="homesharing_back-end" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.homesharing_backend.HomesharingBackEndApplication" />
+=======
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="backend-end_fall22-fu" />
+      <option name="filePath" />
+>>>>>>> Stashed changes
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< Updated upstream
     <list>
       <item itemvalue="Spring Boot.HomesharingBackEndApplication" />
       <item itemvalue="Spring Boot.HomeSharing" />
     </list>
+=======
+>>>>>>> Stashed changes
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+<<<<<<< Updated upstream
       <changelist id="0b83b8c5-2656-407b-97a4-f7fb01fc6687" name="Changes" comment="" />
       <created>1665207178659</created>
       <option name="number" value="Default" />
@@ -122,6 +165,17 @@
       <workItem from="1666027730510" duration="1467000" />
       <workItem from="1666057199199" duration="669000" />
       <workItem from="1666364955770" duration="28000" />
+=======
+      <changelist id="836bc91f-2c96-4fce-b934-3c2fe25ef0a4" name="Changes" comment="" />
+      <created>1666618602877</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1666618602877</updated>
+      <workItem from="1666618606493" duration="409000" />
+      <workItem from="1666619049054" duration="307000" />
+      <workItem from="1666806477243" duration="602000" />
+      <workItem from="1668013168735" duration="513000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
