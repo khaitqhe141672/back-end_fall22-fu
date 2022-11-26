@@ -564,7 +564,7 @@ public class ReportServiceImpl implements ReportService {
                             .statusHistory(1)
                             .reportPost(reportPost)
                             .build();
-                    historyHandleReportPostRepository.save(historyHandleReportPost)
+                    historyHandleReportPostRepository.save(historyHandleReportPost);
                 }
                 reportPost.setStatus(status);
                 post.setStatus(status);
