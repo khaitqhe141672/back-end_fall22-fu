@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 public class ListHistoryHandleReportDto {
 
     private Long reportPostID;
-    private String title;
-    private int statusPost;
-    private int statusReport;
     private int statusHistory;
     private String description;
     private String reportTypeName;

@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface HistoryHandleReportPostRepository extends JpaRepository<HistoryHandleReportPost, Long> {
 
     Page<HistoryHandleReportPost> getHistoryHandleReportPostByPost_Id(Long postID, PageRequest pageRequest);
+
 }
