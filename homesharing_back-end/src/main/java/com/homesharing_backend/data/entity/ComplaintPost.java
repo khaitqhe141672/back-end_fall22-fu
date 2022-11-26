@@ -29,6 +29,10 @@ public class ComplaintPost {
     @JoinColumn(name = "host_id", referencedColumnName = "id")
     private Host host;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
+
     @Column(name = "status")
     private int status;
 }
