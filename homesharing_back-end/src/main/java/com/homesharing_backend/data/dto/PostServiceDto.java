@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,4 +18,21 @@ public class PostServiceDto {
     private float price;
     private Long serviceID;
     private int status;
+
+    public PostServiceDto(Long postServiceID, String iconService,
+                          String nameService, float price, Long serviceID, int status) {
+        this.postServiceID = postServiceID;
+        this.iconService = iconService;
+        this.nameService = nameService;
+        this.price = price;
+        this.serviceID = serviceID;
+        this.status = status;
+    }
+
+    public PostServiceDto(Long postServiceID, String nameService, Long serviceID, int status) {
+        this.postServiceID = postServiceID;
+        this.nameService = nameService;
+        this.serviceID = serviceID;
+        this.status = status;
+    }
 }

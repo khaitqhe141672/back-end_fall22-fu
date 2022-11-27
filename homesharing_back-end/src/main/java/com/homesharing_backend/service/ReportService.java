@@ -20,7 +20,7 @@ public interface ReportService {
 
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportPostID);
 
-    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long reportRateID);
+    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long postID);
 
     public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int type);
 

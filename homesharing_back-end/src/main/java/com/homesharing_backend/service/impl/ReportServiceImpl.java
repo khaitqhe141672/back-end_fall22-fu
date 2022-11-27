@@ -133,20 +133,19 @@ public class ReportServiceImpl implements ReportService {
 
     /*status = 1 dang cho admin xu ly*/
     @Override
-    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long reportPostID) {
+    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long postID) {
 
-        ReportPost reportPost = reportPostRepository.getReportPostById(reportPostID);
+        Post post = postRepository.getPostById(postID);
 
-        if (Objects.isNull(reportPost)) {
-            throw new NotFoundException("ReportPost-id khong ton tai");
+        if (Objects.isNull(post)) {
+            throw new NotFoundException("post-id khong ton tai");
         } else {
             Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
             ComplaintPost complaintPost = ComplaintPost.builder()
-                    .reportPost(reportPost)
                     .description(complaintRequest.getDescription())
                     .host(host)
-                    .post(reportPost.getPost())
+                    .post(post)
                     .status(1)
                     .build();
 
@@ -176,10 +175,6 @@ public class ReportServiceImpl implements ReportService {
 
                 complaintPost.setStatus(2);
                 complaintPostRepository.save(complaintPost);
-
-                ReportPost reportPost = reportPostRepository.getReportPostById(complaintPost.getReportPost().getId());
-                reportPost.setStatus(2);
-                reportPostRepository.save(reportPost);
 
                 return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post thanh cong"));
             }
@@ -429,13 +424,10 @@ public class ReportServiceImpl implements ReportService {
                 ReportRate rate = reportRateRepository.getReportRateById(r.getReportRate().getId());
 
                 ComplaintDto dto = ComplaintDto.builder()
-                        .reportID(rate.getId())
-                        .reportTypeID(rate.getReportType().getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
                         .descriptionComplaint(r.getDescription())
-                        .nameReportType(rate.getReportType().getName())
                         .statusComplaint(r.getStatus())
                         .build();
 
@@ -467,19 +459,15 @@ public class ReportServiceImpl implements ReportService {
 
             complaintPosts.forEach(r -> {
 
-                ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
 
                 ComplaintDto dto = ComplaintDto.builder()
                         .postID(r.getPost().getId())
                         .title(r.getPost().getTitle())
                         .complaintPostID(r.getId())
-                        .reportID(post.getId())
-                        .reportTypeID(post.getReportType().getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
                         .descriptionComplaint(r.getDescription())
-                        .nameReportType(post.getReportType().getName())
                         .statusComplaint(r.getStatus())
                         .build();
 
@@ -512,16 +500,11 @@ public class ReportServiceImpl implements ReportService {
 
             complaintPosts.forEach(r -> {
 
-                ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
-
                 ComplaintDto dto = ComplaintDto.builder()
-                        .reportID(post.getId())
-                        .reportTypeID(post.getReportType().getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
                         .descriptionComplaint(r.getDescription())
-                        .nameReportType(post.getReportType().getName())
                         .statusComplaint(r.getStatus())
                         .build();
 

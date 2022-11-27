@@ -18,9 +18,9 @@ public class ComplaintPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "report_post_id", referencedColumnName = "id")
-    private ReportPost reportPost;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "report_post_id", referencedColumnName = "id")
+//    private ReportPost reportPost;
 
     @Column(name = "description", length = 5000)
     private String description;
