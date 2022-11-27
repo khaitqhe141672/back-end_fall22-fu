@@ -1,7 +1,10 @@
 package com.homesharing_backend.data.repository;
 
+import com.homesharing_backend.data.dto.PostVoucherDto;
 import com.homesharing_backend.data.entity.PostVoucher;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +23,8 @@ public interface PostVoucherRepository extends JpaRepository<PostVoucher, Long> 
     PostVoucher getPostVoucherByPost_IdAndVoucher_Id(Long postID, Long voucherID);
 
     PostVoucher getPostVoucherByPost_IdAndVoucher_Code(Long postID, String code);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostVoucherDto(v.id, v.voucher.id, v.status) FROM PostVoucher v " +
+            "WHERE v.post.id= :postID AND v.status= :status")
+    List<PostVoucherDto> getAllPostVoucherByPostIDAndStatus(@Param("postID") Long postID, @Param("status") int status);
 }

@@ -1,16 +1,16 @@
 package com.homesharing_backend.service.impl;
 
-import com.homesharing_backend.data.dto.FillSearchDto;
-import com.homesharing_backend.data.dto.SearchDto;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.Post;
+import com.homesharing_backend.data.entity.PostServices;
+import com.homesharing_backend.data.entity.PostUtility;
 import com.homesharing_backend.data.entity.Province;
-import com.homesharing_backend.data.repository.DistrictRepository;
-import com.homesharing_backend.data.repository.PostRepository;
-import com.homesharing_backend.data.repository.ProvinceRepository;
+import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.SearchFilterRequest;
 import com.homesharing_backend.presentation.payload.request.SearchRequest;
+import com.homesharing_backend.service.PostService;
 import com.homesharing_backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +32,15 @@ public class SearchServiceImpl implements SearchService {
 
     @Autowired
     private ProvinceRepository provinceRepository;
+
+    @Autowired
+    private PostVoucherRepository postVoucherRepository;
+
+    @Autowired
+    private PostUtilityRepository postUtilityRepository;
+
+    @Autowired
+    private PostServiceRepository postServiceRepository;
 
     @Override
     public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest, int indexPage) {
@@ -88,8 +97,6 @@ public class SearchServiceImpl implements SearchService {
             throw new NotFoundException("search khong co data");
         } else {
 
-
-
 //            if (searchFilterRequest.getStatusSortPrice() == 1) {
 //                searchDtos.stream().sorted(Comparator.comparing(SearchDto::getPrice));
 //            } else if (searchFilterRequest.getStatusSortPrice() == 2) {
@@ -97,6 +104,13 @@ public class SearchServiceImpl implements SearchService {
 //            }
 
             searchDtos.forEach(s -> {
+                List<PostUtilityDto> utilityDtoList =
+                        postUtilityRepository.getAllPostVoucherDTOByPostIDAndStatus(s.getPostID(), 1);
+                List<PostServiceDto> serviceDtoList =
+                        postServiceRepository.getAllPostServiceByPostIDAndStatus(s.getPostID(), 1);
+                List<PostVoucherDto> postVoucherDtoList =
+                        postVoucherRepository.getAllPostVoucherByPostIDAndStatus(s.getPostID(), 1);
+
                 SearchDto dto = SearchDto.builder()
                         .postID(s.getPostID())
                         .title(s.getTitle())
@@ -107,20 +121,29 @@ public class SearchServiceImpl implements SearchService {
                         .nameVoucher(s.getNameVoucher())
                         .typeAccount(s.getTypeAccount())
                         .avgStar(s.getAvgStar())
+                        .provinceID(s.getProvinceID())
+                        .utilityDtoList(utilityDtoList)
+                        .serviceDtoList(serviceDtoList)
+                        .numberOfGuest(s.getNumberOfGuest())
+                        .postVoucherDtoList(postVoucherDtoList)
                         .build();
                 list.add(dto);
             });
-            if (Objects.isNull(list)) {
+
+            List<SearchDto> saveSearch = new ArrayList<>();
+
+            if (Objects.isNull(saveSearch)) {
                 throw new NotFoundException("khong co data search");
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                     {
-                        put("searchList", list);
+                        put("searchList", saveSearch);
                     }
                 }));
             }
         }
     }
+
 
     @Override
     public ResponseEntity<ResponseObject> getTextSearch(SearchRequest searchRequest) {

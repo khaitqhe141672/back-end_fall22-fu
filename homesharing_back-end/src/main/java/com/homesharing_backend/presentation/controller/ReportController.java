@@ -41,8 +41,8 @@ public class ReportController {
     @PostMapping("/create-complaintPost")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> createComplaintPostByHost(@RequestBody ComplaintRequest ComplaintRequest,
-                                                       @RequestParam("reportPost-id") Long reportPostID) {
-        return reportService.createComplaintPost(ComplaintRequest, reportPostID);
+                                                       @RequestParam("post-id") Long postID) {
+        return reportService.createComplaintPost(ComplaintRequest, postID);
     }
 
     @GetMapping("/list-reportPost-host")
