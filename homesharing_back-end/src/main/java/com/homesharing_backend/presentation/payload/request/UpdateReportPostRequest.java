@@ -12,5 +12,4 @@ import java.util.List;
 public class UpdateReportPostRequest {
 
     private List<Long> listReportPostID;
-    private int statusPost;
 }

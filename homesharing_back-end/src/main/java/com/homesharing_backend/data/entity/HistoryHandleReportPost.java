@@ -22,10 +22,6 @@ public class HistoryHandleReportPost {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "complaint_post_id", referencedColumnName = "id")
-    private ComplaintPost complaintPost;
-
     @Column(name = "status_report")
     private int statusReport;
 

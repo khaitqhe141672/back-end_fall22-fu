@@ -553,16 +553,15 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest,
-                                                                  Long postID, Long complaintPostID) {
+                                                                  Long postID, int status) {
 
         Post post = postRepository.getPostById(postID);
 
         if (!Objects.isNull(post)) {
             HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
                     .statusReport(2)
-                    .statusPost(updateReportPostRequest.getStatusPost())
+                    .statusPost(status)
                     .post(post)
-                    .complaintPost(complaintPostRepository.getComplaintPostByIdAndPost_Id(post.getId(), complaintPostID))
                     .build();
             HistoryHandleReportPost saveHistory = historyHandleReportPostRepository.save(historyHandleReportPost);
 
@@ -580,7 +579,7 @@ public class ReportServiceImpl implements ReportService {
 
                     historyHandleReportPostDetailRepository.save(historyHandleReportPostDetail);
                     reportPost.setStatus(2);
-                    post.setStatus(updateReportPostRequest.getStatusPost());
+                    post.setStatus(status);
                     post.setStatusReport(2);
                     reportPostRepository.save(reportPost);
                     postRepository.save(post);
