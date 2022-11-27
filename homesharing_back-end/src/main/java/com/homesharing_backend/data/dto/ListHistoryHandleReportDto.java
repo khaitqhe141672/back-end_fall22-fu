@@ -18,4 +18,7 @@ public class ListHistoryHandleReportDto {
     private String description;
     private String reportTypeName;
     private Long reportTypeID;
+    private String username;
+    private String fullName;
+
 }
