@@ -696,6 +696,8 @@ public class ReportServiceImpl implements ReportService {
                         .reportTypeName(d.getReportPost().getReportType().getName())
                         .reportTypeID(d.getReportPost().getReportType().getId())
                         .description(d.getReportPost().getDescription())
+                        .fullName(d.getReportPost().getCustomer().getUser().getUserDetail().getFullName())
+                        .username(d.getReportPost().getCustomer().getUser().getUsername())
                         .build();
 
                 list.add(dto);
