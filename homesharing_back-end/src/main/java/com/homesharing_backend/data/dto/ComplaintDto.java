@@ -21,4 +21,5 @@ public class ComplaintDto {
     private String username;
     private String imageUrl;
     private int statusComplaint;
+    private int statusPost;
 }

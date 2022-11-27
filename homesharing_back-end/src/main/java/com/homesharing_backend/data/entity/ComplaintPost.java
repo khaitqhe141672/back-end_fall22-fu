@@ -33,6 +33,13 @@ public class ComplaintPost {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "history_handle_report_id", referencedColumnName = "id")
+    private HistoryHandleReportPost historyHandleReportPost;
+
     @Column(name = "status")
     private int status;
+
+    @Column(name = "status_post")
+    private int statusPost;
 }

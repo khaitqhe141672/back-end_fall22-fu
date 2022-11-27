@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -120,24 +121,50 @@ public class SearchServiceImpl implements SearchService {
                         .fullName(s.getFullName())
                         .nameVoucher(s.getNameVoucher())
                         .typeAccount(s.getTypeAccount())
-                        .avgStar(s.getAvgStar())
                         .provinceID(s.getProvinceID())
                         .utilityDtoList(utilityDtoList)
                         .serviceDtoList(serviceDtoList)
                         .numberOfGuest(s.getNumberOfGuest())
                         .postVoucherDtoList(postVoucherDtoList)
                         .build();
+
+                if (Objects.isNull(s.getAvgStar())) {
+                    dto.setAvgStar(0.0);
+                } else {
+                    dto.setAvgStar(s.getAvgStar());
+                }
+
                 list.add(dto);
             });
 
-            List<SearchDto> saveSearch = new ArrayList<>();
+            List<SearchDto> saveSearch = list.stream().filter(searchDto
+                    -> searchDto.getProvinceID() == searchFilterRequest.getProvinceID()
+                    && searchDto.getNumberOfGuest() == searchFilterRequest.getNumberOfGuest()
+                    && searchDto.getAvgStar() >= searchFilterRequest.getStatusStar()
+                    && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
+                    && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()).collect(Collectors.toList());
 
-            if (Objects.isNull(saveSearch)) {
+            List<SearchDto> tempSearch = new ArrayList<>();
+            for (SearchDto s : saveSearch) {
+                if (searchFilterRequest.getStatusVoucher() == 1) {
+                    if (!s.getPostVoucherDtoList().isEmpty()) {
+                        tempSearch.add(s);
+                    }
+                } else if (searchFilterRequest.getStatusVoucher() == 2) {
+                    if (s.getPostVoucherDtoList().isEmpty()) {
+                        tempSearch.add(s);
+                    }
+                } else {
+                    tempSearch.add(s);
+                }
+            }
+
+            if (tempSearch.isEmpty()) {
                 throw new NotFoundException("khong co data search");
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                     {
-                        put("searchList", saveSearch);
+                        put("searchList", tempSearch);
                     }
                 }));
             }

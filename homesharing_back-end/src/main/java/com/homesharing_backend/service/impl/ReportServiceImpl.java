@@ -137,6 +137,9 @@ public class ReportServiceImpl implements ReportService {
 
         Post post = postRepository.getPostById(postID);
 
+        HistoryHandleReportPost reportPost =
+                historyHandleReportPostRepository.getHistoryHandleReportPostByPost_IdAndStatusReport(post.getId(), 1);
+
         if (Objects.isNull(post)) {
             throw new NotFoundException("post-id khong ton tai");
         } else {
@@ -146,6 +149,7 @@ public class ReportServiceImpl implements ReportService {
                     .description(complaintRequest.getDescription())
                     .host(host)
                     .post(post)
+                    .statusPost(reportPost.getStatusPost())
                     .status(1)
                     .build();
 
@@ -459,7 +463,6 @@ public class ReportServiceImpl implements ReportService {
 
             complaintPosts.forEach(r -> {
 
-
                 ComplaintDto dto = ComplaintDto.builder()
                         .postID(r.getPost().getId())
                         .title(r.getPost().getTitle())
@@ -469,6 +472,7 @@ public class ReportServiceImpl implements ReportService {
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
                         .descriptionComplaint(r.getDescription())
                         .statusComplaint(r.getStatus())
+                        .statusPost(r.getStatusPost())
                         .build();
 
                 complaintDtoList.add(dto);
