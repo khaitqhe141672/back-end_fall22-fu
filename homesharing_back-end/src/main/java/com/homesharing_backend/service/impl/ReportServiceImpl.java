@@ -133,12 +133,13 @@ public class ReportServiceImpl implements ReportService {
 
     /*status = 1 dang cho admin xu ly*/
     @Override
-    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long postID) {
+    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest,
+                                                               Long postID, Long historyID) {
 
         Post post = postRepository.getPostById(postID);
 
         HistoryHandleReportPost reportPost =
-                historyHandleReportPostRepository.getHistoryHandleReportPostByPost_IdAndStatusReport(post.getId(), 1);
+                historyHandleReportPostRepository.getHistoryHandleReportPostByIdAndPost_Id(historyID, post.getId());
 
         if (Objects.isNull(post)) {
             throw new NotFoundException("post-id khong ton tai");
