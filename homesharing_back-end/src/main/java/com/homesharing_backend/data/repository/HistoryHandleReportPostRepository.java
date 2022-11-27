@@ -11,6 +11,6 @@ public interface HistoryHandleReportPostRepository extends JpaRepository<History
 
     Page<HistoryHandleReportPost> getHistoryHandleReportPostByPost_Id(Long postID, PageRequest pageRequest);
 
-    HistoryHandleReportPost getHistoryHandleReportPostByPost_IdAndStatusReport(Long postID, int status);
+    HistoryHandleReportPost getHistoryHandleReportPostByIdAndPost_Id(Long id, Long postID);
 
 }
