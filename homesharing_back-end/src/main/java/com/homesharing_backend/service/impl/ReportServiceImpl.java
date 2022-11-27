@@ -150,6 +150,7 @@ public class ReportServiceImpl implements ReportService {
                     .host(host)
                     .post(post)
                     .statusPost(reportPost.getStatusPost())
+                    .historyHandleReportPost(reportPost)
                     .status(1)
                     .build();
 
