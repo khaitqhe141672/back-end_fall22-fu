@@ -20,5 +20,5 @@ public class ListHistoryHandleReportDto {
     private Long reportTypeID;
     private String username;
     private String fullName;
-
+    private String imageUrl;
 }
