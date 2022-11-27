@@ -78,7 +78,7 @@ public class ReportController {
     }
 
     @GetMapping("/list-reportPost-detail-admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllReportPosDetailByAdmin(@RequestParam("post-id") Long postID,
                                                           @RequestParam("index-page") int indexPage) {
         return reportService.getAllDetailReportPostByPostIDOfHost(postID, indexPage);
