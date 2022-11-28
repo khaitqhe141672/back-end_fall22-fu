@@ -26,4 +26,7 @@ public interface PostUtilityRepository extends JpaRepository<PostUtility, Long> 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.PostUtilityDto(u.id, u.utility.name, u.utility.id, u.status) FROM PostUtility u " +
             "WHERE u.post.id= :postID AND u.status = :status")
     List<PostUtilityDto> getAllPostVoucherDTOByPostIDAndStatus(@Param("postID") Long postID, @Param("status") int status);
+
+    @Query(value = "select * from PostUtility where (utility.id in :listID) and status = 1", nativeQuery = true)
+    List<PostUtility> getAllPostUtilityByListID(@Param("listID") List<Long> listID);
 }

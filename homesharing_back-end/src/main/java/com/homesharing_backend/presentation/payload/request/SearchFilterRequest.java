@@ -14,7 +14,7 @@ public class SearchFilterRequest {
 
     private int statusVoucher;
     private List<Long> service;
-    private List<Long> roomTypeID;
+    private Long roomTypeID;
     private Date startDate;
     private float minPrice;
     private float maxPrice;

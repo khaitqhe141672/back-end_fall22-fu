@@ -27,14 +27,15 @@ public class SearchDto {
     private String fullName;
     private Long provinceID;
     private int numberOfGuest;
+    private Long typeRoomID;
     private List<PostServiceDto> serviceDtoList;
     private List<PostUtilityDto> utilityDtoList;
     private List<PostVoucherDto> postVoucherDtoList;
 
 
     public SearchDto(Long postID, String title, String address, float price,
-                     String imageUrl, String nameVoucher, Double avgStar,
-                     int typeAccount, String fullName, Long provinceID, int numberOfGuest,
+                     String imageUrl, String nameVoucher, Double avgStar, int typeAccount,
+                     String fullName, Long provinceID, int numberOfGuest, Long typeRoomID,
                      List<PostServiceDto> serviceDtoList, List<PostUtilityDto> utilityDtoList,
                      List<PostVoucherDto> postVoucherDtoList) {
         this.postID = postID;
@@ -48,6 +49,7 @@ public class SearchDto {
         this.fullName = fullName;
         this.provinceID = provinceID;
         this.numberOfGuest = numberOfGuest;
+        this.typeRoomID = typeRoomID;
         this.serviceDtoList = serviceDtoList;
         this.utilityDtoList = utilityDtoList;
         this.postVoucherDtoList = postVoucherDtoList;
@@ -69,7 +71,7 @@ public class SearchDto {
     public SearchDto(Long postID, String title, String address,
                      float price, String imageUrl, String nameVoucher,
                      Double avgStar, int typeAccount, String fullName,
-                     Long provinceID, int numberOfGuest) {
+                     Long provinceID, int numberOfGuest, Long typeRoomID) {
         this.postID = postID;
         this.title = title;
         this.address = address;
@@ -81,5 +83,6 @@ public class SearchDto {
         this.fullName = fullName;
         this.provinceID = provinceID;
         this.numberOfGuest = numberOfGuest;
+        this.typeRoomID = typeRoomID;
     }
 }

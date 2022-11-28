@@ -94,7 +94,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<ViewBookingDto> getAllCurrentBooking(@Param("hostID") Long hostID, PageRequest pageRequest);
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price, pi.imageUrl, v.description, " +
-            "avg(r.point), h.typeAccount, h.user.userDetail.fullName, pr.id, pd.guestNumber) FROM Post p " +
+            "avg(r.point), h.typeAccount, h.user.userDetail.fullName, pr.id, pd.guestNumber, pd.roomType.id) FROM Post p " +
             "LEFT JOIN PostDetail pd ON p.id = pd.post.id " +
             "LEFT JOIN District d ON pd.district.id = d.id " +
             "LEFT JOIN Province pr ON d.province.id = pr.id " +
@@ -119,4 +119,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "GROUP BY p.id")
     List<FillSearchDto> searchPostByTitle(@Param("title") String title, PageRequest pageRequest);
 
+    @Query(value = "SELECT distinct p.id FROM Post p " +
+            "left join BookingDetail bd on p.id = bd.post.id " +
+            "left join Booking b on bd.booking.id = b.id where b.status = 2 and bd.startDate != :date " +
+            "group by p.id")
+    List<Long> getAllSearchByDate(@Param("date") Date date);
 }
