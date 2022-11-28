@@ -106,7 +106,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN User u ON h.user.id = u.id " +
             "LEFT JOIN UserDetail ud ON u.userDetail.userDetailId = ud.userDetailId " +
             "LEFT JOIN BookingDetail bd ON p.id = bd.post.id " +
-            "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id " +
+            "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id WHERE p.status = 1 " +
             "GROUP BY p.id")
     List<SearchDto> getSearchFilter();
 
@@ -115,13 +115,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN PostImage pi ON p.id = pi.post.id " +
             "LEFT JOIN District d ON pd.district.id = d.id " +
             "LEFT JOIN Province pv ON d.province.id = pv.id " +
-            "where p.title like %:title% " +
+            "where p.title like %:title% and p.status = 1 " +
             "GROUP BY p.id")
     List<FillSearchDto> searchPostByTitle(@Param("title") String title, PageRequest pageRequest);
 
     @Query(value = "SELECT distinct p.id FROM Post p " +
             "left join BookingDetail bd on p.id = bd.post.id " +
-            "left join Booking b on bd.booking.id = b.id where b.status = 2 and bd.startDate = :date " +
+            "left join Booking b on bd.booking.id = b.id where b.status = 2 and bd.startDate = :date and p.status = 1 " +
             "group by p.id")
     List<Long> getAllSearchByDate(@Param("date") Date date);
 }
