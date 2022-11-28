@@ -18,7 +18,7 @@ public class ReportType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 5000)
     private String name;
 
     @Column(name = "status")

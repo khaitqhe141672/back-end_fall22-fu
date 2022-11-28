@@ -8,6 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtResponse {
 
-    private String message;
+    private String status;
     private Object object;
 }

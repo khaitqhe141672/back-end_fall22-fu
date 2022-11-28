@@ -6,6 +6,10 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
+@Table(name = "voucher",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "code")
+        })
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -19,20 +23,20 @@ public class Voucher {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    private Post post;
+    @JoinColumn(name = "host_id", referencedColumnName = "id")
+    private Host host;
 
-    @Column(name = "name_voucher")
-    private String nameVoucher;
+    @Column(name = "code")
+    private String code;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "start_date")
-    private Date startDate;
+    @Column(name = "percent")
+    private int percent;
 
-    @Column(name = "end_date")
-    private Date endDate;
+    @Column(name = "due_day")
+    private int dueDay;
 
     @Column(name = "status")
     private int status;

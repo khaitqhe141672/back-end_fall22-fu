@@ -1,21 +1,30 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.dto.LoginDto;
 import com.homesharing_backend.data.dto.UserDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
+import com.homesharing_backend.exception.BadRequestAlertException;
 import com.homesharing_backend.exception.ConflictException;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
+import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
+import com.homesharing_backend.presentation.payload.request.ForgotPasswordRequest;
 import com.homesharing_backend.presentation.payload.request.LoginRequest;
 import com.homesharing_backend.presentation.payload.request.SignupRequest;
 import com.homesharing_backend.security.jwt.JwtUtils;
 import com.homesharing_backend.security.services.UserDetailsImpl;
 import com.homesharing_backend.service.AuthService;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.homesharing_backend.util.JavaMail;
+import com.homesharing_backend.util.SecurityUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,10 +34,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,8 +75,12 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private FollowHostRepository followHostRepository;
+
     @Override
     public ResponseEntity<ResponseObject> register(SignupRequest signUpRequest, HttpServletRequest servletRequest) {
+
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new ConflictException("Username is already taken");
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -78,22 +93,78 @@ public class AuthServiceImpl implements AuthService {
             userDetail.setDob(signUpRequest.getDob());
             userDetail.setAddress(signUpRequest.getAddress());
             userDetail.setMobile(signUpRequest.getMobile());
+            userDetail.setAvatarUrl("https://home-sharing.s3.ap-southeast-1.amazonaws.com/1665851455149_avatar.png");
             user.setUserDetail(userDetail);
-            Role waitRole = roleRepository.findByName(ERole.ROLE_WAIT)
-                    .orElseThrow(() -> new NotFoundException("WAIT role is not found"));
-            user.setRole(waitRole);
+            String strRoles = signUpRequest.getRole();
+            Role roles = new Role();
+            if (strRoles == null || strRoles.isEmpty()) {
+                Role customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+                        .orElseThrow(() -> new NotFoundException("Student role is not found"));
+//                roles.add(new UserRole(user, customerRole));
+                user.setRole(customerRole);
+            } else {
+//                strRoles.forEach(role -> {
+                switch (strRoles) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new NotFoundException("Admin role is not found"));
+//                            roles.add(new UserRole(user, adminRole));
+                        user.setRole(adminRole);
+                        Admin admin = Admin.builder()
+                                .user(user)
+                                .build();
 
+                        adminRepository.save(admin);
+                        break;
+                    case "host":
+                        Role hostRole = roleRepository.findByName(ERole.ROLE_HOST)
+                                .orElseThrow(() -> new NotFoundException("Teacher role is not found"));
+//                            roles.add(new UserRole(user, hostRole));
+                        user.setRole(hostRole);
+                        Host host = Host.builder()
+                                .user(user)
+                                .typeAccount(1)
+                                .build();
+
+                        hostRepository.save(host);
+                        break;
+                    default:
+                        Role customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+                                .orElseThrow(() -> new NotFoundException("Student role is not found"));
+//                            roles.add(new UserRole(user, customerRole));
+                        user.setRole(customerRole);
+                        Customer customer = Customer.builder()
+                                .user(user)
+                                .build();
+
+                        customerRepository.save(customer);
+                }
+//                });
+            }
+//            user.setRoles(roles);
             String otp = UUID.randomUUID().toString();
-
             user.setCodeActive(otp);
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            LocalDate localDate = localDateTime.toLocalDate();
+
+
+            Date dateStart = Date.valueOf(localDate);
+
+            user.setCreateDate(dateStart);
+
             User savedUser = userRepository.save(user);
-            UserDto userDto = modelMapper.map(user, UserDto.class);
+
+//            List<String> resRoles = new ArrayList<>();
+//            roles.forEach(e -> resRoles.add(e.getRole().getName().name()));
+            LoginDto userDto = modelMapper.map(user, LoginDto.class);
             userDto.setRole(user.getRole().getName().name());
             userDto.setFullName(signUpRequest.getFullName());
             String baseUrl = ServletUriComponentsBuilder.fromRequestUri(servletRequest)
                     .replacePath(null)
                     .build()
                     .toUriString();
+
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
             String text = baseUrl + "/api/auth/confirm-account?token=" + otp;
@@ -108,13 +179,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseObject> login(LoginRequest signInRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword()));
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
+                        signInRequest.getPassword()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        UserDto userDto = UserDto.builder().email(userDetails.getEmail()).username(userDetails.getUsername()).role(roles.get(0)).build();
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority()).collect(Collectors.toList());
+
+        LoginDto userDto = LoginDto.builder()
+                .email(userDetails.getEmail())
+                .username(userDetails.getUsername()).role(roles.get(0)).build();
         Map data = new HashMap<String, Object>();
+
         if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
             Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
             data.put("customerID", customer.getId());
@@ -145,7 +225,7 @@ public class AuthServiceImpl implements AuthService {
             user.setStatus(1);
             User updateRole = userRepository.save(user);
 
-            UserDto dto = UserDto.builder()
+            LoginDto dto = LoginDto.builder()
                     .email(user.getEmail())
                     .role(updateRole.getRole().getName().name())
                     .username(user.getUsername())
@@ -167,8 +247,8 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.getUserByEmail(email);
         Map data = new HashMap<String, Object>();
 
-        if(user != null){
-            if(role == 1){
+        if (user != null) {
+            if (role == 1) {
                 Role customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
                         .orElseThrow(() -> new NotFoundException("Customer role is not found"));
                 user.setRole(customerRole);
@@ -199,5 +279,144 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public ResponseEntity<ResponseObject> existAccountByUsername(String username) {
+        Map data = new HashMap<String, Object>();
+        if (userRepository.existsByUsername(username.trim())) {
+            data.put("user", username + " đã tồn tại");
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("USERNAME_EXIST", data));
+        } else {
+            data.put("user", username + " chưa tồn tại");
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("USERNAME_NOT_EXIST", data));
+        }
+    }
 
+    @Override
+    public ResponseEntity<ResponseObject> existAccountByEmail(String email) {
+        Map data = new HashMap<String, Object>();
+        if (userRepository.existsByEmail(email.trim())) {
+            data.put("user", email + " đã tồn tại");
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_EXIST", data));
+        } else {
+            data.put("user", email + " chưa tồn tại");
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("EMAIL_NOT_EXIST", data));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> logout(HttpServletRequest request, HttpServletResponse response) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Login success full!"));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(400, " Login success fail!"));
+        }
+    }
+
+    /*
+    * typeAccount = 1 tk thuong
+    * typeAccount = 2 tk co tich xanh
+    */
+    @Override
+    public ResponseEntity<JwtResponse> profile() {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("User khong ton tai");
+        } else {
+            UserDto dto = UserDto.builder()
+                    .userID(user.getId())
+                    .username(user.getUsername())
+                    .createDate(user.getCreateDate())
+                    .dob(user.getUserDetail().getDob())
+                    .mobile(user.getUserDetail().getMobile())
+                    .fullName(user.getUserDetail().getFullName())
+                    .userDetailID(user.getUserDetail().getUserDetailId())
+                    .urlImage(user.getUserDetail().getAvatarUrl())
+                    .email(user.getEmail())
+                    .address(user.getUserDetail().getAddress())
+                    .status(user.getStatus())
+                    .role(user.getRole().getName().name())
+                    .build();
+
+
+            if (user.getRole().getName().name().equals("ROLE_HOST")) {
+                Host host = hostRepository.getHostsByUser_Id(user.getId());
+                dto.setTypeAccount(host.getTypeAccount());
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> changePassword(ChangePasswordRequest changePasswordRequest) {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("User khong ton tai");
+        } else {
+            if (passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+                userRepository.save(user);
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Change password success full!"));
+            } else {
+                throw new BadRequestAlertException("mat khau current khong khop");
+            }
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> forgotPassword(String email, HttpServletRequest servletRequest) {
+
+        User user = userRepository.getUserByEmail(email);
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("email khong ton tai");
+        } else {
+            String resetPassword = UUID.randomUUID().toString();
+            String baseUrl = ServletUriComponentsBuilder.fromRequestUri(servletRequest)
+                    .replacePath(null)
+                    .build()
+                    .toUriString();
+            String toEmail = user.getEmail();
+            String subject = "[JavaMail] - Demo sent email";
+            String text = baseUrl + "/api/auth/forgot-password?token=" + resetPassword;
+            user.setCodeActive(resetPassword);
+            userRepository.save(user);
+            new JavaMail().sentEmail(toEmail, subject, text);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Reset-password success check mail"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> confirmResetPassword(String token) {
+
+        User user = userRepository.getUserByCodeActive(token);
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("otp khong ton tai");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "confirm-reset success"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> resetPassword(ForgotPasswordRequest forgotPasswordRequest) {
+
+        User user = userRepository.getUserByEmail(forgotPasswordRequest.getEmail());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("email khong ton tai");
+        } else {
+            user.setPassword(passwordEncoder.encode(forgotPasswordRequest.getPassword()));
+            userRepository.save(user);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "reset-password success"));
+        }
+    }
 }

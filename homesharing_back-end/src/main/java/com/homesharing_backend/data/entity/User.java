@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ import java.util.Set;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
+public class  User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +53,9 @@ public class User {
 
     @Column(name = "active_code")
     private String codeActive;
+
+    @Column(name = "create_date")
+    private Date createDate;
 
     @Column(name = "status")
     private int status;

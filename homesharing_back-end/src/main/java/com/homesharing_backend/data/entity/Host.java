@@ -22,5 +22,6 @@ public class Host {
     private User user;
 
     @Column(name = "type_account")
-    private Long typeAccount;
+    private int typeAccount;
+
 }

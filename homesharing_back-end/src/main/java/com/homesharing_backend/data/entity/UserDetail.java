@@ -27,7 +27,7 @@ public class UserDetail {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "avatar_url")
+    @Column(name = "avatar_url", length = 5000)
     private String avatarUrl;
 
     @Column(name = "dob")

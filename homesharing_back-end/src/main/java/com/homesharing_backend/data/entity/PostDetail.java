@@ -29,19 +29,12 @@ public class PostDetail {
     @JoinColumn(name = "district_id", referencedColumnName = "id")
     private District district;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 5000)
     private String description;
-
-    @Column(name = "service_fee")
-    private float serviceFee;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_type_id", referencedColumnName = "id")
     private RoomType roomType;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "human_capacity_id", referencedColumnName = "id")
-    private HumanCapacity humanCapacity;
 
     @Column(name = "guest_number")
     private int guestNumber;
@@ -52,6 +45,12 @@ public class PostDetail {
     @Column(name = "number_of_bedrooms")
     private int numberOfBedrooms;
 
-    @Column(name = "numberOfBathrooms")
+    @Column(name = "number_of_bathrooms")
     private int numberOfBathroom;
+
+    @Column(name = "longitude")
+    private String longitude;
+
+    @Column(name = "latitude")
+    private String latitude;
 }

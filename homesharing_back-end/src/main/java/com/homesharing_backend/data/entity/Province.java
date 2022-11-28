@@ -14,9 +14,11 @@ import javax.persistence.*;
 public class Province {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "image_url", length = 5000)
+    private String imageUrl;
 }

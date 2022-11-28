@@ -3,6 +3,7 @@ package com.homesharing_backend.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name = "post_payment")
@@ -25,6 +26,12 @@ public class PostPayment {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_package_id", referencedColumnName = "id")
     private PaymentPackage paymentPackage;
+
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Column(name = "end_date")
+    private Date endDate;
 
     @Column(name = "status")
     private int status;

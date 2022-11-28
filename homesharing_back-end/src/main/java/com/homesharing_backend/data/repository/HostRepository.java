@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface HostRepository extends JpaRepository<Host, Long> {
 
     Host getHostsByUser_Username(String useName);
+
+    Host getHostsByUser_Id(Long id);
+
+    Host getHostsById(Long id);
 }

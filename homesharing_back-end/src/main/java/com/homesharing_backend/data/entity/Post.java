@@ -20,7 +20,7 @@ public class Post {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "host_id", referencedColumnName = "id")
-    private User host;
+    private Host host;
 
     @Column(name = "title")
     private String title;
@@ -33,5 +33,8 @@ public class Post {
 
     @Column(name = "status")
     private int status;
+
+    @Column(name = "status_report")
+    private int statusReport;
 
 }

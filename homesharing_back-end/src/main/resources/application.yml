@@ -1,0 +1,13 @@
+cloud:
+  aws:
+    credentials:
+      access-key: AKIASUHNUQ3SSKUD7AIO
+      secret-key: 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
+    region:
+      static: ap-southeast-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: home-sharing

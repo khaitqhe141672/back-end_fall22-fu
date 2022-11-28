@@ -29,7 +29,7 @@ public class SignupRequest {
 
 //    private Set<String> role;
 
-//    private String role;
+    private String role;
 
 
 //    @Size(max = 20)

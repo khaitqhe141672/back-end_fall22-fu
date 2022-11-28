@@ -26,12 +26,6 @@ public class PostUtility {
     @JoinColumn(name = "utility_id", referencedColumnName = "id")
     private Utility utility;
 
-    @Column(name = "price")
-    private float price;
-
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "status")
     private int status;
 
