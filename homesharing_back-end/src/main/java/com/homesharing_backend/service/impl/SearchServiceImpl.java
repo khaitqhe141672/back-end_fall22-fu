@@ -140,7 +140,7 @@ public class SearchServiceImpl implements SearchService {
             });
 
             List<SearchDto> saveSearch = list.stream().filter(searchDto
-                    -> searchDto.getNumberOfGuest() <= searchFilterRequest.getNumberOfGuest()
+                    -> searchDto.getNumberOfGuest() >= searchFilterRequest.getNumberOfGuest()
                     && searchDto.getAvgStar() >= searchFilterRequest.getStatusStar()
                     && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
                     && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()
