@@ -126,6 +126,7 @@ public class SearchServiceImpl implements SearchService {
                         .serviceDtoList(serviceDtoList)
                         .numberOfGuest(s.getNumberOfGuest())
                         .postVoucherDtoList(postVoucherDtoList)
+                        .typeRoomID(s.getTypeRoomID())
                         .build();
 
                 if (Objects.isNull(s.getAvgStar())) {
@@ -142,7 +143,12 @@ public class SearchServiceImpl implements SearchService {
                     && searchDto.getNumberOfGuest() == searchFilterRequest.getNumberOfGuest()
                     && searchDto.getAvgStar() >= searchFilterRequest.getStatusStar()
                     && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
-                    && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()).collect(Collectors.toList());
+                    && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()
+                    && searchDto.getTypeRoomID() == searchFilterRequest.getRoomTypeID()).collect(Collectors.toList());
+
+//             && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
+//                    && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()
+//                    && searchDto.getTypeRoomID() == searchFilterRequest.getRoomTypeID()
 
             List<SearchDto> tempSearch = new ArrayList<>();
             for (SearchDto s : saveSearch) {
@@ -159,12 +165,71 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
 
-            if (tempSearch.isEmpty()) {
+            List<Long> postServices = new ArrayList<>();
+
+            if (!searchFilterRequest.getService().isEmpty()) {
+                postServices = postServiceRepository.getAllPostServicesByListID(searchFilterRequest.getService());
+                System.out.println(postServices.size());
+            } else {
+                postServices = postServiceRepository.getAllPostServices();
+            }
+
+            List<Long> postList = new ArrayList<>();
+
+            if (!Objects.isNull(searchFilterRequest.getStartDate())) {
+                System.out.println(searchFilterRequest.getStartDate());
+                postList = postRepository.getAllSearchByDate(searchFilterRequest.getStartDate());
+                System.out.println(" s " + postList.size());
+            }
+
+            List<SearchDto> tempSearch1 = new ArrayList<>();
+
+            for (SearchDto dto : tempSearch) {
+                for (Long id : postServices) {
+                    if (dto.getPostID() == id) {
+                        tempSearch1.add(dto);
+                        System.out.println(dto.getPostID() + " -  3 - " + id);
+                    }
+                }
+            }
+            System.out.println("1 - " + tempSearch1.size());
+
+            List<SearchDto> resultSearch = new ArrayList<>();
+
+            for (SearchDto dto : tempSearch1) {
+                if (!Objects.isNull(postList)) {
+                    for (Long id : postList) {
+                        if (dto.getPostID() == id) {
+                            System.out.println(dto.getPostID() + " - " + id);
+                            resultSearch.add(dto);
+                        } else {
+                            System.out.println(dto.getPostID() + " - 1 - " + id);
+                        }
+                    }
+                } else {
+                    resultSearch.add(dto);
+                }
+            }
+
+            List<SearchDto> sort = new ArrayList<>();
+
+            if (searchFilterRequest.getStatusSortPrice() == 1) {
+                System.out.println(searchFilterRequest.getStatusSortPrice());
+                sort=  resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice)).collect(Collectors.toList());;
+            } else if (searchFilterRequest.getStatusSortPrice() == 2) {
+                System.out.println(searchFilterRequest.getStatusSortPrice());
+                sort = resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed()).collect(Collectors.toList());;
+            } else {
+                sort = resultSearch;
+            }
+
+            if (sort.isEmpty()) {
                 throw new NotFoundException("khong co data search");
             } else {
+                List<SearchDto> finalSort = sort;
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                     {
-                        put("searchList", tempSearch);
+                        put("searchList", finalSort);
                     }
                 }));
             }
