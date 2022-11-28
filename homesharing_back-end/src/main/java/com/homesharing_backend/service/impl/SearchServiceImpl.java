@@ -239,10 +239,36 @@ public class SearchServiceImpl implements SearchService {
             if (sort.isEmpty()) {
                 throw new NotFoundException("khong co data search");
             } else {
-                List<SearchDto> finalSort = province;
+
+                int totalSearch = province.size();
+
+                int totalPage = (totalSearch % 10 == 0) ? totalSearch / 10 : totalSearch / 10 + 1;
+
+                List<SearchDto> finalSort = province.stream()
+                        .skip(page)
+                        .limit(10)
+                        .collect(Collectors.toList());
+
+                List<ViewSearchDto> viewSearchDtoList = new ArrayList<>();
+
+                finalSort.forEach(v -> {
+                    ViewSearchDto dto = ViewSearchDto.builder()
+                            .postID(v.getPostID())
+                            .title(v.getTitle())
+                            .address(v.getAddress())
+                            .price(v.getPrice())
+                            .imageUrl(v.getImageUrl())
+                            .nameVoucher(v.getNameVoucher())
+                            .avgStar(v.getAvgStar())
+                            .typeAccount(v.getTypeAccount())
+                            .numberOfGuest(v.getNumberOfGuest())
+                            .build();
+                    viewSearchDtoList.add(dto);
+                });
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                     {
-                        put("searchList", finalSort);
+                        put("searchList", viewSearchDtoList);
+                        put("sizePage", totalPage);
                     }
                 }));
             }
