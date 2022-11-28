@@ -121,7 +121,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT distinct p.id FROM Post p " +
             "left join BookingDetail bd on p.id = bd.post.id " +
-            "left join Booking b on bd.booking.id = b.id where b.status = 2 and bd.startDate != :date " +
+            "left join Booking b on bd.booking.id = b.id where b.status = 2 and bd.startDate = :date " +
             "group by p.id")
     List<Long> getAllSearchByDate(@Param("date") Date date);
 }
