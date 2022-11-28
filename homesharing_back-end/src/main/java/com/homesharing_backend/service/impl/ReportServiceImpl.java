@@ -168,22 +168,24 @@ public class ReportServiceImpl implements ReportService {
     /*type = 1 khang an thanh cong update status= 2
       type = 2 khang an khong thanh cong khong phai lam gi*/
     @Override
-    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int type) {
+    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int status) {
 
         ComplaintPost complaintPost = complaintPostRepository.getComplaintPostById(complaintPostID);
 
         if (Objects.isNull(complaintPost)) {
             throw new NotFoundException("ComplaintPost-id khong ton tai");
         } else {
-            if (type == 2) {
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post khong thanh cong"));
-            } else {
+            Post post = postRepository.getPostById(complaintPost.getPost().getId());
 
-                complaintPost.setStatus(2);
-                complaintPostRepository.save(complaintPost);
+            complaintPost.setStatus(status);
+            complaintPostRepository.save(complaintPost);
 
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post thanh cong"));
-            }
+            post.setStatusReport(status);
+            post.setStatus(status);
+            postRepository.save(post);
+
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post thanh cong"));
+
         }
     }
 
