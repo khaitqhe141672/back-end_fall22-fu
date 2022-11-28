@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -175,13 +176,6 @@ public class SearchServiceImpl implements SearchService {
             }
 
             List<Long> postList = new ArrayList<>();
-
-            if (!Objects.isNull(searchFilterRequest.getStartDate())) {
-                System.out.println(searchFilterRequest.getStartDate());
-                postList = postRepository.getAllSearchByDate(searchFilterRequest.getStartDate());
-                System.out.println(" s " + postList.size());
-            }
-
             List<SearchDto> tempSearch1 = new ArrayList<>();
 
             for (SearchDto dto : tempSearch) {
@@ -192,33 +186,46 @@ public class SearchServiceImpl implements SearchService {
                     }
                 }
             }
+
+
             System.out.println("1 - " + tempSearch1.size());
 
             List<SearchDto> resultSearch = new ArrayList<>();
 
-            for (SearchDto dto : tempSearch1) {
-                if (!Objects.isNull(postList)) {
-                    for (Long id : postList) {
-                        if (dto.getPostID() == id) {
-                            System.out.println(dto.getPostID() + " - " + id);
-                            resultSearch.add(dto);
-                        } else {
-                            System.out.println(dto.getPostID() + " - 1 - " + id);
+            if (!Objects.isNull(searchFilterRequest.getStartDate())) {
+                System.out.println(searchFilterRequest.getStartDate());
+                postList = postRepository.getAllSearchByDate(searchFilterRequest.getStartDate());
+                System.out.println(" s " + postList.size());
+
+                if (!postList.isEmpty()) {
+                    for (SearchDto dto : tempSearch1) {
+                        for (Long id : postList) {
+                            if (dto.getPostID() != id) {
+                                System.out.println(dto.getPostID() + " - " + id);
+                                resultSearch.add(dto);
+                            } else {
+                                System.out.println(dto.getPostID() + " - 1 - " + id);
+                            }
                         }
                     }
                 } else {
-                    resultSearch.add(dto);
+                    resultSearch = tempSearch1;
                 }
+            } else {
+                resultSearch = tempSearch1;
             }
+
 
             List<SearchDto> sort = new ArrayList<>();
 
             if (searchFilterRequest.getStatusSortPrice() == 1) {
                 System.out.println(searchFilterRequest.getStatusSortPrice());
-                sort=  resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice)).collect(Collectors.toList());;
+                sort = resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice)).collect(Collectors.toList());
+                ;
             } else if (searchFilterRequest.getStatusSortPrice() == 2) {
                 System.out.println(searchFilterRequest.getStatusSortPrice());
-                sort = resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed()).collect(Collectors.toList());;
+                sort = resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed()).collect(Collectors.toList());
+                ;
             } else {
                 sort = resultSearch;
             }
