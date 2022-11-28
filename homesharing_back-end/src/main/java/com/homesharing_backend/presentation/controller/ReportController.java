@@ -55,8 +55,8 @@ public class ReportController {
     @PutMapping("/resolve-complaintPost")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> resolveComplaintPostByAdmin(@RequestParam("complaintPost-id") Long complaintPostID,
-                                                         @RequestParam("type") int type) {
-        return reportService.resolveComplaintPost(complaintPostID, type);
+                                                         @RequestParam("status") int status) {
+        return reportService.resolveComplaintPost(complaintPostID, status);
     }
 
     @PutMapping("/resolve-complaintRate")

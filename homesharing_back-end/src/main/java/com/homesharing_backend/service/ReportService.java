@@ -22,7 +22,7 @@ public interface ReportService {
 
     public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long postID, Long historyID);
 
-    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int type);
+    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int status);
 
     public ResponseEntity<MessageResponse> resolveComplaintRate(Long complaintRateID, int type);
 
