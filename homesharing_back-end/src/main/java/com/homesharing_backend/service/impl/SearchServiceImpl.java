@@ -140,8 +140,7 @@ public class SearchServiceImpl implements SearchService {
             });
 
             List<SearchDto> saveSearch = list.stream().filter(searchDto
-                    -> searchDto.getProvinceID() == searchFilterRequest.getProvinceID()
-                    && searchDto.getNumberOfGuest() == searchFilterRequest.getNumberOfGuest()
+                    -> searchDto.getNumberOfGuest() <= searchFilterRequest.getNumberOfGuest()
                     && searchDto.getAvgStar() >= searchFilterRequest.getStatusStar()
                     && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
                     && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()
@@ -221,19 +220,26 @@ public class SearchServiceImpl implements SearchService {
             if (searchFilterRequest.getStatusSortPrice() == 1) {
                 System.out.println(searchFilterRequest.getStatusSortPrice());
                 sort = resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice)).collect(Collectors.toList());
-                ;
             } else if (searchFilterRequest.getStatusSortPrice() == 2) {
                 System.out.println(searchFilterRequest.getStatusSortPrice());
                 sort = resultSearch.stream().sorted(Comparator.comparing(SearchDto::getPrice).reversed()).collect(Collectors.toList());
-                ;
             } else {
                 sort = resultSearch;
+            }
+
+            List<SearchDto> province = new ArrayList<>();
+
+            if (searchFilterRequest.getProvinceID() == 0) {
+                province = sort;
+            } else {
+                province = sort.stream().filter(searchDto
+                        -> searchDto.getProvinceID() == searchFilterRequest.getProvinceID()).collect(Collectors.toList());
             }
 
             if (sort.isEmpty()) {
                 throw new NotFoundException("khong co data search");
             } else {
-                List<SearchDto> finalSort = sort;
+                List<SearchDto> finalSort = province;
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
                     {
                         put("searchList", finalSort);
