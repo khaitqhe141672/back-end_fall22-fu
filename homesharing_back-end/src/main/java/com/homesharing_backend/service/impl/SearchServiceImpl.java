@@ -141,10 +141,7 @@ public class SearchServiceImpl implements SearchService {
 
             List<SearchDto> saveSearch = list.stream().filter(searchDto
                     -> searchDto.getNumberOfGuest() >= searchFilterRequest.getNumberOfGuest()
-                    && searchDto.getAvgStar() >= searchFilterRequest.getStatusStar()
-                    && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
-                    && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()
-                    && searchDto.getTypeRoomID() == searchFilterRequest.getRoomTypeID()).collect(Collectors.toList());
+                    && searchDto.getAvgStar() >= searchFilterRequest.getStatusStar()).collect(Collectors.toList());
 
 //             && searchFilterRequest.getMinPrice() <= searchDto.getPrice()
 //                    && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()
@@ -236,15 +233,34 @@ public class SearchServiceImpl implements SearchService {
                         -> searchDto.getProvinceID() == searchFilterRequest.getProvinceID()).collect(Collectors.toList());
             }
 
-            if (sort.isEmpty()) {
+            List<SearchDto> roomType = new ArrayList<>();
+
+            if (searchFilterRequest.getRoomTypeID() == 0) {
+                roomType = province;
+            } else {
+                roomType = province.stream().filter(searchDto
+                        -> searchDto.getTypeRoomID() == searchFilterRequest.getRoomTypeID()).collect(Collectors.toList());
+            }
+
+            List<SearchDto> price = new ArrayList<>();
+
+            if (searchFilterRequest.getMinPrice() == 0 || searchFilterRequest.getMaxPrice() == 0) {
+                price = roomType;
+            } else {
+                price = roomType.stream().filter(searchDto
+                        -> searchDto.getPrice() >= searchFilterRequest.getMinPrice()
+                        && searchDto.getPrice() <= searchFilterRequest.getMaxPrice()).collect(Collectors.toList());
+            }
+
+            if (price.isEmpty()) {
                 throw new NotFoundException("khong co data search");
             } else {
 
-                int totalSearch = province.size();
+                int totalSearch = price.size();
 
                 int totalPage = (totalSearch % 10 == 0) ? totalSearch / 10 : totalSearch / 10 + 1;
 
-                List<SearchDto> finalSort = province.stream()
+                List<SearchDto> finalSort = price.stream()
                         .skip(page)
                         .limit(10)
                         .collect(Collectors.toList());

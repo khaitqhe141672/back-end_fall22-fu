@@ -33,7 +33,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point) , p.title) FROM Post p" +
             " left join PostImage pi on p.id = pi.post.id left join BookingDetail bd" +
-            " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id WHERE p.id =:postID " +
+            " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id WHERE p.id =:postID AND ((p.statusReport IS NULL) OR (p.statusReport = 1))" +
             " group by p.id order by avg(r.point) desc")
     Optional<PostTopRateDto> getPostDetailByPostID(@Param("postID") Long postID);
 
@@ -45,18 +45,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "left join PostPayment  pm on p.id = pm.post.id " +
             "left join BookingDetail bd on p.id = bd.post.id " +
             "left join ReportPost rp on p.id = rp.post.id " +
-            "left join Rate r on r.bookingDetail.id=bd.id WHERE p.host.id =:hostID " +
+            "left join Rate r on r.bookingDetail.id=bd.id WHERE p.host.id =:hostID AND ((p.statusReport IS NULL) OR (p.statusReport = 1))" +
             "GROUP BY p.id order by avg(r.point) desc")
     public List<PostDto> getPostDTO(@Param("hostID") Long hostID);
 
     @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
-            " pi.imageUrl, v.code, avg(r.point), p.host.typeAccount) FROM Post p " +
+            " pi.imageUrl, v.description, avg(r.point), p.host.typeAccount) FROM Post p " +
             "LEFT JOIN PostDetail pd on p.id = pd.post.id " +
             "LEFT join PostVoucher pv on p.id = pv.post.id " +
             "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
             "LEFT JOIN PostImage pi on p.id = pi.post.id " +
             "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
-            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% OR pd.address LIKE %:title% " +
+            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% " +
+            "AND ((p.statusReport IS NULL) OR (p.statusReport = 1))" +
             "GROUP BY p.id")
     Page<SearchDto> listSearchPostByTitle(@Param("title") String title, PageRequest pageRequest);
 
@@ -106,7 +107,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN User u ON h.user.id = u.id " +
             "LEFT JOIN UserDetail ud ON u.userDetail.userDetailId = ud.userDetailId " +
             "LEFT JOIN BookingDetail bd ON p.id = bd.post.id " +
-            "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id WHERE p.status = 1 " +
+            "LEFT JOIN Rate r ON bd.id = r.bookingDetail.id WHERE p.status = 1 AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) " +
             "GROUP BY p.id")
     List<SearchDto> getSearchFilter();
 
@@ -121,7 +122,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT distinct p.id FROM Post p " +
             "left join BookingDetail bd on p.id = bd.post.id " +
-            "left join Booking b on bd.booking.id = b.id where b.status = 2 and bd.startDate = :date and p.status = 1 " +
+            "left join Booking b on bd.booking.id = b.id where b.status = 2 " +
+            "and bd.startDate = :date and p.status = 1 " +
+            "AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) " +
             "group by p.id")
     List<Long> getAllSearchByDate(@Param("date") Date date);
 }
