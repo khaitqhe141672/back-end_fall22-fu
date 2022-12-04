@@ -113,14 +113,8 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             List<DateBookingDto> dateBookingDtoList = new ArrayList<>();
 
-            List<BookingDetail> bookingDetails = bookingDetailRepository.getBookingDetailByPost_Id(postID);
-            bookingDetails.forEach(b -> {
-                DateBookingDto dto = DateBookingDto.builder()
-                        .endDate(b.getEndDate())
-                        .startDate(b.getStartDate())
-                        .build();
-                dateBookingDtoList.add(dto);
-            });
+            List<DateBookingDto> bookingDetails =
+                    bookingDetailRepository.getAllBookingByPostID(postID);
 
             PostDetailDto dto = PostDetailDto.builder()
                     .postDetailID(postDetail.getId())
@@ -146,7 +140,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .postVoucherDtoList(postVoucherDtoList)
                     .latitude(postDetail.getLatitude())
                     .longitude(postDetail.getLongitude())
-                    .dtoList(dateBookingDtoList)
+                    .dtoList(bookingDetails)
                     .build();
 
             if (Objects.isNull(postTopRateDto.getAvgRate())) {
