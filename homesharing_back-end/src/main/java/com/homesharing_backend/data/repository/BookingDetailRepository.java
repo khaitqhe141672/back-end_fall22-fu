@@ -20,4 +20,6 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
 
     BookingDetail getBookingDetailById(Long id);
 
+    List<BookingDetail> getBookingDetailByPost_Id(Long postID);
+
 }

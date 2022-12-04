@@ -40,4 +40,6 @@ public class PostDetailDto {
     private int status;
     private String latitude;
     private String longitude;
+    private List<DateBookingDto> dtoList;
+
 }
