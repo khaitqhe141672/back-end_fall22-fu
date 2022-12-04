@@ -36,6 +36,9 @@ public class PostDetailServiceImpl implements PostDetailService {
     @Autowired
     private PostVoucherRepository postVoucherRepository;
 
+    @Autowired
+    private BookingDetailRepository bookingDetailRepository;
+
     /*
         còn voucher, rate bổ sung sau
     */
@@ -108,6 +111,17 @@ public class PostDetailServiceImpl implements PostDetailService {
                 postVoucherDtoList.add(dto);
             });
 
+            List<DateBookingDto> dateBookingDtoList = new ArrayList<>();
+
+            List<BookingDetail> bookingDetails = bookingDetailRepository.getBookingDetailByPost_Id(postID);
+            bookingDetails.forEach(b -> {
+                DateBookingDto dto = DateBookingDto.builder()
+                        .endDate(b.getEndDate())
+                        .startDate(b.getStartDate())
+                        .build();
+                dateBookingDtoList.add(dto);
+            });
+
             PostDetailDto dto = PostDetailDto.builder()
                     .postDetailID(postDetail.getId())
                     .postID(postID)
@@ -132,6 +146,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .postVoucherDtoList(postVoucherDtoList)
                     .latitude(postDetail.getLatitude())
                     .longitude(postDetail.getLongitude())
+                    .dtoList(dateBookingDtoList)
                     .build();
 
             if (Objects.isNull(postTopRateDto.getAvgRate())) {

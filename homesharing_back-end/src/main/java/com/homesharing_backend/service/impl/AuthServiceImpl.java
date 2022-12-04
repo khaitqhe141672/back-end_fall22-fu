@@ -221,6 +221,7 @@ public class AuthServiceImpl implements AuthService {
                     Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
                     data.put("adminId", admin.getId());
                 }
+
                 data.put("userID", userDetails.getId());
                 data.put("user", userDto);
                 data.put("token", "Bearer " + jwt);
