@@ -18,4 +18,8 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
     PostPayment getPostPaymentByIdAndPost_IdAndPaymentPackage_Id(Long id, Long postID, Long paymentPackageID);
 
     PostPayment getPostPaymentByPost_IdAndStatusAndPaymentPackage_Id(Long postID, int status, Long paymentPackageID);
+
+    @Query(value = "SELECT sum(pp.price) FROM demo.post_payment py " +
+            "left join payment_package pp on py.payment_package_id = pp.id ", nativeQuery = true)
+    int totalPricePostPayment();
 }
