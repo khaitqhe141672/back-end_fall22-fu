@@ -6,10 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,4 +17,8 @@ public class DateBookingDto {
     private Date startDate;
     private Date endDate;
 
+    public DateBookingDto(Date startDate, Date endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

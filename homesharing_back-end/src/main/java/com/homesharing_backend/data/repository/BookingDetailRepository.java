@@ -1,8 +1,10 @@
 package com.homesharing_backend.data.repository;
 
+import com.homesharing_backend.data.dto.DateBookingDto;
 import com.homesharing_backend.data.entity.BookingDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -20,6 +22,10 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
 
     BookingDetail getBookingDetailById(Long id);
 
-    List<BookingDetail> getBookingDetailByPost_Id(Long postID);
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.DateBookingDto(bd.startDate, bd.endDate) FROM BookingDetail bd " +
+            "LEFT JOIN Booking b ON bd.booking.id = b.id " +
+            "WHERE bd.post.id= :postID AND (b.status = 2 OR b.status = 3) " +
+            "GROUP BY bd.id")
+    List<DateBookingDto> getAllBookingByPostID(@Param("postID") Long postID);
 
 }
