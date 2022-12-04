@@ -11,10 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Date;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -127,4 +126,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) " +
             "group by p.id")
     List<Long> getAllSearchByDate(@Param("date") Date date);
+
+    @Query(value = "SELECT count(*) FROM post WHERE MONTH(create_date)= :createDate", nativeQuery = true)
+    int getAllMonth(@Param("createDate") int createDate);
+
+    @Query(value = "SELECT count(*) FROM post p where p.status= :status", nativeQuery = true)
+    int totalPostActive(@Param("status") int status);
+
+    @Query(value = "SELECT count(*) FROM post ", nativeQuery = true)
+    int totalPost();
 }

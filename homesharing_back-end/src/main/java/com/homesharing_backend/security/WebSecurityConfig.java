@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/posting/**").permitAll()
                 .antMatchers("/api/payment-package/**").permitAll()
                 .antMatchers("/api/voucher/**").permitAll()
+                .antMatchers("/api/dashboard/**").permitAll()
                 .antMatchers("/api/like-dislike/**").permitAll()
                 .antMatchers("/api/follow-favourite/**").permitAll()
                 .anyRequest().authenticated();

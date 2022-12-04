@@ -405,7 +405,7 @@ public class AuthServiceImpl implements AuthService {
                     .toUriString();
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
-            String text = "http://localhost:4200/auth/forgot-password?otp=" + resetPassword;
+            String text = "http://localhost:4200/auth/forgot-password?otp=" + resetPassword + "&email=" + user.getEmail();
             user.setCodeActive(resetPassword);
             userRepository.save(user);
             new JavaMail().sentEmail(toEmail, subject, text);
