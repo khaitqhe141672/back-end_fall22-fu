@@ -1,6 +1,7 @@
 package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.DashboardPostDto;
+import com.homesharing_backend.data.dto.DashboardPostPaymentDto;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.DashboardService;
@@ -42,8 +43,9 @@ public class DashboardServiceImpl implements DashboardService {
         int totalPostDeActive = postRepository.totalPostActive(3);
         int totalPost = postRepository.totalPost();
         int totalHostDeActive = hostRepository.countHostByUser_Status(2);
-        int totalCustomerDeActive = hostRepository.countHostByUser_Status(2);
+        int totalCustomerDeActive = customerRepository.countCustomerByUser_Status(2);
         int totalPostPayment = postPaymentRepository.totalPricePostPayment();
+        List<DashboardPostPaymentDto> paymentDtoList = postPaymentRepository.getAllPostPayment();
 
 //        List<DashboardPostDto> dashboardPostDtoList = new ArrayList<>();
 //
@@ -55,7 +57,6 @@ public class DashboardServiceImpl implements DashboardService {
 //                    .build();
 //            dashboardPostDtoList.add(dto);
 //        }
-
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
             {
@@ -69,6 +70,7 @@ public class DashboardServiceImpl implements DashboardService {
                 put("totalHostDeActive", totalHostDeActive);
                 put("totalCustomerDeActive", totalCustomerDeActive);
                 put("totalPostPayment", totalPostPayment);
+                put("paymentDtoList", paymentDtoList);
             }
         }));
     }
