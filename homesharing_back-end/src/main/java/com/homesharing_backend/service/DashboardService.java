@@ -7,5 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface DashboardService {
 
-    public ResponseEntity<ResponseObject> dashboard();
+    public ResponseEntity<ResponseObject> dashboardAdmin();
+
+    public ResponseEntity<ResponseObject> dashboardHost();
 }

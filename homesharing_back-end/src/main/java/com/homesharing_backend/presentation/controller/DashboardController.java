@@ -20,6 +20,12 @@ public class DashboardController {
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> dashBoardAdmin() {
-        return dashboardService.dashboard();
+        return dashboardService.dashboardAdmin();
+    }
+
+    @GetMapping("/host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> dashBoardHost() {
+        return dashboardService.dashboardHost();
     }
 }
