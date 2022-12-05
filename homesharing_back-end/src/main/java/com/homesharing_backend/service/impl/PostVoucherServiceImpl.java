@@ -47,7 +47,7 @@ public class PostVoucherServiceImpl implements PostVoucherService {
         } else {
             List<PostVoucherDto> postVoucherDtoList = new ArrayList<>();
 
-            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_IdAndStatus(post.getId(), 1);
+            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_IdAndStatusAndVoucher_Status(post.getId(), 1, 1);
 
             postVouchers.forEach(v -> {
                 PostVoucherDto dto = PostVoucherDto.builder()
