@@ -91,7 +91,7 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
             voucher.setStatus(status);
             voucherRepository.save(voucher);
 
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Update voucher thanh cong"));
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Update voucher thanh congg"));
         }
     }
 }
