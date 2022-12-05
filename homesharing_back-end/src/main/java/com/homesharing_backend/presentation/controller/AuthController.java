@@ -4,10 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
-import com.homesharing_backend.presentation.payload.request.ForgotPasswordRequest;
-import com.homesharing_backend.presentation.payload.request.LoginRequest;
-import com.homesharing_backend.presentation.payload.request.SignupRequest;
+import com.homesharing_backend.presentation.payload.request.*;
 import com.homesharing_backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -95,4 +92,11 @@ public class AuthController {
     public ResponseEntity<?> editAvatar(@RequestParam("file") MultipartFile file) {
         return authService.editAvatar(file);
     }
+
+    @PutMapping("/edit-profile")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> editAvatar(@RequestBody EditProfileRequest editProfileRequest) {
+        return authService.editProfile(editProfileRequest);
+    }
+
 }

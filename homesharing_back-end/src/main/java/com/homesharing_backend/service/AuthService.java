@@ -3,10 +3,7 @@ package com.homesharing_backend.service;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
-import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
-import com.homesharing_backend.presentation.payload.request.ForgotPasswordRequest;
-import com.homesharing_backend.presentation.payload.request.LoginRequest;
-import com.homesharing_backend.presentation.payload.request.SignupRequest;
+import com.homesharing_backend.presentation.payload.request.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,4 +26,6 @@ public interface AuthService {
     public ResponseEntity<MessageResponse> confirmResetPassword(String token);
     public ResponseEntity<MessageResponse> resetPassword(ForgotPasswordRequest forgotPasswordRequest);
     public ResponseEntity<MessageResponse> editAvatar(MultipartFile file);
+
+    public ResponseEntity<MessageResponse> editProfile(EditProfileRequest editProfileRequest);
 }
