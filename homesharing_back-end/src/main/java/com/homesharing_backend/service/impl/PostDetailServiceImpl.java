@@ -6,14 +6,15 @@ import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.service.PostDetailService;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class PostDetailServiceImpl implements PostDetailService {
@@ -114,11 +115,15 @@ public class PostDetailServiceImpl implements PostDetailService {
             List<DateBookingDto> bookingDetails =
                     bookingDetailRepository.getAllBookingByPostID(postID);
 
-            List<String> list = new ArrayList<>();
+            List<LocalDate> totalDates = new ArrayList<>();
 
             bookingDetails.forEach(b -> {
-                list.add(b.getEndDate().toString());
-                list.add(b.getStartDate().toString());
+                LocalDate start = LocalDate.parse(b.getStartDate() + "");
+                LocalDate end = LocalDate.parse(b.getEndDate()+ "");
+                while (!start.isAfter(end)) {
+                    totalDates.add(start);
+                    start = start.plusDays(1);
+                }
             });
 
             PostDetailDto dto = PostDetailDto.builder()
@@ -145,7 +150,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .postVoucherDtoList(postVoucherDtoList)
                     .latitude(postDetail.getLatitude())
                     .longitude(postDetail.getLongitude())
-                    .bookingDate(list)
+                    .bookingDate(totalDates)
                     .build();
 
             if (Objects.isNull(postTopRateDto.getAvgRate())) {
