@@ -1,10 +1,10 @@
-package fpt.edu.backendfall22fu;
+package com.homesharing_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendFall22FuApplicationTests {
+class HomesharingBackEndApplicationTests {
 
     @Test
     void contextLoads() {
