@@ -94,7 +94,7 @@ public class PostDetailServiceImpl implements PostDetailService {
 
             List<PostVoucherDto> postVoucherDtoList = new ArrayList<>();
 
-            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_IdAndStatus(postID, 1);
+            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_IdAndStatusAndVoucher_Status(postID, 1, 1);
 
             postVouchers.forEach(v -> {
                 PostVoucherDto dto = PostVoucherDto.builder()

@@ -131,7 +131,11 @@
             <artifactId>jcommander</artifactId>
             <version>1.48</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.21.0</version>
+        </dependency>
     </dependencies>
 
     <build>
