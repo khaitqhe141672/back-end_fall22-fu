@@ -2,8 +2,10 @@ package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.VoucherDto;
 import com.homesharing_backend.data.entity.Host;
+import com.homesharing_backend.data.entity.PostVoucher;
 import com.homesharing_backend.data.entity.Voucher;
 import com.homesharing_backend.data.repository.HostRepository;
+import com.homesharing_backend.data.repository.PostVoucherRepository;
 import com.homesharing_backend.data.repository.VoucherRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.MessageResponse;
@@ -30,6 +32,9 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
 
     @Autowired
     private VoucherRepository voucherRepository;
+
+    @Autowired
+    private PostVoucherRepository postVoucherRepository;
 
     @Override
     public ResponseEntity<ResponseObject> getAllVoucherByHost(int indexPage) {
@@ -75,6 +80,13 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
         if (Objects.isNull(voucher)) {
             throw new NotFoundException("khong co voucher theo host_id");
         } else {
+
+            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByVoucher_Id(voucher.getId());
+
+            postVouchers.forEach(pv -> {
+                pv.setStatus(status);
+                postVoucherRepository.save(pv);
+            });
 
             voucher.setStatus(status);
             voucherRepository.save(voucher);

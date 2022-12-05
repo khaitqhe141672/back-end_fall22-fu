@@ -27,4 +27,6 @@ public interface PostVoucherRepository extends JpaRepository<PostVoucher, Long> 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.PostVoucherDto(v.id, v.voucher.id, v.status) FROM PostVoucher v " +
             "WHERE v.post.id= :postID AND v.status= :status")
     List<PostVoucherDto> getAllPostVoucherByPostIDAndStatus(@Param("postID") Long postID, @Param("status") int status);
+
+    List<PostVoucher> getPostVoucherByVoucher_Id(Long voucherID);
 }
