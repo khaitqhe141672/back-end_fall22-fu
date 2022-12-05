@@ -5,6 +5,7 @@ import com.homesharing_backend.data.dto.DashboardPostPaymentDto;
 import com.homesharing_backend.data.entity.PostPayment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +30,11 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
             "left join PostPayment py on pp.id = py.paymentPackage.id " +
             "group by pp.id")
     List<DashboardPostPaymentDto> getAllPostPayment();
+
+    @Query(value = "SELECT  new com.homesharing_backend.data.dto.DashboardPostPaymentDto(p.id, sum(pp.price)) FROM PostPayment py " +
+            "left join PaymentPackage pp on py.paymentPackage.id = pp.id " +
+            "left join Post p on py.post.id = p.id where p.host.id= :hostID " +
+            "group by py.id ")
+    List<DashboardPostPaymentDto> getAllPostPaymentByHost(@Param("hostID") Long hostID);
+
 }

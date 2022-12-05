@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -135,4 +136,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT count(*) FROM post ", nativeQuery = true)
     int totalPost();
+
+
+    int countPostByHost_IdAndStatus(Long hostID, int status);
+
+    int countPostByHost_Id(Long hostID);
+
+    @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND (status= 2 or status= 3);", nativeQuery = true)
+    int totalPostDeActive(@Param("hostID") Long hostID);
 }
