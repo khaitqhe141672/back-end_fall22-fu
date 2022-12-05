@@ -47,7 +47,7 @@ public class ManageRateServiceImpl implements ManageRateService {
     private ReportTypeRepository reportTypeRepository;
 
     @Override
-    public ResponseEntity<ResponseObject>  getAllRateByHost(int indexPage) {
+    public ResponseEntity<ResponseObject> getAllRateByHost(int indexPage) {
 
         int size = 10;
         int page = indexPage - 1;

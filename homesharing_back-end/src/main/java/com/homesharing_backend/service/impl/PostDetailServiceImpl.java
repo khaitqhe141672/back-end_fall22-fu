@@ -6,14 +6,15 @@ import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.service.PostDetailService;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class PostDetailServiceImpl implements PostDetailService {
@@ -35,6 +36,9 @@ public class PostDetailServiceImpl implements PostDetailService {
 
     @Autowired
     private PostVoucherRepository postVoucherRepository;
+
+    @Autowired
+    private BookingDetailRepository bookingDetailRepository;
 
     /*
         còn voucher, rate bổ sung sau
@@ -108,6 +112,20 @@ public class PostDetailServiceImpl implements PostDetailService {
                 postVoucherDtoList.add(dto);
             });
 
+            List<DateBookingDto> bookingDetails =
+                    bookingDetailRepository.getAllBookingByPostID(postID);
+
+            List<LocalDate> totalDates = new ArrayList<>();
+
+            bookingDetails.forEach(b -> {
+                LocalDate start = LocalDate.parse(b.getStartDate() + "");
+                LocalDate end = LocalDate.parse(b.getEndDate()+ "");
+                while (!start.isAfter(end)) {
+                    totalDates.add(start);
+                    start = start.plusDays(1);
+                }
+            });
+
             PostDetailDto dto = PostDetailDto.builder()
                     .postDetailID(postDetail.getId())
                     .postID(postID)
@@ -132,6 +150,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .postVoucherDtoList(postVoucherDtoList)
                     .latitude(postDetail.getLatitude())
                     .longitude(postDetail.getLongitude())
+                    .bookingDate(totalDates)
                     .build();
 
             if (Objects.isNull(postTopRateDto.getAvgRate())) {

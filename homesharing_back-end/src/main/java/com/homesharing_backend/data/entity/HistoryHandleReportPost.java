@@ -22,13 +22,10 @@ public class HistoryHandleReportPost {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "report_post_id", referencedColumnName = "id")
-    private ReportPost reportPost;
-
     @Column(name = "status_report")
     private int statusReport;
 
     @Column(name = "status_post")
     private int statusPost;
+
 }

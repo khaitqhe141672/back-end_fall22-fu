@@ -87,6 +87,13 @@ public class PostVoucherServiceImpl implements PostVoucherService {
 
             Date dateNow = Date.valueOf(localDate);
 
+            List<PostVoucher> postVouchers = postVoucherRepository.getPostVoucherByPost_Id(post.getId());
+
+            postVouchers.forEach(pv -> {
+                pv.setStatus(2);
+                postVoucherRepository.save(pv);
+            });
+
             postVoucherRequest.getVoucherIDList().forEach(v -> {
 
                 Voucher voucher = voucherRepository.getVoucherById(v);

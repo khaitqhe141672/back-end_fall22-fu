@@ -1,6 +1,6 @@
 package com.homesharing_backend.presentation.controller;
 
-import com.homesharing_backend.service.ServicesService;
+import com.homesharing_backend.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,14 +11,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/services")
-public class ServicesController {
+@RequestMapping("/api/dashboard")
+public class DashboardController {
 
     @Autowired
-    private ServicesService servicesService;
+    private DashboardService dashboardService;
 
-    @GetMapping("/all-list")
-    public ResponseEntity<?> getAllServiceByHost() {
-        return servicesService.getAllServiceByHost();
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> dashBoardAdmin() {
+        return dashboardService.dashboardAdmin();
+    }
+
+    @GetMapping("/host")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> dashBoardHost() {
+        return dashboardService.dashboardHost();
     }
 }

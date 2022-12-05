@@ -1,9 +1,6 @@
 package com.homesharing_backend.service.impl;
 
-import com.homesharing_backend.data.dto.ComplaintDto;
-import com.homesharing_backend.data.dto.PostDto;
-import com.homesharing_backend.data.dto.ReportDto;
-import com.homesharing_backend.data.dto.ReportPostDto;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
@@ -60,6 +57,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private PostImageRepository postImageRepository;
+
+    @Autowired
+    private HistoryHandleReportPostRepository historyHandleReportPostRepository;
+
+    @Autowired
+    private HistoryHandleReportPostDetailRepository historyHandleReportPostDetailRepository;
 
     @Override
     public ResponseEntity<MessageResponse> createReportRate(ReportRequest reportRequest, Long rateID) {
@@ -130,19 +133,25 @@ public class ReportServiceImpl implements ReportService {
 
     /*status = 1 dang cho admin xu ly*/
     @Override
-    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long reportPostID) {
+    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest,
+                                                               Long postID, Long historyID) {
 
-        ReportPost reportPost = reportPostRepository.getReportPostById(reportPostID);
+        Post post = postRepository.getPostById(postID);
 
-        if (Objects.isNull(reportPost)) {
-            throw new NotFoundException("ReportPost-id khong ton tai");
+        HistoryHandleReportPost reportPost =
+                historyHandleReportPostRepository.getHistoryHandleReportPostByIdAndPost_Id(historyID, post.getId());
+
+        if (Objects.isNull(post)) {
+            throw new NotFoundException("post-id khong ton tai");
         } else {
             Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
             ComplaintPost complaintPost = ComplaintPost.builder()
-                    .reportPost(reportPost)
                     .description(complaintRequest.getDescription())
                     .host(host)
+                    .post(post)
+                    .statusPost(reportPost.getStatusPost())
+                    .historyHandleReportPost(reportPost)
                     .status(1)
                     .build();
 
@@ -159,26 +168,24 @@ public class ReportServiceImpl implements ReportService {
     /*type = 1 khang an thanh cong update status= 2
       type = 2 khang an khong thanh cong khong phai lam gi*/
     @Override
-    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int type) {
+    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int status) {
 
         ComplaintPost complaintPost = complaintPostRepository.getComplaintPostById(complaintPostID);
 
         if (Objects.isNull(complaintPost)) {
             throw new NotFoundException("ComplaintPost-id khong ton tai");
         } else {
-            if (type == 2) {
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post khong thanh cong"));
-            } else {
+            Post post = postRepository.getPostById(complaintPost.getPost().getId());
 
-                complaintPost.setStatus(2);
-                complaintPostRepository.save(complaintPost);
+            complaintPost.setStatus(status);
+            complaintPostRepository.save(complaintPost);
 
-                ReportPost reportPost = reportPostRepository.getReportPostById(complaintPost.getReportPost().getId());
-                reportPost.setStatus(2);
-                reportPostRepository.save(reportPost);
+            post.setStatusReport(status);
+            post.setStatus(status);
+            postRepository.save(post);
 
-                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post thanh cong"));
-            }
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Khang an report post thanh cong"));
+
         }
     }
 
@@ -425,13 +432,10 @@ public class ReportServiceImpl implements ReportService {
                 ReportRate rate = reportRateRepository.getReportRateById(r.getReportRate().getId());
 
                 ComplaintDto dto = ComplaintDto.builder()
-                        .reportID(rate.getId())
-                        .reportTypeID(rate.getReportType().getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
-                        .description(r.getDescription())
-                        .nameReportType(rate.getReportType().getName())
+                        .descriptionComplaint(r.getDescription())
                         .statusComplaint(r.getStatus())
                         .build();
 
@@ -463,17 +467,16 @@ public class ReportServiceImpl implements ReportService {
 
             complaintPosts.forEach(r -> {
 
-                ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
-
                 ComplaintDto dto = ComplaintDto.builder()
-                        .reportID(post.getId())
-                        .reportTypeID(post.getReportType().getId())
+                        .postID(r.getPost().getId())
+                        .title(r.getPost().getTitle())
+                        .complaintPostID(r.getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
-                        .description(r.getDescription())
-                        .nameReportType(post.getReportType().getName())
+                        .descriptionComplaint(r.getDescription())
                         .statusComplaint(r.getStatus())
+                        .statusPost(r.getStatusPost())
                         .build();
 
                 complaintDtoList.add(dto);
@@ -505,16 +508,11 @@ public class ReportServiceImpl implements ReportService {
 
             complaintPosts.forEach(r -> {
 
-                ReportPost post = reportPostRepository.getReportPostById(r.getReportPost().getId());
-
                 ComplaintDto dto = ComplaintDto.builder()
-                        .reportID(post.getId())
-                        .reportTypeID(post.getReportType().getId())
                         .fullName(r.getHost().getUser().getUserDetail().getFullName())
                         .username(r.getHost().getUser().getUsername())
                         .imageUrl(r.getHost().getUser().getUserDetail().getAvatarUrl())
-                        .description(r.getDescription())
-                        .nameReportType(post.getReportType().getName())
+                        .descriptionComplaint(r.getDescription())
                         .statusComplaint(r.getStatus())
                         .build();
 
@@ -531,47 +529,58 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID, int status) {
+    public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID) {
 
         ReportRate reportRate = reportRateRepository.getReportRateById(reportRateID);
 
         if (Objects.isNull(reportRate)) {
             throw new NotFoundException("report-rate-id khong ton tai");
         } else {
-            reportRate.setStatus(status);
+            reportRate.setStatus(2);
             reportRateRepository.save(reportRate);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
         }
     }
 
     @Override
-    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, int status) {
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest,
+                                                                  Long postID, int status) {
 
-        updateReportPostRequest.getListReportPostID().forEach(r -> {
+        Post post = postRepository.getPostById(postID);
 
-            ReportPost reportPost = reportPostRepository.getReportPostById(r);
-            Post post = postRepository.getPostById(reportPost.getPost().getId());
+        if (!Objects.isNull(post)) {
+            HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
+                    .statusReport(2)
+                    .statusPost(status)
+                    .post(post)
+                    .build();
+            HistoryHandleReportPost saveHistory = historyHandleReportPostRepository.save(historyHandleReportPost);
 
-            if (Objects.isNull(reportPost) && Objects.isNull(post)) {
-                throw new NotFoundException("report-post-id khong ton tai");
-            } else {
+            updateReportPostRequest.getListReportPostID().forEach(r -> {
 
-                if (status == 2) {
-                    HistoryHandleReportPost historyHandleReportPost = HistoryHandleReportPost.builder()
-                            .statusReport(2)
-                            .statusPost(2)
-                            .post(post)
+                ReportPost reportPost = reportPostRepository.getReportPostByIdAndPost_Id(r, post.getId());
+
+                if (!Objects.isNull(reportPost)) {
+
+                    HistoryHandleReportPostDetail historyHandleReportPostDetail = HistoryHandleReportPostDetail.builder()
+                            .historyHandleReportPost(saveHistory)
                             .reportPost(reportPost)
+                            .statusHistory(1)
                             .build();
-                }
-                reportPost.setStatus(status);
-                post.setStatus(status);
-                reportPostRepository.save(reportPost);
-                postRepository.save(post);
-            }
-        });
 
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
+                    historyHandleReportPostDetailRepository.save(historyHandleReportPostDetail);
+                    reportPost.setStatus(2);
+                    post.setStatus(status);
+                    post.setStatusReport(2);
+                    reportPostRepository.save(reportPost);
+                    postRepository.save(post);
+                }
+            });
+
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
+        } else {
+            throw new NotFoundException("khong co post-id nay");
+        }
     }
 
     @Override
@@ -614,6 +623,84 @@ public class ReportServiceImpl implements ReportService {
                     }
                 }));
             }
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllHistoryReportPost(Long postID, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<HistoryHandleReportPost> historyHandleReportPosts =
+                historyHandleReportPostRepository.getHistoryHandleReportPostByPost_Id(postID, PageRequest.of(page, size));
+
+        if (Objects.isNull(historyHandleReportPosts)) {
+            throw new NotFoundException("Khong co data cua history");
+        } else {
+            List<HistoryReportPostDto> list = new ArrayList<>();
+            historyHandleReportPosts.forEach(h -> {
+
+                int totalReport = historyHandleReportPostDetailRepository.countHistoryHandleReportPostDetailByHistoryHandleReportPost_Id(h.getId());
+
+                HistoryReportPostDto dto = HistoryReportPostDto.builder()
+                        .historyHandleReportPostID(h.getId())
+                        .statusReportPost(h.getStatusReport())
+                        .statusPost(h.getStatusPost())
+                        .postID(h.getPost().getId())
+                        .title(h.getPost().getTitle())
+                        .totalReportPost(totalReport)
+                        .build();
+
+                list.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listHistoryReportPost", list);
+                    put("sizePage", historyHandleReportPosts.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getAllHistoryReportPostDetail(Long historyID, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Page<HistoryHandleReportPostDetail> details =
+                historyHandleReportPostDetailRepository.getHistoryHandleReportPostDetailByHistoryHandleReportPost_Id(historyID, PageRequest.of(page, size));
+
+        if (Objects.isNull(details)) {
+            throw new NotFoundException("history-id khogn co data");
+        } else {
+
+            List<ListHistoryHandleReportDto> list = new ArrayList<>();
+
+            details.forEach(d -> {
+                ListHistoryHandleReportDto dto = ListHistoryHandleReportDto.builder()
+                        .reportPostID(d.getReportPost().getId())
+                        .statusHistory(d.getStatusHistory())
+                        .reportTypeName(d.getReportPost().getReportType().getName())
+                        .reportTypeID(d.getReportPost().getReportType().getId())
+                        .description(d.getReportPost().getDescription())
+                        .fullName(d.getReportPost().getCustomer().getUser().getUserDetail().getFullName())
+                        .username(d.getReportPost().getCustomer().getUser().getUsername())
+                        .imageUrl(d.getReportPost().getCustomer().getUser().getUserDetail().getAvatarUrl())
+                        .build();
+
+                list.add(dto);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
+                {
+                    put("listDetailHistoryReportPost", list);
+                    put("sizePage", details.getTotalPages());
+                    put("size", indexPage);
+                }
+            }));
         }
     }
 

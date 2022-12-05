@@ -4,6 +4,7 @@ import com.homesharing_backend.data.dto.LoginDto;
 import com.homesharing_backend.data.dto.UserDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
+import com.homesharing_backend.exception.AuthException;
 import com.homesharing_backend.exception.BadRequestAlertException;
 import com.homesharing_backend.exception.ConflictException;
 import com.homesharing_backend.exception.NotFoundException;
@@ -36,6 +37,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,9 +60,6 @@ public class AuthServiceImpl implements AuthService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
@@ -78,6 +77,12 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private FollowHostRepository followHostRepository;
 
+    @Autowired
+    private UserDetailRepository userDetailRepository;
+
+    @Autowired
+    private AWSService awsService;
+
     @Override
     public ResponseEntity<ResponseObject> register(SignupRequest signUpRequest, HttpServletRequest servletRequest) {
 
@@ -93,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
             userDetail.setDob(signUpRequest.getDob());
             userDetail.setAddress(signUpRequest.getAddress());
             userDetail.setMobile(signUpRequest.getMobile());
-            userDetail.setAvatarUrl("https://home-sharing.s3.ap-southeast-1.amazonaws.com/1665851455149_avatar.png");
+            userDetail.setAvatarUrl("https://home-sharing.s3.ap-southeast-1.amazonaws.com/avatar.png");
             user.setUserDetail(userDetail);
             String strRoles = signUpRequest.getRole();
             Role roles = new Role();
@@ -167,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
 
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
-            String text = baseUrl + "/api/auth/confirm-account?token=" + otp;
+            String text = "http://localhost:4200/auth/confirm-account?otp=" + otp;
             new JavaMail().sentEmail(toEmail, subject, text);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("User registered successfully!", new HashMap<>() {
                 {
@@ -179,40 +184,53 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseObject> login(LoginRequest signInRequest) {
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
-                        signInRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.getUserByUsername(signInRequest.getUsername());
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority()).collect(Collectors.toList());
+        if (Objects.isNull(user)) {
+            throw new AuthException("Tai Khoan khong hop le");
+        } else {
 
-        LoginDto userDto = LoginDto.builder()
-                .email(userDetails.getEmail())
-                .username(userDetails.getUsername()).role(roles.get(0)).build();
-        Map data = new HashMap<String, Object>();
+            if (passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
+                Authentication authentication =
+                        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
+                                signInRequest.getPassword()));
 
-        if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
-            Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
-            data.put("customerID", customer.getId());
-            System.out.println(customer.getId());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+                List<String> roles = userDetails.getAuthorities().stream()
+                        .map(item -> item.getAuthority()).collect(Collectors.toList());
+
+                LoginDto userDto = LoginDto.builder()
+                        .email(userDetails.getEmail())
+                        .username(userDetails.getUsername()).role(roles.get(0)).build();
+                Map data = new HashMap<String, Object>();
+
+                if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
+                    Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
+                    data.put("customerID", customer.getId());
+                    System.out.println(customer.getId());
+                }
+                if (roles.contains(ERole.ROLE_HOST.name())) {
+                    Host teacher = hostRepository.getHostsByUser_Username(userDto.getUsername());
+                    data.put("hostID", teacher.getId());
+                }
+                if (roles.contains(ERole.ROLE_ADMIN.name())) {
+                    Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
+                    data.put("adminId", admin.getId());
+                }
+
+                data.put("userID", userDetails.getId());
+                data.put("user", userDto);
+                data.put("token", "Bearer " + jwt);
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Sign in successfully", data));
+
+            } else {
+                throw new BadRequestAlertException("mat khau current khong khop");
+            }
         }
-        if (roles.contains(ERole.ROLE_HOST.name())) {
-            Host teacher = hostRepository.getHostsByUser_Username(userDto.getUsername());
-            data.put("hostID", teacher.getId());
-        }
-        if (roles.contains(ERole.ROLE_ADMIN.name())) {
-            Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
-            data.put("adminId", admin.getId());
-        }
-        data.put("userID", userDetails.getId());
-        data.put("user", userDto);
-        data.put("token", "Bearer " + jwt);
-
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Sign in successfully", data));
     }
 
     @Override
@@ -308,6 +326,7 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Login success full!"));
@@ -317,9 +336,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /*
-    * typeAccount = 1 tk thuong
-    * typeAccount = 2 tk co tich xanh
-    */
+     * typeAccount = 1 tk thuong
+     * typeAccount = 2 tk co tich xanh
+     */
     @Override
     public ResponseEntity<JwtResponse> profile() {
 
@@ -386,7 +405,7 @@ public class AuthServiceImpl implements AuthService {
                     .toUriString();
             String toEmail = user.getEmail();
             String subject = "[JavaMail] - Demo sent email";
-            String text = baseUrl + "/api/auth/forgot-password?token=" + resetPassword;
+            String text = "http://localhost:4200/auth/forgot-password?otp=" + resetPassword + "&email=" + user.getEmail();
             user.setCodeActive(resetPassword);
             userRepository.save(user);
             new JavaMail().sentEmail(toEmail, subject, text);
@@ -417,6 +436,34 @@ public class AuthServiceImpl implements AuthService {
             user.setPassword(passwordEncoder.encode(forgotPasswordRequest.getPassword()));
             userRepository.save(user);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "reset-password success"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> editAvatar(MultipartFile file) {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("user khong ton tai");
+        } else {
+
+            UserDetail userDetail = userDetailRepository.getUserDetailByUserDetailId(user.getUserDetail().getUserDetailId());
+
+            List<String> list = List.of(userDetail.getAvatarUrl().split("/"));
+
+            String nameFile = awsService.upload(file);
+
+            String urlImage = "https://home-sharing.s3.ap-southeast-1.amazonaws.com/avatar.png";
+
+            if (userDetail.getAvatarUrl().equalsIgnoreCase(urlImage)) {
+                userDetail.setAvatarUrl(nameFile);
+            } else {
+                awsService.delete(list.get(3));
+                userDetail.setAvatarUrl(nameFile);
+            }
+            userDetailRepository.save(userDetail);
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "edit avatar thanh cong"));
         }
     }
 }

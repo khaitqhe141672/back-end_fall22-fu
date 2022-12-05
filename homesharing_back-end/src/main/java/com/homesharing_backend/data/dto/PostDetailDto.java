@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -40,4 +41,6 @@ public class PostDetailDto {
     private int status;
     private String latitude;
     private String longitude;
+    private List<LocalDate> bookingDate;
+
 }

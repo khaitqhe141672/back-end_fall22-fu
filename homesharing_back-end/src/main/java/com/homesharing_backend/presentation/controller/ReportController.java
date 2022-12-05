@@ -41,8 +41,9 @@ public class ReportController {
     @PostMapping("/create-complaintPost")
     @PreAuthorize("hasRole('ROLE_HOST')")
     public ResponseEntity<?> createComplaintPostByHost(@RequestBody ComplaintRequest ComplaintRequest,
-                                                       @RequestParam("reportPost-id") Long reportPostID) {
-        return reportService.createComplaintPost(ComplaintRequest, reportPostID);
+                                                       @RequestParam("post-id") Long postID,
+                                                       @RequestParam("history-id") Long historyID) {
+        return reportService.createComplaintPost(ComplaintRequest, postID, historyID);
     }
 
     @GetMapping("/list-reportPost-host")
@@ -54,8 +55,8 @@ public class ReportController {
     @PutMapping("/resolve-complaintPost")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> resolveComplaintPostByAdmin(@RequestParam("complaintPost-id") Long complaintPostID,
-                                                         @RequestParam("type") int type) {
-        return reportService.resolveComplaintPost(complaintPostID, type);
+                                                         @RequestParam("status") int status) {
+        return reportService.resolveComplaintPost(complaintPostID, status);
     }
 
     @PutMapping("/resolve-complaintRate")
@@ -78,7 +79,7 @@ public class ReportController {
     }
 
     @GetMapping("/list-reportPost-detail-admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllReportPosDetailByAdmin(@RequestParam("post-id") Long postID,
                                                           @RequestParam("index-page") int indexPage) {
         return reportService.getAllDetailReportPostByPostIDOfHost(postID, indexPage);
@@ -104,16 +105,16 @@ public class ReportController {
 
     @PutMapping("/update-status-report-rate")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-rate-id") Long reportRateID,
-                                                           @RequestParam("status") int status) {
-        return reportService.updateStatusReportRate(reportRateID, status);
+    public ResponseEntity<?> updateStatusReportRateByAdmin(@RequestParam("report-rate-id") Long reportRateID) {
+        return reportService.updateStatusReportRate(reportRateID);
     }
 
     @PutMapping("/update-status-report-post")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateStatusReportPostByAdmin(@RequestBody UpdateReportPostRequest updateReportPostRequest,
+                                                           @RequestParam("post-id") Long postID,
                                                            @RequestParam("status") int status) {
-        return reportService.updateStatusReportPost(updateReportPostRequest, status);
+        return reportService.updateStatusReportPost(updateReportPostRequest, postID, status);
     }
 
     @GetMapping("/all-report-post-done")
@@ -121,5 +122,19 @@ public class ReportController {
     public ResponseEntity<?> getAllReportPostDonePostByHost(@RequestParam("post-id") Long postID,
                                                             @RequestParam("index-page") int indexPage) {
         return reportService.getAllReportPostStatusDoneByHost(indexPage, postID);
+    }
+
+    @GetMapping("/all-history-report-post")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllHistoryReportPostByAdmin(@RequestParam("post-id") Long postID,
+                                                            @RequestParam("index-page") int indexPage) {
+        return reportService.getAllHistoryReportPost(postID, indexPage);
+    }
+
+    @GetMapping("/all-detail-history-report-post")
+    @PreAuthorize("hasRole('ROLE_HOST') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllDetailHistoryReportPostByAdmin(@RequestParam("history-id") Long historyID,
+                                                                  @RequestParam("index-page") int indexPage) {
+        return reportService.getAllHistoryReportPostDetail(historyID, indexPage);
     }
 }

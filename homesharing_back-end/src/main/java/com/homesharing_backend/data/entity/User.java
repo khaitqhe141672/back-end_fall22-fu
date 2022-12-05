@@ -23,7 +23,7 @@ import java.util.Set;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class  User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

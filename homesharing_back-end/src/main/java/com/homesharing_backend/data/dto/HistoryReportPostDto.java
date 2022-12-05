@@ -6,20 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class ComplaintDto {
+public class HistoryReportPostDto {
 
     private Long postID;
     private String title;
-    private Long complaintPostID;
-    private String descriptionComplaint;
-    private String fullName;
-    private String username;
-    private String imageUrl;
-    private int statusComplaint;
+    private Long historyHandleReportPostID;
     private int statusPost;
+    private int statusReportPost;
+    private int totalReportPost;
 }

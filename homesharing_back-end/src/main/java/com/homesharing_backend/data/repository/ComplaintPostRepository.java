@@ -12,4 +12,6 @@ public interface ComplaintPostRepository extends JpaRepository<ComplaintPost, Lo
     ComplaintPost getComplaintPostById(Long id);
 
     Page<ComplaintPost> getComplaintPostByHost_Id(Long hostID, PageRequest pageRequest);
+
+    ComplaintPost getComplaintPostByIdAndPost_Id(Long id, Long postID);
 }

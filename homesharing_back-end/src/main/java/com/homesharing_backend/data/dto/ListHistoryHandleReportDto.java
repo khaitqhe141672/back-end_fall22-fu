@@ -11,15 +11,14 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class ComplaintDto {
+public class ListHistoryHandleReportDto {
 
-    private Long postID;
-    private String title;
-    private Long complaintPostID;
-    private String descriptionComplaint;
-    private String fullName;
+    private Long reportPostID;
+    private int statusHistory;
+    private String description;
+    private String reportTypeName;
+    private Long reportTypeID;
     private String username;
+    private String fullName;
     private String imageUrl;
-    private int statusComplaint;
-    private int statusPost;
 }

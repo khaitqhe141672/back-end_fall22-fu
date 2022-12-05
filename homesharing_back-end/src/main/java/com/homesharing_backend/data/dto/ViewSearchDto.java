@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class ComplaintDto {
+public class ViewSearchDto {
 
     private Long postID;
     private String title;
-    private Long complaintPostID;
-    private String descriptionComplaint;
-    private String fullName;
-    private String username;
+    private String address;
+    private float price;
     private String imageUrl;
-    private int statusComplaint;
-    private int statusPost;
+    private String nameVoucher;
+    private Double avgStar;
+    private int typeAccount;
+    private int numberOfGuest;
 }

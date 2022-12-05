@@ -18,9 +18,9 @@ public class ComplaintPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "report_post_id", referencedColumnName = "id")
-    private ReportPost reportPost;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "report_post_id", referencedColumnName = "id")
+//    private ReportPost reportPost;
 
     @Column(name = "description", length = 5000)
     private String description;
@@ -29,6 +29,17 @@ public class ComplaintPost {
     @JoinColumn(name = "host_id", referencedColumnName = "id")
     private Host host;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "history_handle_report_id", referencedColumnName = "id")
+    private HistoryHandleReportPost historyHandleReportPost;
+
     @Column(name = "status")
     private int status;
+
+    @Column(name = "status_post")
+    private int statusPost;
 }

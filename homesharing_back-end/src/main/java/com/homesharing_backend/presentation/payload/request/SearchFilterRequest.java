@@ -12,14 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchFilterRequest {
 
-    private List<Integer> voucherPercent;
+    private int statusVoucher;
     private List<Long> service;
-    private List<Long> roomTypeID;
+    private Long roomTypeID;
     private Date startDate;
     private float minPrice;
     private float maxPrice;
-    private double minStar;
-    private double maxStar;
+    private int statusStar;
     private int statusSortPrice;
     private int numberOfGuest;
+    private Long provinceID;
 }

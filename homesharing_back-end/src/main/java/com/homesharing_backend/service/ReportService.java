@@ -20,9 +20,9 @@ public interface ReportService {
 
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportPostID);
 
-    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long reportRateID);
+    public ResponseEntity<MessageResponse> createComplaintPost(ComplaintRequest complaintRequest, Long postID, Long historyID);
 
-    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int type);
+    public ResponseEntity<MessageResponse> resolveComplaintPost(Long complaintPostID, int status);
 
     public ResponseEntity<MessageResponse> resolveComplaintRate(Long complaintRateID, int type);
 
@@ -42,9 +42,14 @@ public interface ReportService {
 
     public ResponseEntity<ResponseObject> getAllComplaintPostByHost(int indexPage);
 
-    public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID, int status);
+    public ResponseEntity<MessageResponse> updateStatusReportRate(Long reportRateID);
 
-    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest, int status);
+    public ResponseEntity<MessageResponse> updateStatusReportPost(UpdateReportPostRequest updateReportPostRequest,
+                                                                  Long postID, int status);
 
     public ResponseEntity<ResponseObject> getAllReportPostStatusDoneByHost(int indexPage, Long postID);
+
+    public ResponseEntity<ResponseObject> getAllHistoryReportPost(Long postID, int indexPage);
+
+    public ResponseEntity<ResponseObject> getAllHistoryReportPostDetail(Long historyID, int indexPage);
 }

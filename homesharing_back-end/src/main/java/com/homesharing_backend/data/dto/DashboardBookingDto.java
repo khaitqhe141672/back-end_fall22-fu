@@ -7,19 +7,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class ComplaintDto {
+public class DashboardBookingDto {
 
     private Long postID;
-    private String title;
-    private Long complaintPostID;
-    private String descriptionComplaint;
-    private String fullName;
-    private String username;
-    private String imageUrl;
-    private int statusComplaint;
-    private int statusPost;
+    private Long totalBooking;
+
+    public DashboardBookingDto(Long postID, Long totalBooking) {
+        this.postID = postID;
+        this.totalBooking = totalBooking;
+    }
 }

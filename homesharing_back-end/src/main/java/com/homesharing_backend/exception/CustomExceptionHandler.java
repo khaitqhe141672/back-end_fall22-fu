@@ -45,4 +45,9 @@ public class CustomExceptionHandler {
     public ExceptionResponse handlerEmptyDataException(EmptyDataException ex, WebRequest req) {
         return new ExceptionResponse(HttpStatus.NO_CONTENT.value(), ex.getMessage());
     }
+
+    @ExceptionHandler(AuthException.class)
+    public ExceptionResponse handlerAuthException(AuthException ex, WebRequest req) {
+        return new ExceptionResponse(11, ex.getMessage());
+    }
 }
