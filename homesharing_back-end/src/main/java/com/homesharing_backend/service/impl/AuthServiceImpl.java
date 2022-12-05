@@ -11,10 +11,7 @@ import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
-import com.homesharing_backend.presentation.payload.request.ChangePasswordRequest;
-import com.homesharing_backend.presentation.payload.request.ForgotPasswordRequest;
-import com.homesharing_backend.presentation.payload.request.LoginRequest;
-import com.homesharing_backend.presentation.payload.request.SignupRequest;
+import com.homesharing_backend.presentation.payload.request.*;
 import com.homesharing_backend.security.jwt.JwtUtils;
 import com.homesharing_backend.security.services.UserDetailsImpl;
 import com.homesharing_backend.service.AuthService;
@@ -465,5 +462,19 @@ public class AuthServiceImpl implements AuthService {
             userDetailRepository.save(userDetail);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "edit avatar thanh cong"));
         }
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> editProfile(EditProfileRequest editProfileRequest) {
+
+        User user = userRepository.findUserById(SecurityUtils.getPrincipal().getId());
+
+        user.getUserDetail().setAddress(editProfileRequest.getAddress());
+        user.getUserDetail().setMobile(editProfileRequest.getMobile());
+        user.getUserDetail().setFullName(editProfileRequest.getFullName());
+
+        userRepository.save(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "edit profile thanh cong"));
     }
 }
