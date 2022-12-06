@@ -95,8 +95,8 @@ public class PostImageServiceImpl implements PostImageService {
 
             postImages.forEach(i -> {
 
-                List<String> stringList = List.of(i.getImageUrl().split("/"));
-                awsService.delete(stringList.get(3));
+//                List<String> stringList = List.of(i.getImageUrl().split("/"));
+//                awsService.delete(stringList.get(3));
 
                 multipartFile.forEach(file -> {
                     String fileName = awsService.upload(file);
@@ -105,13 +105,13 @@ public class PostImageServiceImpl implements PostImageService {
                 postImageRepository.save(i);
             });
 
-            for (int i = 0; i < postImages.size() - 1; i++) {
-                List<String> stringList = List.of(postImages.get(i).getImageUrl().split("/"));
-                awsService.delete(stringList.get(3));
-                String fileName = awsService.upload(multipartFile.get(i));
-                postImages.get(i).setImageUrl(fileName);
-                postImageRepository.save(postImages.get(i));
-            }
+//            for (int i = 0; i < postImages.size() - 1; i++) {
+//                List<String> stringList = List.of(postImages.get(i).getImageUrl().split("/"));
+//                awsService.delete(stringList.get(3));
+//                String fileName = awsService.upload(multipartFile.get(i));
+//                postImages.get(i).setImageUrl(fileName);
+//                postImageRepository.save(postImages.get(i));
+//            }
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Edit image thanh cong"));
         }
 

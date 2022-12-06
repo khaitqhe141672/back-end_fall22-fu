@@ -25,7 +25,7 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.DateBookingDto(bd.startDate, bd.endDate) FROM BookingDetail bd " +
             "LEFT JOIN Booking b ON bd.booking.id = b.id " +
-            "WHERE bd.post.id= :postID AND (b.status = 2 OR b.status = 3) " +
+            "WHERE bd.post.id= :postID AND (b.status = 2 OR b.status = 3 OR b.status = 1) " +
             "GROUP BY bd.id")
     List<DateBookingDto> getAllBookingByPostID(@Param("postID") Long postID);
 
