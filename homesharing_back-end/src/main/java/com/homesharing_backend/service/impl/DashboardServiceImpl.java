@@ -1,6 +1,7 @@
 package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.DashboardBookingDto;
+import com.homesharing_backend.data.dto.DashboardDto;
 import com.homesharing_backend.data.dto.DashboardPostDto;
 import com.homesharing_backend.data.dto.DashboardPostPaymentDto;
 import com.homesharing_backend.data.entity.Host;
@@ -63,15 +64,18 @@ public class DashboardServiceImpl implements DashboardService {
 //            dashboardPostDtoList.add(dto);
 //        }
 
+        List<DashboardDto> list = new ArrayList<>();
+        list.add(new DashboardDto("Bài đăng", totalPost));
+        list.add(new DashboardDto("Bài đăng hoạt động", totalPostActive));
+        list.add(new DashboardDto("Bài đăng dừng hoạt động", totalPostDeActive));
+
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
             {
                 put("totalAccount", totalAccount);
                 put("totalCustomer", totalCustomer);
                 put("totalHost", totalHost);
 //                put("totalPostByMonth", dashboardPostDtoList);
-                put("totalPostActive", totalPostActive);
-                put("totalPostDeActive", totalPostDeActive);
-                put("totalPost", totalPost);
+                put("post", list);
                 put("totalHostDeActive", totalHostDeActive);
                 put("totalCustomerDeActive", totalCustomerDeActive);
                 put("totalPostPayment", totalPostPayment);
@@ -104,14 +108,16 @@ public class DashboardServiceImpl implements DashboardService {
                 list.add(p);
             });
 
-            List<DashboardBookingDto> bookingDtoList = bookingDetailRepository.totalBookingByHost(host.getId(), 4);
+            List<DashboardDto> dtoList = new ArrayList<>();
+            dtoList.add(new DashboardDto("Bài đăng", totalPost));
+            dtoList.add(new DashboardDto("Bài đăng hoạt động", totalPostActive));
+            dtoList.add(new DashboardDto("Bài đăng dừng hoạt động", totalPostDeActive));
 
+            List<DashboardBookingDto> bookingDtoList = bookingDetailRepository.totalBookingByHost(host.getId(), 4);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                 {
-                    put("totalPost", totalPost);
-                    put("totalPostActive", totalPostActive);
-                    put("totalPostDeActive", totalPostDeActive);
+                    put("post", dtoList);
                     put("totalPostPayment", list);
                     put("totalBooking", bookingDtoList);
                 }
