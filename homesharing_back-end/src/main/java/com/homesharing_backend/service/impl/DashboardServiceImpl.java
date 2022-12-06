@@ -45,8 +45,8 @@ public class DashboardServiceImpl implements DashboardService {
         int totalAccount = userRepository.totalAccount();
         int totalCustomer = customerRepository.totalCustomer();
         int totalHost = hostRepository.totalHost();
-        int totalPostActive = postRepository.totalPostActive(2);
-        int totalPostDeActive = postRepository.totalPostActive(3);
+        int totalPostActive = postRepository.totalPostActive(1);
+        int totalPostDeActive = postRepository.totalPostDeActiveByAdmin();
         int totalPost = postRepository.totalPost();
         int totalHostDeActive = hostRepository.countHostByUser_Status(2);
         int totalCustomerDeActive = customerRepository.countCustomerByUser_Status(2);
