@@ -1,5 +1,6 @@
 package com.homesharing_backend.presentation.controller;
 
+import com.homesharing_backend.service.HistoryPostPaymentService;
 import com.homesharing_backend.service.ManagePostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,9 @@ public class ManagePostController {
 
     @Autowired
     private ManagePostService managePostService;
+
+    @Autowired
+    private HistoryPostPaymentService historyPostPaymentService;
 
     @GetMapping("/view-all-post")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -63,4 +67,12 @@ public class ManagePostController {
                                                     @RequestParam("status") int status) {
         return managePostService.updateStatusPostByHost(postID, status);
     }
+
+    @GetMapping("/all-history_post_payment")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> getAllHistoryPostPayment(@RequestParam("index-page") int indexPage,
+                                                      @RequestParam("post-id") Long postID) {
+        return historyPostPaymentService.getAllHistoryPostPayment(indexPage, postID);
+    }
+
 }
