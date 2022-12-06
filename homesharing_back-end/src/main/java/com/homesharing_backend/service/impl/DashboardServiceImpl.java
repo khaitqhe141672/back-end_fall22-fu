@@ -65,7 +65,6 @@ public class DashboardServiceImpl implements DashboardService {
 //        }
 
         List<DashboardDto> list = new ArrayList<>();
-        list.add(new DashboardDto("Bài đăng", totalPost));
         list.add(new DashboardDto("Bài đăng hoạt động", totalPostActive));
         list.add(new DashboardDto("Bài đăng dừng hoạt động", totalPostDeActive));
 
@@ -76,6 +75,7 @@ public class DashboardServiceImpl implements DashboardService {
                 put("totalHost", totalHost);
 //                put("totalPostByMonth", dashboardPostDtoList);
                 put("post", list);
+                put("totalPost", totalPost);
                 put("totalHostDeActive", totalHostDeActive);
                 put("totalCustomerDeActive", totalCustomerDeActive);
                 put("totalPostPayment", totalPostPayment);
@@ -109,7 +109,6 @@ public class DashboardServiceImpl implements DashboardService {
             });
 
             List<DashboardDto> dtoList = new ArrayList<>();
-            dtoList.add(new DashboardDto("Bài đăng", totalPost));
             dtoList.add(new DashboardDto("Bài đăng hoạt động", totalPostActive));
             dtoList.add(new DashboardDto("Bài đăng dừng hoạt động", totalPostDeActive));
 
@@ -117,6 +116,7 @@ public class DashboardServiceImpl implements DashboardService {
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                 {
+                    put("totalPost", totalPost);
                     put("post", dtoList);
                     put("totalPostPayment", list);
                     put("totalBooking", bookingDtoList);
