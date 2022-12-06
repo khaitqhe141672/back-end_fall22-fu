@@ -134,6 +134,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT count(*) FROM post p where p.status= :status", nativeQuery = true)
     int totalPostActive(@Param("status") int status);
 
+    @Query(value = "SELECT count(*) FROM post p where p.status!= 1", nativeQuery = true)
+    int totalPostDeActiveByAdmin();
+
     @Query(value = "SELECT count(*) FROM post ", nativeQuery = true)
     int totalPost();
 
@@ -142,6 +145,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     int countPostByHost_Id(Long hostID);
 
-    @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND (status= 2 or status= 3);", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND status!= 2;", nativeQuery = true)
     int totalPostDeActive(@Param("hostID") Long hostID);
 }

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface HistoryPostPaymentService {
 
-//    public ResponseEntity<ResponseObject> getAll
+    public ResponseEntity<ResponseObject> getAllHistoryPostPayment(int index);
 }
