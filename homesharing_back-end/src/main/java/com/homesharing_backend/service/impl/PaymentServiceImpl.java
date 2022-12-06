@@ -1,9 +1,11 @@
 package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.config.PaymentConfig;
+import com.homesharing_backend.data.entity.HistoryPostPayment;
 import com.homesharing_backend.data.entity.PaymentPackage;
 import com.homesharing_backend.data.entity.Post;
 import com.homesharing_backend.data.entity.PostPayment;
+import com.homesharing_backend.data.repository.HistoryPostPaymentRepository;
 import com.homesharing_backend.data.repository.PaymentPackageRepository;
 import com.homesharing_backend.data.repository.PostPaymentRepository;
 import com.homesharing_backend.data.repository.PostRepository;
@@ -39,6 +41,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private HistoryPostPaymentRepository historyPostPaymentRepository;
 
     @Override
     public ResponseEntity<ResponseObject> rePayment(Long paymentPackageID) {
@@ -145,6 +150,15 @@ public class PaymentServiceImpl implements PaymentService {
 
                 post.setStatus(1);
                 postRepository.save(post);
+
+                HistoryPostPayment historyPostPayment = HistoryPostPayment.builder()
+                        .post(post)
+                        .paymentPackage(paymentPackage)
+                        .endDate(Date.valueOf(localDate.plusMonths(paymentPackage.getDueMonth())))
+                        .startDate(dateNow)
+                        .build();
+                historyPostPaymentRepository.save(historyPostPayment);
+
                 status = 1;
             } else {
                 status = 0;

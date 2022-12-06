@@ -73,6 +73,9 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostServiceRepository postServiceRepository;
 
+    @Autowired
+    private HistoryPostPaymentRepository historyPostPaymentRepository;
+
     @Override
     public ResponseEntity<JwtResponse> getInterestingPlaceByPost() {
 

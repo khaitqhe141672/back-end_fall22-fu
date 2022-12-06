@@ -453,12 +453,13 @@ public class AuthServiceImpl implements AuthService {
 
             String urlImage = "https://home-sharing.s3.ap-southeast-1.amazonaws.com/avatar.png";
 
-            if (userDetail.getAvatarUrl().equalsIgnoreCase(urlImage)) {
+//            if (userDetail.getAvatarUrl().equalsIgnoreCase(urlImage)) {
+//                userDetail.setAvatarUrl(nameFile);
+//            } else {
+//                awsService.delete(list.get(3));
                 userDetail.setAvatarUrl(nameFile);
-            } else {
-                awsService.delete(list.get(3));
-                userDetail.setAvatarUrl(nameFile);
-            }
+//            }
+            userDetail.setAvatarUrl(nameFile);
             userDetailRepository.save(userDetail);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "edit avatar thanh cong"));
         }
