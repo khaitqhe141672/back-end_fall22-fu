@@ -36,4 +36,6 @@ public interface ReportPostRepository extends JpaRepository<ReportPost, Long> {
     List<ReportPost> getReportPostByPost_IdAndStatus(Long postID, int status);
 
     ReportPost getReportPostByIdAndPost_Id(Long id, Long postID);
+
+    ReportPost getReportPostByPost_IdAndCustomer_Id(Long postID, Long customerID);
 }

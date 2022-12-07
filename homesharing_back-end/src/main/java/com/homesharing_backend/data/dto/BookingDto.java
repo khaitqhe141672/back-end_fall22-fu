@@ -29,4 +29,7 @@ public class BookingDto {
     private float totalMoney;
     private int statusBooking;
     private int statusRate;
+    private int statusReportPost;
+    private RateDto rateDto;
+    private ReportDto reportDto;
 }
