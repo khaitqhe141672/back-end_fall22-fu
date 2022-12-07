@@ -48,8 +48,7 @@ public class RateServiceImpl implements RateService {
         if (!postRepository.existsPostById(postID)) {
             throw new NotFoundException("post_id khong ton tai trong rate");
         } else {
-            List<Rate> rates = rateRepository.findAllByBookingDetail_Post_Id(postID);
-
+            List<Rate> rates = rateRepository.findAllByBookingDetail_Post_IdAndStatus(postID, 1);
 
             List<RateDto> rateDtos = new ArrayList<>();
 
