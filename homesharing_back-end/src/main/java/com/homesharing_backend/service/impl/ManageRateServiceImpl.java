@@ -97,8 +97,7 @@ public class ManageRateServiceImpl implements ManageRateService {
         if (Objects.isNull(post)) {
             throw new NotFoundException("khong co post lien quan den host_id");
         } else {
-            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(post.getId())
-                    .orElseThrow(() -> new NotFoundException("khong co data lien quan den post_id cua rate"));
+            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(post.getId());
 
             Page<Rate> ratePage = rateRepository.getRateByBookingDetail_Post_Id(post.getId(), PageRequest.of(page, size));
 
