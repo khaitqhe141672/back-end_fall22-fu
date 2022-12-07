@@ -168,8 +168,13 @@ public class AuthServiceImpl implements AuthService {
                     .toUriString();
 
             String toEmail = user.getEmail();
-            String subject = "[JavaMail] - Demo sent email";
-            String text = "http://localhost:4200/auth/confirm-account?otp=" + otp;
+            String subject = "Xác nhận tài khoản!";
+            String text = "Chào " + userDetail.getFullName() + ",\n" +
+                    "Cảm ơn bạn đã dăng ký tài khoản trên HomeSharing! Trước khi bắt đầu," +
+                    " bạn cần xác nhận đó là bạn. Bấm vào đường dẫn bên dưới để xác nhận tài khoản: \n" +
+                    "http://localhost:4200/auth/confirm-account?otp=" + otp + "\n" +
+                    "\nTrân trọng,\n" +
+                    "\nĐội ngũ HomeSharing.";
             new JavaMail().sentEmail(toEmail, subject, text);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("User registered successfully!", new HashMap<>() {
                 {
@@ -401,8 +406,12 @@ public class AuthServiceImpl implements AuthService {
                     .build()
                     .toUriString();
             String toEmail = user.getEmail();
-            String subject = "[JavaMail] - Demo sent email";
-            String text = "http://localhost:4200/auth/forgot-password?otp=" + resetPassword + "&email=" + user.getEmail();
+            String subject = "Xác nhận tài khoản!";
+            String text = "Chào " + user.getUserDetail().getFullName() + ",\n" +
+                    "Bạn cần xác nhận đó là bạn. Bấm vào đường dẫn bên dưới để xác nhận tài khoản: \n" +
+                    "http://localhost:4200/auth/forgot-password?otp=" + resetPassword + "&email=" + user.getEmail() + "\n" +
+                    "\nTrân trọng,\n" +
+                    "\nĐội ngũ HomeSharing.";
             user.setCodeActive(resetPassword);
             userRepository.save(user);
             new JavaMail().sentEmail(toEmail, subject, text);
@@ -457,7 +466,7 @@ public class AuthServiceImpl implements AuthService {
 //                userDetail.setAvatarUrl(nameFile);
 //            } else {
 //                awsService.delete(list.get(3));
-                userDetail.setAvatarUrl(nameFile);
+            userDetail.setAvatarUrl(nameFile);
 //            }
             userDetail.setAvatarUrl(nameFile);
             userDetailRepository.save(userDetail);

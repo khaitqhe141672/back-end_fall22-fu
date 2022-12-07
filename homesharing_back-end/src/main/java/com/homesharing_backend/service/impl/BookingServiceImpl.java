@@ -12,6 +12,7 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.request.BookingRequest;
 import com.homesharing_backend.service.BookingService;
+import com.homesharing_backend.util.JavaMail;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,6 +68,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private RateRepository rateRepository;
+
+    @Autowired
+    private PostDetailRepository postDetailRepository;
 
     /* status = 1 chờ confirm bởi host */
     @Override
@@ -290,12 +294,37 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Booking_id khong ton tai");
         } else {
 
+            BookingDetail bookingDetail = bookingDetailRepository.getBookingDetailByBooking_Id(booking.getId());
+            PostDetail postDetail = postDetailRepository.getPostDetailByPost_Id(bookingDetail.getPost().getId());
+
+            String toEmail = bookingDetail.getEmail();
+            String subject = "Thông báo trạng thái đặt phòng";
+            String text = "";
+
             if (type == 1) {
                 booking.setStatus(2);
+                text = "Kính gửi anh/chị " + bookingDetail.getFullName() + ",\n" +
+                        "Home Sharing trân trọng thông báo yêu cầu đặt phòng của anh/chị đã được chủ homestay chấp thuận: \n" +
+                        "- Thông tin:\n" +
+                        "\t+ Tên homestay: " + bookingDetail.getPost().getTitle() + "\n" +
+                        "\t+ Địa chỉ: " + postDetail.getAddress() + "\n" +
+                        "\t+ Giá phòng: " + bookingDetail.getPost().getPrice() + "\n" +
+                        "- Thời gian:\n" +
+                        "\t+ Nhận phòng: 12h30 Ngày " + bookingDetail.getStartDate() + "\n" +
+                        "\t+ Trả phòng: 12h30 Ngày " + bookingDetail.getEndDate() + "\n" +
+                        "Anh chị vui lòng đến đúng ngày giờ nhận phòng.\n" +
+                        "Cảm ơn anh chị đã đặt phòng trên hệ thống Home Sharing!";
             } else {
                 booking.setStatus(5);
+
+                text = "Home Sharing trân trọng thông báo yêu cầu đặt phòng của anh/chị không được chủ homestay chấp thuận!\n" +
+                        "Cảm ơn anh chị đã đặt phòng trên hệ thống Home Sharing.";
             }
 
+            text += "\n Trân trọng,\n\n" +
+                    "Đội ngũ Home Sharing.";
+
+            new JavaMail().sentEmail(toEmail, subject, text);
             Booking b = bookingRepository.save(booking);
 
             if (Objects.isNull(b)) {
