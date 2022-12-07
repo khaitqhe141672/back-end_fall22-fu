@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -31,9 +32,14 @@ public class AWSService implements StorageService {
     public String upload(MultipartFile file) {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj).withCannedAcl(CannedAccessControlList.PublicReadWrite));
+        List<String> list = List.of(fileName.split(" "));
+        String nameFile = "";
+        for (int i = 0; i < list.size(); i++) {
+            nameFile += list.get(i);
+        }
+        amazonS3Client.putObject(new PutObjectRequest(bucketName, nameFile, fileObj).withCannedAcl(CannedAccessControlList.PublicReadWrite));
         fileObj.delete();
-        URL url = amazonS3Client.getUrl(bucketName, fileName);
+        URL url = amazonS3Client.getUrl(bucketName, nameFile);
         return url.toString();
     }
 
