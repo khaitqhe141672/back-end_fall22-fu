@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface RateRepository extends JpaRepository<Rate, Long> {
 
-    List<Rate> findAllByBookingDetail_Post_Id(Long postID);
+    List<Rate> findAllByBookingDetail_Post_IdAndStatus(Long postID, int status);
 
     Rate getRateById(Long id);
 
