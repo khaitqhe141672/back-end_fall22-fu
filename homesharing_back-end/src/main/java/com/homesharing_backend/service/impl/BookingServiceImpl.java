@@ -2,6 +2,8 @@ package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.BookingDto;
 import com.homesharing_backend.data.dto.BookingUtilityDto;
+import com.homesharing_backend.data.dto.RateDto;
+import com.homesharing_backend.data.dto.ReportDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.DateException;
@@ -71,6 +73,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private PostDetailRepository postDetailRepository;
+
+    @Autowired
+    private ReportPostRepository reportPostRepository;
 
     /* status = 1 chờ confirm bởi host */
     @Override
@@ -380,6 +385,28 @@ public class BookingServiceImpl implements BookingService {
                     dto.setStatusRate(0);
                 } else {
                     dto.setStatusRate(rate.getStatus());
+                    RateDto rateDto = RateDto.builder()
+                            .rateID(rate.getId())
+                            .comment(rate.getComment())
+                            .point(rate.getPoint())
+                            .dateRate(rate.getDateRate())
+                            .build();
+                    dto.setRateDto(rateDto);
+                }
+
+                ReportPost reportPost = reportPostRepository.getReportPostByPost_IdAndCustomer_Id(bookingDetail.getPost().getId(), customer.getId());
+
+                if (Objects.isNull(reportPost)) {
+                    dto.setStatusReportPost(0);
+                } else {
+                    dto.setStatusReportPost(reportPost.getStatus());
+                    ReportDto reportDto = ReportDto.builder()
+                            .reportID(reportPost.getId())
+                            .description(reportPost.getDescription())
+                            .reportTypeID(reportPost.getReportType().getId())
+                            .nameReportType(reportPost.getReportType().getName())
+                            .build();
+                    dto.setReportDto(reportDto);
                 }
 
                 bookingDtoList.add(dto);
