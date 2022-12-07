@@ -36,7 +36,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public ResponseEntity<ResponseObject> getAllVoucher() {
 
-        List<Voucher> vouchers = voucherRepository.findAll();
+        List<Voucher> vouchers = voucherRepository.getVoucherByStatus(1);
         List<VoucherDto> dtoList = new ArrayList<>();
 
         for (Voucher v : vouchers) {
