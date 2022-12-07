@@ -198,36 +198,41 @@ public class AuthServiceImpl implements AuthService {
                         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(),
                                 signInRequest.getPassword()));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                String jwt = jwtUtils.generateJwtToken(authentication);
-                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                if (user.getStatus() == 2) {
+                    throw new AuthException("Tai khoan bi chan");
+                } else {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    String jwt = jwtUtils.generateJwtToken(authentication);
+                    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-                List<String> roles = userDetails.getAuthorities().stream()
-                        .map(item -> item.getAuthority()).collect(Collectors.toList());
+                    List<String> roles = userDetails.getAuthorities().stream()
+                            .map(item -> item.getAuthority()).collect(Collectors.toList());
 
-                LoginDto userDto = LoginDto.builder()
-                        .email(userDetails.getEmail())
-                        .username(userDetails.getUsername()).role(roles.get(0)).build();
-                Map data = new HashMap<String, Object>();
+                    LoginDto userDto = LoginDto.builder()
+                            .email(userDetails.getEmail())
+                            .username(userDetails.getUsername()).role(roles.get(0))
+                            .status(user.getStatus()).build();
+                    Map data = new HashMap<String, Object>();
 
-                if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
-                    Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
-                    data.put("customerID", customer.getId());
-                    System.out.println(customer.getId());
+                    if (roles.contains(ERole.ROLE_CUSTOMER.name())) {
+                        Customer customer = customerRepository.getByUser_Username(userDto.getUsername());
+                        data.put("customerID", customer.getId());
+                        System.out.println(customer.getId());
+                    }
+                    if (roles.contains(ERole.ROLE_HOST.name())) {
+                        Host teacher = hostRepository.getHostsByUser_Username(userDto.getUsername());
+                        data.put("hostID", teacher.getId());
+                    }
+                    if (roles.contains(ERole.ROLE_ADMIN.name())) {
+                        Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
+                        data.put("adminId", admin.getId());
+                    }
+
+                    data.put("userID", userDetails.getId());
+                    data.put("user", userDto);
+                    data.put("token", "Bearer " + jwt);
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Sign in successfully", data));
                 }
-                if (roles.contains(ERole.ROLE_HOST.name())) {
-                    Host teacher = hostRepository.getHostsByUser_Username(userDto.getUsername());
-                    data.put("hostID", teacher.getId());
-                }
-                if (roles.contains(ERole.ROLE_ADMIN.name())) {
-                    Admin admin = adminRepository.getAdminByUser_Username(userDto.getUsername());
-                    data.put("adminId", admin.getId());
-                }
-
-                data.put("userID", userDetails.getId());
-                data.put("user", userDto);
-                data.put("token", "Bearer " + jwt);
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Sign in successfully", data));
 
             } else {
                 throw new BadRequestAlertException("mat khau current khong khop");
