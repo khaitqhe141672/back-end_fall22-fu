@@ -72,8 +72,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                         postUtility.getUtility().getId(), postUtility.getStatus()));
             });
 
-            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(postID)
-                    .orElseThrow(() -> new NotFoundException("khong co data lien quan den post_id cua rate"));
+            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(postID);
 
             List<PostServiceDto> serviceDtoList = new ArrayList<>();
 
@@ -169,8 +168,7 @@ public class PostDetailServiceImpl implements PostDetailService {
         if (postRepository.existsPostById(postID)) {
             throw new NotFoundException("Post_ID không tôn tại!");
         } else {
-            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(postID)
-                    .orElseThrow(() -> new NotFoundException("khong co data lien quan den post_id cua rate"));
+            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(postID);
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), postTopRateDto));
         }
     }
