@@ -3,6 +3,7 @@ package com.homesharing_backend.service.impl;
 import com.homesharing_backend.data.dto.HomeDto;
 import com.homesharing_backend.data.dto.PostDto;
 import com.homesharing_backend.data.dto.PostTopRateDto;
+import com.homesharing_backend.data.dto.SearchDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
@@ -115,7 +116,7 @@ public class PostServiceImpl implements PostService {
         } else {
             List<HomeDto> homeDtoList = new ArrayList<>();
 
-            postTopRateDtos.forEach(p ->{
+            postTopRateDtos.forEach(p -> {
                 List<PostImage> image = postImageRepository.getPostImageByPost_Id(p.getId(), PageRequest.of(0, 1));
                 HomeDto dto = HomeDto.builder()
                         .postID(p.getId())
@@ -426,6 +427,112 @@ public class PostServiceImpl implements PostService {
             post.setStatus(status);
             postRepository.save(post);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getPostByProvinceID(Long provinceID, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Province province = provinceRepository.getById(provinceID);
+
+        if (Objects.isNull(province)) {
+            throw new NotFoundException("khong co tinh thanh nay");
+        } else {
+
+            List<District> list = districtRepository.findDistrictByProvince_Id(province.getId());
+
+            List<Long> districtID = new ArrayList<>();
+
+            list.forEach(l -> {
+                districtID.add(l.getId());
+            });
+
+            Page<SearchDto> postByProvinces =
+                    postRepository.listSearchPostByProvinces(districtID, PageRequest.of(page, size));
+
+            List<SearchDto> listPostByProvince = new ArrayList<>();
+
+            if (Objects.isNull(postByProvinces)) {
+                throw new NotFoundException("search khong co data");
+            } else {
+                postByProvinces.forEach(s -> {
+                    SearchDto dto = SearchDto.builder()
+                            .postID(s.getPostID())
+                            .title(s.getTitle())
+                            .address(s.getAddress())
+                            .imageUrl(s.getImageUrl())
+                            .price(s.getPrice())
+                            .fullName(s.getFullName())
+                            .nameVoucher(s.getNameVoucher())
+                            .typeAccount(s.getTypeAccount())
+                            .avgStar(s.getAvgStar())
+                            .build();
+                    listPostByProvince.add(dto);
+                });
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+                {
+                    put("listPost", listPostByProvince);
+                    put("sizePage", postByProvinces.getTotalPages());
+                }
+            }));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getPostByProvinceIDPagination(Long provinceID, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Province province = provinceRepository.getById(provinceID);
+
+        if (Objects.isNull(province)) {
+            throw new NotFoundException("khong co tinh thanh nay");
+        } else {
+
+            List<District> list = districtRepository.findDistrictByProvince_Id(province.getId());
+
+            List<Long> districtID = new ArrayList<>();
+
+            list.forEach(l -> {
+                districtID.add(l.getId());
+            });
+
+            Page<SearchDto> postByProvinces =
+                    postRepository.listSearchPostByProvinces(districtID, PageRequest.of(0, 10));
+
+            List<SearchDto> listPostByProvince = new ArrayList<>();
+
+            if (Objects.isNull(postByProvinces)) {
+                throw new NotFoundException("search khong co data");
+            } else {
+                postByProvinces.forEach(s -> {
+                    SearchDto dto = SearchDto.builder()
+                            .postID(s.getPostID())
+                            .title(s.getTitle())
+                            .address(s.getAddress())
+                            .imageUrl(s.getImageUrl())
+                            .price(s.getPrice())
+                            .fullName(s.getFullName())
+                            .nameVoucher(s.getNameVoucher())
+                            .typeAccount(s.getTypeAccount())
+                            .avgStar(s.getAvgStar())
+                            .build();
+                    listPostByProvince.add(dto);
+                });
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+                {
+                    put("listPost", listPostByProvince);
+                    put("sizePage", postByProvinces.getTotalPages());
+                }
+            }));
         }
     }
 

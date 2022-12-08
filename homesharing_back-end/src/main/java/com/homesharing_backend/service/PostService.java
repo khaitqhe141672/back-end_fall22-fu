@@ -24,4 +24,8 @@ public interface PostService {
     public ResponseEntity<ResponseObject> editPost(Long postID , PostRequest postRequest);
 
     public ResponseEntity<MessageResponse> updateStatus(Long postID, int status);
+
+    public ResponseEntity<ResponseObject> getPostByProvinceID(Long provinceID, int indexPage);
+
+    public ResponseEntity<ResponseObject> getPostByProvinceIDPagination(Long provinceID, int indexPage);
 }
