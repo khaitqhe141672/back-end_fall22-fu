@@ -1,10 +1,7 @@
 package com.homesharing_backend.service.impl;
 
 import com.homesharing_backend.data.dto.*;
-import com.homesharing_backend.data.entity.Post;
-import com.homesharing_backend.data.entity.PostServices;
-import com.homesharing_backend.data.entity.PostUtility;
-import com.homesharing_backend.data.entity.Province;
+import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
@@ -318,5 +315,56 @@ public class SearchServiceImpl implements SearchService {
                 put("listProvince", provinceList);
             }
         }));
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> searchByProvince(SearchRequest searchRequest, int indexPage) {
+
+        int size = 10;
+        int page = indexPage - 1;
+
+        Province province = provinceRepository.getProvincesByName(" " + searchRequest.getSearchText());
+
+        if (Objects.isNull(province)) {
+            throw new NotFoundException("khong co tinh thanh nay");
+        } else {
+            List<District> list = districtRepository.findDistrictByProvince_Id(province.getId());
+
+            List<Long> districtID = new ArrayList<>();
+
+            list.forEach(l -> {
+                districtID.add(l.getId());
+            });
+
+            Page<SearchDto> searchDtoPage =
+                    postRepository.listSearchPostByProvinces(districtID, PageRequest.of(page, size));
+
+            List<SearchDto> searchDtoListByProvince = new ArrayList<>();
+
+            if (Objects.isNull(searchDtoPage)) {
+                throw new NotFoundException("search khong co data");
+            } else {
+                searchDtoPage.forEach(s -> {
+                    SearchDto dto = SearchDto.builder()
+                            .postID(s.getPostID())
+                            .title(s.getTitle())
+                            .address(s.getAddress())
+                            .imageUrl(s.getImageUrl())
+                            .price(s.getPrice())
+                            .fullName(s.getFullName())
+                            .nameVoucher(s.getNameVoucher())
+                            .typeAccount(s.getTypeAccount())
+                            .avgStar(s.getAvgStar())
+                            .build();
+                    searchDtoListByProvince.add(dto);
+                });
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+                {
+                    put("listPost", searchDtoListByProvince);
+                    put("sizePage", searchDtoPage.getTotalPages());
+                }
+            }));
+        }
     }
 }
