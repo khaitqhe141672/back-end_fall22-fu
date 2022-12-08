@@ -5,8 +5,10 @@ import com.homesharing_backend.data.entity.Province;
 import com.homesharing_backend.data.repository.PostImageRepository;
 import com.homesharing_backend.data.repository.ProvinceRepository;
 import com.homesharing_backend.presentation.payload.JwtResponse;
+import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.impl.AWSService;
+import com.homesharing_backend.util.JavaMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,5 +82,15 @@ public class Test {
         List<String> list = List.of(postImage.getImageUrl().split("/"));
 
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), awsService.download(list.get(3))));
+    }
+
+    @GetMapping("/test-email")
+    public ResponseEntity<MessageResponse> getEmail(){
+
+        String text = "<h1>Check attachment for image!</h1>";
+
+        new JavaMail().sentEmail("khaitran30062000@gmail.com", "sss", text);
+
+        return null;
     }
 }

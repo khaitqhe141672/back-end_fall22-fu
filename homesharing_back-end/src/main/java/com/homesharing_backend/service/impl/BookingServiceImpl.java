@@ -9,11 +9,14 @@ import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.exception.UpdateDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.BookingRequest;
 import com.homesharing_backend.service.BookingService;
 import com.homesharing_backend.util.JavaMail;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.DataFormatException;
@@ -344,11 +348,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public ResponseEntity<JwtResponse> historyBookingByCustomerID() {
+    public ResponseEntity<ResponseObject> historyBookingByCustomerID(int indexPage) {
+
+        int size = 4;
+        int page = indexPage - 1;
 
         Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        List<Booking> booking = bookingRepository.getBookingByCustomer_Id(customer.getId());
+        Page<Booking> booking = bookingRepository.getBookingByCustomer_Id(customer.getId(), PageRequest.of(page, size));
 
         if (Objects.isNull(booking)) {
             throw new NotFoundException("Customer khong co booking");
@@ -416,7 +423,13 @@ public class BookingServiceImpl implements BookingService {
 
                 bookingDtoList.add(dto);
             });
-            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), bookingDtoList));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("search success", new HashMap<>() {
+                {
+                    put("historyBooking", bookingDtoList);
+                    put("sizePage", booking.getTotalPages());
+                }
+            }));
+
         }
     }
 

@@ -37,8 +37,8 @@ public class BookingController {
 
     @GetMapping("/history-booking-customer")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    public ResponseEntity<?> historyBookingByCustomerID() {
-        return bookingService.historyBookingByCustomerID();
+    public ResponseEntity<?> historyBookingByCustomerID(@RequestParam("index-page") int indexPage) {
+        return bookingService.historyBookingByCustomerID(indexPage);
     }
 
     @GetMapping("/get-one-bookingID")

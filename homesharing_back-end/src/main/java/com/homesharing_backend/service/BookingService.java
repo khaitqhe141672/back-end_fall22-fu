@@ -2,6 +2,7 @@ package com.homesharing_backend.service;
 
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.BookingRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public interface BookingService {
 
     public ResponseEntity<JwtResponse> getOneBookingOfCustomerByBookingID(Long bookingID);
 
-    public ResponseEntity<JwtResponse> historyBookingByCustomerID();
+    public ResponseEntity<ResponseObject> historyBookingByCustomerID(int indexPage);
 
     public ResponseEntity<JwtResponse> getAllBookingByHostID();
 
