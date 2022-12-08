@@ -15,4 +15,6 @@ public interface SearchService {
 
     public ResponseEntity<ResponseObject> getTextSearch(SearchRequest searchRequest);
 
+    public ResponseEntity<ResponseObject> searchByProvince(SearchRequest searchRequest, int indexPage);
+
 }

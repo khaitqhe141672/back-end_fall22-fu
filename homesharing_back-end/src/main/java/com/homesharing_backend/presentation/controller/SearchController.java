@@ -31,4 +31,10 @@ public class SearchController {
     public ResponseEntity<?> getSearch(@RequestBody SearchRequest nameSearch) {
         return searchService.getTextSearch(nameSearch);
     }
+
+    @PostMapping("/search-by-province")
+    public ResponseEntity<?> getSearchByProvince(@RequestBody SearchRequest nameSearch,
+                                                 @RequestParam("index-page") int indexPage) {
+        return searchService.searchByProvince(nameSearch, indexPage);
+    }
 }
