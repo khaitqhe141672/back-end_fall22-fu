@@ -30,6 +30,6 @@ public class BookingDto {
     private int statusBooking;
     private int statusRate;
     private int statusReportPost;
-    private RateDto rateDto;
-    private ReportDto reportDto;
+    private ViewRateCustomerDto viewRateCustomerDto;
+    private List<ViewReportPostCustomerDto> listReportPostCustomer;
 }
