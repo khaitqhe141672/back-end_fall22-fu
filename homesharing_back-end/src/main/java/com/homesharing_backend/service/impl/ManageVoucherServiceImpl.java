@@ -43,7 +43,7 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
         int page = indexPage - 1;
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
-        Page<Voucher> vouchers = voucherRepository.getVoucherByHost_Id(host.getId(), PageRequest.of(page, size));
+        Page<Voucher> vouchers = voucherRepository.getVoucherByHost_IdAndStatus(host.getId(), 1, PageRequest.of(page, size));
 
         if (Objects.isNull(vouchers)) {
             throw new NotFoundException("khong co voucher theo host_id");
