@@ -152,7 +152,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .bookingDate(totalDates)
                     .build();
 
-            if (Objects.isNull(postTopRateDto.getAvgRate())) {
+            if (Objects.isNull(postTopRateDto)) {
                 dto.setAvgRate(0.0);
             } else {
                 dto.setAvgRate(postTopRateDto.getAvgRate());
