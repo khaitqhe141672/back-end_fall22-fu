@@ -30,6 +30,10 @@ public class ReportPost {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    private Booking booking;
+
     @Column(name = "description", length = 5000)
     private String description;
 

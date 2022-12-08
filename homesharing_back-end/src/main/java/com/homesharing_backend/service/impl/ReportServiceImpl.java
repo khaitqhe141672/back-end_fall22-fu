@@ -62,6 +62,9 @@ public class ReportServiceImpl implements ReportService {
     private HistoryHandleReportPostRepository historyHandleReportPostRepository;
 
     @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
     private HistoryHandleReportPostDetailRepository historyHandleReportPostDetailRepository;
 
     @Override
@@ -98,7 +101,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> createReportPost(ReportRequest reportRequest, Long postID) {
+    public ResponseEntity<MessageResponse> createReportPost(ReportRequest reportRequest, Long postID, Long bookingID) {
 
         Post post = postRepository.getPostById(postID);
 
@@ -108,6 +111,7 @@ public class ReportServiceImpl implements ReportService {
             Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
 
             ReportType reportType = reportTypeRepository.getReportTypeById(reportRequest.getReportTypeID());
+            Booking booking = bookingRepository.getBookingById(bookingID);
 
             if (Objects.isNull(reportType)) {
                 throw new NotFoundException("ReportType-id khong ton tai");
@@ -117,6 +121,7 @@ public class ReportServiceImpl implements ReportService {
                         .customer(customer)
                         .reportType(reportType)
                         .description(reportRequest.getDescription())
+                        .booking(booking)
                         .status(1)
                         .build();
 
