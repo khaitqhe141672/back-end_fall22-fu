@@ -84,9 +84,9 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<ResponseObject> register(SignupRequest signUpRequest, HttpServletRequest servletRequest) {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new ConflictException("Username is already taken");
+            throw new ConflictException("Tên tài khoàn đã tồn tại");
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new ConflictException("Email is already taken");
+            throw new ConflictException("Email đã tồn tại");
         } else {
             User user = new User(signUpRequest.getUsername(),
                     signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()));
