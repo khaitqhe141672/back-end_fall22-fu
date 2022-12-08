@@ -27,8 +27,9 @@ public class ReportController {
     @PostMapping("/create-reportPost")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> createReportPostByCustomer(@RequestBody ReportRequest reportRequest,
-                                                        @RequestParam("post-id") Long postID) {
-        return reportService.createReportPost(reportRequest, postID);
+                                                        @RequestParam("post-id") Long postID,
+                                                        @RequestParam("booking-id") Long bookingID) {
+        return reportService.createReportPost(reportRequest, postID, bookingID);
     }
 
     @PostMapping("/create-complaintRate")

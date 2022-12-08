@@ -399,7 +399,8 @@ public class BookingServiceImpl implements BookingService {
                     dto.setViewRateCustomerDto(rateDto);
                 }
 
-                List<ReportPost> reportPost = reportPostRepository.getReportPostByPost_IdAndCustomer_Id(bookingDetail.getPost().getId(), customer.getId());
+                List<ReportPost> reportPost =
+                        reportPostRepository.getReportPostByPost_IdAndCustomer_IdAndBooking_Id(bookingDetail.getPost().getId(), customer.getId(), b.getId());
 
                 if (Objects.isNull(reportPost)) {
                     dto.setStatusReportPost(0);
@@ -408,7 +409,7 @@ public class BookingServiceImpl implements BookingService {
 
                     List<ViewReportPostCustomerDto> list = new ArrayList<>();
 
-                    reportPost.forEach(r ->{
+                    reportPost.forEach(r -> {
                         ViewReportPostCustomerDto reportPostCustomerDto = ViewReportPostCustomerDto.builder()
                                 .reportID(r.getId())
                                 .description(r.getDescription())

@@ -16,7 +16,7 @@ public interface ReportService {
 
     public ResponseEntity<MessageResponse> createReportRate(ReportRequest reportRateRequest, Long rateID);
 
-    public ResponseEntity<MessageResponse> createReportPost(ReportRequest reportRateRequest, Long postID);
+    public ResponseEntity<MessageResponse> createReportPost(ReportRequest reportRateRequest, Long postID, Long bookingID);
 
     public ResponseEntity<MessageResponse> createComplaintRate(ComplaintRequest complaintRequest, Long reportPostID);
 
