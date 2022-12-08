@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import com.homesharing_backend.service.StorageService;
+import com.homesharing_backend.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,15 +32,14 @@ public class AWSService implements StorageService {
     @Override
     public String upload(MultipartFile file) {
         File fileObj = convertMultiPartFileToFile(file);
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        List<String> list = List.of(fileName.split(" "));
-        String nameFile = "";
-        for (int i = 0; i < list.size(); i++) {
-            nameFile += list.get(i);
-        }
-        amazonS3Client.putObject(new PutObjectRequest(bucketName, nameFile, fileObj).withCannedAcl(CannedAccessControlList.PublicReadWrite));
+
+        String text = Util.genCode(10);
+
+        String fileName = System.currentTimeMillis() + "_" + text;
+
+        amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj).withCannedAcl(CannedAccessControlList.PublicReadWrite));
         fileObj.delete();
-        URL url = amazonS3Client.getUrl(bucketName, nameFile);
+        URL url = amazonS3Client.getUrl(bucketName, fileName);
         return url.toString();
     }
 
