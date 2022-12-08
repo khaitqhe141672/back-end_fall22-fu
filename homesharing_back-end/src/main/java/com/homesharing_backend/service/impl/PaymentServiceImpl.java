@@ -163,10 +163,8 @@ public class PaymentServiceImpl implements PaymentService {
                 status = 200;
             } else {
                 status = 300;
-                throw new SaveDataException("da duoc thanh toan");
             }
         }
-
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), status));
     }
 }
