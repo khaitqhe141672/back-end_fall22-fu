@@ -90,6 +90,7 @@ public class VoucherServiceImpl implements VoucherService {
             Voucher v = Voucher.builder()
                     .code(vp.getName())
                     .description(vp.getDescription())
+                    .percent(vp.getPercent())
                     .dueDay(vp.getDueDate())
                     .host(host)
                     .status(1)
