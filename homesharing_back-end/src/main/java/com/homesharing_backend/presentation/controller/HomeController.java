@@ -5,10 +5,7 @@ import com.homesharing_backend.service.PostService;
 import com.homesharing_backend.service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -22,17 +19,24 @@ public class HomeController {
     private ProvinceService provinceService;
 
     @GetMapping("/interesting-place")
-    public ResponseEntity<?> getInterestingPlace(){
+    public ResponseEntity<?> getInterestingPlace() {
         return postService.getInterestingPlaceByPost();
     }
 
     @GetMapping("/recommended-places")
-    public ResponseEntity<?> getRecommendedPlaces(){
+    public ResponseEntity<?> getRecommendedPlaces() {
         return provinceService.getRecommendedPlaces();
     }
 
     @GetMapping("/post-top-rate")
-    public ResponseEntity<?>  getPostTopRate(){
+    public ResponseEntity<?> getPostTopRate() {
         return postService.getTopPostByRate();
     }
+
+    @GetMapping("/post-by-province")
+    public ResponseEntity<?> getPostByProvince(@RequestParam("provinceID") Long provinceID,
+                                               @RequestParam("index-page") int indexPage) {
+        return postService.getPostByProvinceID(provinceID, indexPage);
+    }
+
 }
