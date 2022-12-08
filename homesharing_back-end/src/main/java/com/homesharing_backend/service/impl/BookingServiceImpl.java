@@ -402,9 +402,10 @@ public class BookingServiceImpl implements BookingService {
                 List<ReportPost> reportPost =
                         reportPostRepository.getReportPostByPost_IdAndCustomer_IdAndBooking_Id(bookingDetail.getPost().getId(), customer.getId(), b.getId());
 
-                if (Objects.isNull(reportPost)) {
+                if (reportPost.isEmpty()) {
                     dto.setStatusReportPost(0);
                 } else {
+
                     dto.setStatusReportPost(1);
 
                     List<ViewReportPostCustomerDto> list = new ArrayList<>();
