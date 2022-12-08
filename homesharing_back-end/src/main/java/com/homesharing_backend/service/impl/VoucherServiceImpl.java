@@ -152,7 +152,7 @@ public class VoucherServiceImpl implements VoucherService {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        List<Voucher> vouchers = voucherRepository.getVoucherByHost_Id(host.getId());
+        List<Voucher> vouchers = voucherRepository.getVoucherByHost_IdAndStatus(host.getId(), 1);
 
         if (Objects.isNull(vouchers)) {
             throw new NotFoundException("Khong co data voucher cua host_id nay");
