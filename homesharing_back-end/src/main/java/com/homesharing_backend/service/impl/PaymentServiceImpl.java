@@ -112,8 +112,9 @@ public class PaymentServiceImpl implements PaymentService {
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                 {
-                    put("status", "Create payment success");
+                    put("mess", "Create payment success");
                     put("urlPayment", paymentUrl);
+                    put("status", 10);
                 }
             }));
         }
@@ -159,9 +160,9 @@ public class PaymentServiceImpl implements PaymentService {
                         .build();
                 historyPostPaymentRepository.save(historyPostPayment);
 
-                status = 1;
+                status = 200;
             } else {
-                status = 0;
+                status = 300;
                 throw new SaveDataException("da duoc thanh toan");
             }
         }
