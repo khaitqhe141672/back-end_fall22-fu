@@ -1,0 +1,21 @@
+package com.homesharing_backend.data.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@Data
+@Builder
+@NoArgsConstructor
+public class ViewReportPostCustomerDto {
+
+    private Long reportID;
+    private String description;
+    private Long reportTypeID;
+    private String nameReportType;
+    private int status;
+}

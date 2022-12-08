@@ -1,9 +1,6 @@
 package com.homesharing_backend.service.impl;
 
-import com.homesharing_backend.data.dto.BookingDto;
-import com.homesharing_backend.data.dto.BookingUtilityDto;
-import com.homesharing_backend.data.dto.RateDto;
-import com.homesharing_backend.data.dto.ReportDto;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.DateException;
@@ -385,28 +382,36 @@ public class BookingServiceImpl implements BookingService {
                     dto.setStatusRate(0);
                 } else {
                     dto.setStatusRate(rate.getStatus());
-                    RateDto rateDto = RateDto.builder()
+                    ViewRateCustomerDto rateDto = ViewRateCustomerDto.builder()
                             .rateID(rate.getId())
                             .comment(rate.getComment())
                             .point(rate.getPoint())
                             .dateRate(rate.getDateRate())
+                            .status(rate.getStatus())
                             .build();
-                    dto.setRateDto(rateDto);
+                    dto.setViewRateCustomerDto(rateDto);
                 }
 
-                ReportPost reportPost = reportPostRepository.getReportPostByPost_IdAndCustomer_Id(bookingDetail.getPost().getId(), customer.getId());
+                List<ReportPost> reportPost = reportPostRepository.getReportPostByPost_IdAndCustomer_Id(bookingDetail.getPost().getId(), customer.getId());
 
                 if (Objects.isNull(reportPost)) {
                     dto.setStatusReportPost(0);
                 } else {
-                    dto.setStatusReportPost(reportPost.getStatus());
-                    ReportDto reportDto = ReportDto.builder()
-                            .reportID(reportPost.getId())
-                            .description(reportPost.getDescription())
-                            .reportTypeID(reportPost.getReportType().getId())
-                            .nameReportType(reportPost.getReportType().getName())
-                            .build();
-                    dto.setReportDto(reportDto);
+                    dto.setStatusReportPost(1);
+
+                    List<ViewReportPostCustomerDto> list = new ArrayList<>();
+
+                    reportPost.forEach(r ->{
+                        ViewReportPostCustomerDto reportPostCustomerDto = ViewReportPostCustomerDto.builder()
+                                .reportID(r.getId())
+                                .description(r.getDescription())
+                                .reportTypeID(r.getReportType().getId())
+                                .nameReportType(r.getReportType().getName())
+                                .status(r.getStatus())
+                                .build();
+                        list.add(reportPostCustomerDto);
+                    });
+                    dto.setListReportPostCustomer(list);
                 }
 
                 bookingDtoList.add(dto);
