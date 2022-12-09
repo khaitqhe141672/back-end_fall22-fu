@@ -84,29 +84,24 @@ public class VoucherServiceImpl implements VoucherService {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        List<Voucher> vouchers = new ArrayList<>();
-
         voucherRequest.forEach(vp -> {
-            Voucher v = Voucher.builder()
-                    .code(vp.getName())
-                    .description(vp.getDescription())
-                    .percent(vp.getPercent())
-                    .dueDay(vp.getDueDate())
-                    .host(host)
-                    .status(1)
-                    .build();
-            Voucher voucher = voucherRepository.save(v);
 
-            vouchers.add(voucher);
-
+            if (voucherRepository.existsByCode(vp.getName())) {
+                throw new SaveDataException("trùng mã giảm giá");
+            } else {
+                Voucher v = Voucher.builder()
+                        .code(vp.getName())
+                        .description(vp.getDescription())
+                        .percent(vp.getPercent())
+                        .dueDay(vp.getDueDate())
+                        .host(host)
+                        .status(1)
+                        .build();
+                voucherRepository.save(v);
+            }
         });
 
-        if (Objects.isNull(vouchers)) {
-            throw new SaveDataException("create voucher khong thanh cong");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Create voucher thanh cong"));
-        }
-
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Create voucher thanh cong"));
     }
 
     @Override
