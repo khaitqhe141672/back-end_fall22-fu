@@ -17,6 +17,7 @@ import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -355,7 +356,7 @@ public class BookingServiceImpl implements BookingService {
 
         Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
 
-        Page<Booking> booking = bookingRepository.getBookingByCustomer_Id(customer.getId(), PageRequest.of(page, size));
+        Page<Booking> booking = bookingRepository.getBookingByCustomer_Id(customer.getId(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
 
         if (Objects.isNull(booking)) {
             throw new NotFoundException("Customer khong co booking");
