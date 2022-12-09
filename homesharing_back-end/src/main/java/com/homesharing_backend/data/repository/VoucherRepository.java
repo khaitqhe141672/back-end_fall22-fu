@@ -23,4 +23,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     Voucher getVoucherByIdAndHost_Id(Long voucherID, Long hostID);
 
     List<Voucher> getVoucherByStatus(int status);
+
+    Boolean existsByCode(String code);
 }
