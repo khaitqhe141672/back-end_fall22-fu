@@ -541,6 +541,11 @@ public class ReportServiceImpl implements ReportService {
         if (Objects.isNull(reportRate)) {
             throw new NotFoundException("report-rate-id khong ton tai");
         } else {
+
+            Rate rate = rateRepository.getRateById(reportRate.getRate().getId());
+            rate.setStatus(2);
+            rateRepository.save(rate);
+
             reportRate.setStatus(2);
             reportRateRepository.save(reportRate);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "update status thanh cong"));
