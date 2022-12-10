@@ -150,6 +150,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .latitude(postDetail.getLatitude())
                     .longitude(postDetail.getLongitude())
                     .bookingDate(totalDates)
+                    .typeAccountHost(postDetail.getPost().getHost().getTypeAccount())
                     .build();
 
             if (Objects.isNull(postTopRateDto)) {

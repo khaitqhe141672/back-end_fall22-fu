@@ -29,4 +29,5 @@ public class HostDto {
     private String address;
     private Long totalFollower;
     private int status;
+    private int typeAccountHost;
 }
