@@ -382,6 +382,7 @@ public class BookingServiceImpl implements BookingService {
                         .totalMoney(b.getTotalMoney())
                         .totalPerson(bookingDetail.getTotalPerson())
                         .statusBooking(b.getStatus())
+                        .mobileHost(bookingDetail.getPost().getHost().getUser().getUserDetail().getMobile())
                         .build();
 
                 Rate rate = rateRepository.getRateByBookingDetail_Id(bookingDetail.getId());
