@@ -125,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
                         user.setRole(hostRole);
                         Host host = Host.builder()
                                 .user(user)
-                                .typeAccount(1)
+                                .typeAccount(2)
                                 .build();
 
                         hostRepository.save(host);
