@@ -28,5 +28,5 @@ public class UserDto {
     private String address;
     private int status;
     private String role;
-    private int typeAccount;
+    private int typeAccountHost;
 }

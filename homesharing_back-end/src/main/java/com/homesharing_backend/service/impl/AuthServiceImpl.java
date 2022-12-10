@@ -372,7 +372,7 @@ public class AuthServiceImpl implements AuthService {
 
             if (user.getRole().getName().name().equals("ROLE_HOST")) {
                 Host host = hostRepository.getHostsByUser_Id(user.getId());
-                dto.setTypeAccount(host.getTypeAccount());
+                dto.setTypeAccountHost(host.getTypeAccount());
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dto));

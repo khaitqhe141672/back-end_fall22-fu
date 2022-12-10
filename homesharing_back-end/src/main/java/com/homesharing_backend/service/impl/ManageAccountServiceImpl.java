@@ -158,6 +158,7 @@ public class ManageAccountServiceImpl implements ManageAccountService {
                         .mobile(h.getUser().getUserDetail().getMobile())
                         .address(h.getUser().getUserDetail().getAddress())
                         .totalFollower(followHostRepository.totalFollowHostByCustomer(h.getId()))
+                        .typeAccountHost(h.getTypeAccount())
                         .status(h.getUser().getStatus())
                         .build();
 
