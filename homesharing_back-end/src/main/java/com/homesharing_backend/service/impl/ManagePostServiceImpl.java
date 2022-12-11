@@ -48,6 +48,9 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private BookingDetailRepository bookingDetailRepository;
+
     @Override
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
 
@@ -277,9 +280,24 @@ public class ManagePostServiceImpl implements ManagePostService {
                 List<BookingServiceDto> list = bookingServiceRepository.getAllBookingService(v.getBookingID());
                 CurrentBookingDto dto = CurrentBookingDto.builder()
                         .viewBookingDto(v)
-                        .bookingServiceDtos(list)
                         .userBookingDto(bookingDto)
                         .build();
+
+                BookingDetail bookingDetail = bookingDetailRepository.getBookingDetailByBooking_Id(b.getId());
+
+                if (!Objects.isNull(bookingDetail.getPostVoucher())) {
+                    BookingPostVoucherDto bookingPostVoucherDto = BookingPostVoucherDto.builder()
+                            .postVoucherID(bookingDetail.getPostVoucher().getId())
+                            .voucherID(bookingDetail.getPostVoucher().getVoucher().getId())
+                            .code(bookingDetail.getPostVoucher().getVoucher().getCode())
+                            .percent(bookingDetail.getPostVoucher().getVoucher().getPercent())
+                            .build();
+                    dto.setBookingPostVoucherDto(bookingPostVoucherDto);
+                }
+
+                if (!list.isEmpty()) {
+                    dto.setBookingServiceDtos(list);
+                }
 
                 dtoList.add(dto);
             });
@@ -298,7 +316,7 @@ public class ManagePostServiceImpl implements ManagePostService {
 
         Post post = postRepository.getPostById(postID);
 
-        if(Objects.isNull(post)){
+        if (Objects.isNull(post)) {
             throw new NotFoundException("khong co post-id nao");
         } else {
             post.setStatus(status);

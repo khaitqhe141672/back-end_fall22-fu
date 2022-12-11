@@ -33,4 +33,6 @@ public class BookingDto {
     private ViewRateCustomerDto viewRateCustomerDto;
     private List<ViewReportPostCustomerDto> listReportPostCustomer;
     private String mobileHost;
+    private BookingPostVoucherDto bookingPostVoucherDto;
+    private List<BookingServiceDto> bookingServiceDtoList;
 }
