@@ -6,17 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class CurrentBookingDto {
+public class BookingPostVoucherDto {
 
-    private ViewBookingDto viewBookingDto;
-    private UserBookingDto userBookingDto;
-    private List<BookingServiceDto> bookingServiceDtos;
-    private BookingPostVoucherDto bookingPostVoucherDto;
+    private Long postVoucherID;
+    private Long voucherID;
+    private String code;
+    private int percent;
 }
