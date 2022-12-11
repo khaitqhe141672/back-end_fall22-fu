@@ -293,7 +293,7 @@ public class BookingServiceImpl implements BookingService {
 
     /* status = 2 xác nhận thuê thành công */
     @Override
-    public ResponseEntity<ResponseObject> confirmBooking(Long bookingID, int type) {
+    public ResponseEntity<MessageResponse> confirmBooking(Long bookingID, int type) {
 
         Booking booking = bookingRepository.getBookingById(bookingID);
 
@@ -337,23 +337,23 @@ public class BookingServiceImpl implements BookingService {
             if (Objects.isNull(b)) {
                 throw new UpdateDataException("Confirm booking not success");
             } else {
-//                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Confirm booking success"));
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Confirm booking success"));
 
-                List<BookingServiceDto> bookingServiceDtoList = bookingServiceRepository.getAllBookingService(b.getId());
+//                List<BookingServiceDto> bookingServiceDtoList = bookingServiceRepository.getAllBookingService(b.getId());
 
-                BookingPostVoucherDto bookingPostVoucherDto = BookingPostVoucherDto.builder()
-                        .postVoucherID(bookingDetail.getPostVoucher().getId())
-                        .voucherID(bookingDetail.getPostVoucher().getVoucher().getId())
-                        .code(bookingDetail.getPostVoucher().getVoucher().getCode())
-                        .percent(bookingDetail.getPostVoucher().getVoucher().getPercent())
-                        .build();
+//                BookingPostVoucherDto bookingPostVoucherDto = BookingPostVoucherDto.builder()
+//                        .postVoucherID(bookingDetail.getPostVoucher().getId())
+//                        .voucherID(bookingDetail.getPostVoucher().getVoucher().getId())
+//                        .code(bookingDetail.getPostVoucher().getVoucher().getCode())
+//                        .percent(bookingDetail.getPostVoucher().getVoucher().getPercent())
+//                        .build();
 
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Confirm booking success", new HashMap<>() {
-                    {
-                        put("bookingServiceDtoList", bookingServiceDtoList);
-                        put("bookingPostVoucherDto", bookingPostVoucherDto);
-                    }
-                }));
+//                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Confirm booking success", new HashMap<>() {
+//                    {
+//                        put("bookingServiceDtoList", bookingServiceDtoList);
+//                        put("bookingPostVoucherDto", bookingPostVoucherDto);
+//                    }
+//                }));
             }
         }
     }
