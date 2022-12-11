@@ -113,7 +113,7 @@ public class BookingServiceImpl implements BookingService {
                     throw new NotFoundException("End date or start date null");
                 } else {
 
-                    PostVoucher postVoucher = postVoucherRepository.getPostVoucherByIdAndPost_Id(bookingRequest.getPostVoucherID(), postID);
+                    PostVoucher postVoucher = postVoucherRepository.getPostVoucherByIdAndPost_IdAndStatus(bookingRequest.getPostVoucherID(), postID, 1);
 
                     BookingDetail bookingDetail = BookingDetail.builder()
                             .booking(saveBooking)

@@ -14,7 +14,7 @@ public interface PostVoucherRepository extends JpaRepository<PostVoucher, Long> 
 
     List<PostVoucher> getPostVoucherByPost_Id(Long postID);
 
-    PostVoucher getPostVoucherByIdAndPost_Id(Long id, Long postID);
+    PostVoucher getPostVoucherByIdAndPost_IdAndStatus(Long id, Long postID, int status);
 
     Boolean existsPostVoucherByVoucher_CodeAndPost_Id(String code, Long postID);
 
