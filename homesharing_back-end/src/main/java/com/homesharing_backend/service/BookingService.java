@@ -22,7 +22,7 @@ public interface BookingService {
 
     public ResponseEntity<MessageResponse> cancelBooking(Long bookingID);
 
-    public ResponseEntity<ResponseObject> confirmBooking(Long bookingID, int type);
+    public ResponseEntity<MessageResponse> confirmBooking(Long bookingID, int type);
 
     public ResponseEntity<JwtResponse> getOneBookingOfCustomerByBookingID(Long bookingID);
 
