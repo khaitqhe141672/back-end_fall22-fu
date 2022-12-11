@@ -279,7 +279,7 @@ public class BookingServiceImpl implements BookingService {
 
             Date dateNow = Date.valueOf(localDate);
 
-            if (dateNow.before(bookingDetail.getStartDate())) {
+            if (dateNow.before(bookingDetail.getStartDate()) || bookingDetail.getBooking().getStatus() != 2) {
                 booking.setStatus(5);
                 Booking b = bookingRepository.save(booking);
                 return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "cancel booking success"));
