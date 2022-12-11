@@ -14,7 +14,7 @@ import java.util.List;
 public interface BookingServiceRepository extends JpaRepository<BookingServices, Long> {
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.BookingServiceDto(bs.booking.id, ps.id, ps.price," +
-            "s.icon, s.name) FROM BookingServices bs\n" +
+            "s.icon, s.name, bs.status) FROM BookingServices bs\n" +
             "left join Booking b on bs.booking.id = b.id\n" +
             "left join PostServices ps on bs.postServices.id = ps.id\n" +
             "left join Services s on ps.services.id = s.id where bs.booking.id = :bookingID and bs.status = 1\n" +

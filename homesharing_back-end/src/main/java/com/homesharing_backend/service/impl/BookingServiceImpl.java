@@ -489,6 +489,7 @@ public class BookingServiceImpl implements BookingService {
                                 .voucherID(b.getPostVoucher().getVoucher().getId())
                                 .code(b.getPostVoucher().getVoucher().getCode())
                                 .percent(b.getPostVoucher().getVoucher().getPercent())
+                                .status(1)
                                 .build();
                         dto.setBookingPostVoucherDto(bookingPostVoucherDto);
                     }
