@@ -183,7 +183,7 @@ public class ReportServiceImpl implements ReportService {
             Post post = postRepository.getPostById(complaintPost.getPost().getId());
 
             complaintPost.setStatus(status);
-            complaintPost.setStatusPost(status);
+            complaintPost.setStatusPost(statusPost);
             complaintPostRepository.save(complaintPost);
 
             post.setStatusReport(statusPost);
