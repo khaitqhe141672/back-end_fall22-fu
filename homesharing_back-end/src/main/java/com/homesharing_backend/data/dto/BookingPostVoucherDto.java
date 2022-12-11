@@ -17,4 +17,5 @@ public class BookingPostVoucherDto {
     private Long voucherID;
     private String code;
     private int percent;
+    private int status;
 }

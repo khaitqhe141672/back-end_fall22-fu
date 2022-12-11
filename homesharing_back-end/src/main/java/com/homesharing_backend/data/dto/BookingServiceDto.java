@@ -17,14 +17,16 @@ public class BookingServiceDto {
     private float priceService;
     private String iconService;
     private String nameService;
+    private int status;
 
     public BookingServiceDto(Long bookingID, Long postServiceID,
                              float priceService, String iconService,
-                             String nameService) {
+                             String nameService, int status) {
         this.bookingID = bookingID;
         this.postServiceID = postServiceID;
         this.priceService = priceService;
         this.iconService = iconService;
         this.nameService = nameService;
+        this.status = status;
     }
 }
