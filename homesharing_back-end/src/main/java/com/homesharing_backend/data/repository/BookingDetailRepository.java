@@ -29,7 +29,7 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
             "GROUP BY bd.id")
     List<DateBookingDto> getAllBookingByPostID(@Param("postID") Long postID);
 
-    @Query("SELECT new com.homesharing_backend.data.dto.DashboardBookingDto(p.id, count(p.id)) FROM BookingDetail bd " +
+    @Query("SELECT new com.homesharing_backend.data.dto.DashboardBookingDto(p.title, count(p.id)) FROM BookingDetail bd " +
             "left join Booking b on bd.booking.id = b.id " +
             "left join Post p on bd.post.id = p.id where p.host.id= :hostID and b.status= :status \n" +
             "group by p.id")
