@@ -39,10 +39,10 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
     List<DashboardPostPaymentDto> getAllPostPaymentByHost(@Param("hostID") Long hostID);
 
 
-    @Query(value = "SELECT new com.homesharing_backend.data.dto.DashboardPaymentPostDto(pp.post.id, sum(pg.price)) FROM PostPayment pp " +
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.DashboardPaymentPostDto(pp.post.title, sum(pg.price)) FROM PostPayment pp " +
             "LEFT JOIN Post p ON pp.post.id = p.id " +
             "LEFT JOIN PaymentPackage pg ON pp.paymentPackage.id = pg.id " +
             "WHERE p.host.id= :hostID " +
-            "GROUP BY pp.post.id")
+            "GROUP BY pp.post.title")
     List<DashboardPaymentPostDto> getAllPaymentByHost(@Param("hostID") Long hostID);
 }

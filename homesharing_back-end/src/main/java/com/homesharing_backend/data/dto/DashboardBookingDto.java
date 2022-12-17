@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DashboardBookingDto {
 
-    private Long postID;
+    private String title;
     private Long totalBooking;
 
-    public DashboardBookingDto(Long postID, Long totalBooking) {
-        this.postID = postID;
+    public DashboardBookingDto(String title, Long totalBooking) {
+        this.title = title;
         this.totalBooking = totalBooking;
     }
 }

@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DashboardPaymentPostDto {
 
-    private Long postID;
+    private String title;
     private Long price;
 
-    public DashboardPaymentPostDto(Long postID, Long price) {
-        this.postID = postID;
+    public DashboardPaymentPostDto(String title, Long price) {
+        this.title = title;
         this.price = price;
     }
 }
