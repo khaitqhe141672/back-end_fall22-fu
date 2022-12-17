@@ -14,12 +14,18 @@ public class PostTopRateDto {
     private String imageUrl;
     private Double avgRate;
     private String title;
+    private float price;
+    private String address;
 
-    public PostTopRateDto(Long id, String imageUrl, Double avgRate, String title) {
+    public PostTopRateDto(Long id, String imageUrl,
+                          Double avgRate, String title,
+                          float price, String address) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.avgRate = avgRate;
         this.title = title;
+        this.price = price;
+        this.address = address;
     }
 
     public PostTopRateDto(Long id, String imageUrl, String title) {

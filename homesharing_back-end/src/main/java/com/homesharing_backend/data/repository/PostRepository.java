@@ -25,15 +25,23 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Boolean existsPostById(Long id);
 
-    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point) , p.title) FROM Post p" +
-            " left join PostImage pi on p.id = pi.post.id left join BookingDetail bd" +
-            " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id WHERE p.status = 1 AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) " +
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point)," +
+            " p.title, p.price, pd.address) FROM Post p" +
+            " left join PostImage pi on p.id = pi.post.id " +
+            "left join PostDetail pd on p.id = pd.post.id " +
+            "left join BookingDetail bd on p.id = bd.post.id " +
+            "left join Rate r on r.bookingDetail.id=bd.id " +
+            "WHERE p.status = 1 AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) " +
             "group by p.id order by avg(r.point) desc ")
     Page<PostTopRateDto> getTopPostByRate(PageRequest pageRequest);
 
-    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point) , p.title) FROM Post p" +
-            " left join PostImage pi on p.id = pi.post.id left join BookingDetail bd" +
-            " on p.id = bd.post.id left join Rate r on r.bookingDetail.id=bd.id WHERE p.id =:postID AND ((p.statusReport IS NULL) OR (p.statusReport = 1))" +
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point)," +
+            " p.title, p.price, pd.address) FROM Post p" +
+            " left join PostImage pi on p.id = pi.post.id " +
+            "left join PostDetail pd on p.id = pd.post.id " +
+            "left join BookingDetail bd on p.id = bd.post.id " +
+            "left join Rate r on r.bookingDetail.id=bd.id " +
+            "WHERE p.id =:postID AND ((p.statusReport IS NULL) OR (p.statusReport = 1))" +
             " group by p.id order by avg(r.point) desc")
     PostTopRateDto getPostDetailByPostID(@Param("postID") Long postID);
 
@@ -140,8 +148,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "group by p.id")
     List<Long> getAllSearchByDate(@Param("date") Date date);
 
-    @Query(value = "SELECT count(*) FROM post WHERE MONTH(create_date)= :createDate", nativeQuery = true)
-    int getAllMonth(@Param("createDate") int createDate);
+    @Query(value = "SELECT count(*) FROM post WHERE MONTH(create_date)= :createDate and host_id= :hostID", nativeQuery = true)
+    int getAllMonth(@Param("createDate") int createDate, @Param("hostID") Long hostID);
 
     @Query(value = "SELECT count(*) FROM post p where p.status= :status", nativeQuery = true)
     int totalPostActive(@Param("status") int status);
@@ -152,11 +160,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT count(*) FROM post ", nativeQuery = true)
     int totalPost();
 
-
     int countPostByHost_IdAndStatus(Long hostID, int status);
 
     int countPostByHost_Id(Long hostID);
 
     @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND status!= 2;", nativeQuery = true)
     int totalPostDeActive(@Param("hostID") Long hostID);
+
+
 }

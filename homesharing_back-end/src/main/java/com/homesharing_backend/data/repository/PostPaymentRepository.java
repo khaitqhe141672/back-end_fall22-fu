@@ -1,5 +1,6 @@
 package com.homesharing_backend.data.repository;
 
+import com.homesharing_backend.data.dto.DashboardPaymentPostDto;
 import com.homesharing_backend.data.dto.DashboardPostDto;
 import com.homesharing_backend.data.dto.DashboardPostPaymentDto;
 import com.homesharing_backend.data.entity.PostPayment;
@@ -37,4 +38,11 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
             "group by py.id ")
     List<DashboardPostPaymentDto> getAllPostPaymentByHost(@Param("hostID") Long hostID);
 
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.DashboardPaymentPostDto(pp.post.id, sum(pg.price)) FROM PostPayment pp " +
+            "LEFT JOIN Post p ON pp.post.id = p.id " +
+            "LEFT JOIN PaymentPackage pg ON pp.paymentPackage.id = pg.id " +
+            "WHERE p.host.id= :hostID " +
+            "GROUP BY pp.post.id")
+    List<DashboardPaymentPostDto> getAllPaymentByHost(@Param("hostID") Long hostID);
 }
