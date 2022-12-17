@@ -1,9 +1,6 @@
 package com.homesharing_backend.service.impl;
 
-import com.homesharing_backend.data.dto.DashboardBookingDto;
-import com.homesharing_backend.data.dto.DashboardDto;
-import com.homesharing_backend.data.dto.DashboardPostDto;
-import com.homesharing_backend.data.dto.DashboardPostPaymentDto;
+import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.Host;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
@@ -114,12 +111,27 @@ public class DashboardServiceImpl implements DashboardService {
 
             List<DashboardBookingDto> bookingDtoList = bookingDetailRepository.totalBookingByHost(host.getId(), 4);
 
+            List<DashboardPostDto> dashboardPostDtoList = new ArrayList<>();
+
+            for (int i = 1; i < 13; i++) {
+                int month = postRepository.getAllMonth(i, host.getId());
+                DashboardPostDto dto = DashboardPostDto.builder()
+                        .month(i)
+                        .totalPost(month)
+                        .build();
+                dashboardPostDtoList.add(dto);
+            }
+
+            List<DashboardPaymentPostDto> totalPriceByPost = postPaymentRepository.getAllPaymentByHost(host.getId());
+
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                 {
                     put("totalPost", totalPost);
                     put("post", dtoList);
                     put("totalPostPayment", list);
                     put("totalBooking", bookingDtoList);
+                    put("totalPostByMonth", dashboardPostDtoList);
+                    put("totalPriceByPost", totalPriceByPost);
                 }
             }));
         }

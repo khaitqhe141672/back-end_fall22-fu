@@ -109,7 +109,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<JwtResponse> getTopPostByRate() {
 
-        Page<PostTopRateDto> postTopRateDtos = postRepository.getTopPostByRate(PageRequest.of(0, 7));
+        Page<PostTopRateDto> postTopRateDtos = postRepository.getTopPostByRate(PageRequest.of(0, 8));
 
         if (postTopRateDtos.isEmpty()) {
             throw new NotFoundException("không có dữ liệu");
@@ -121,11 +121,18 @@ public class PostServiceImpl implements PostService {
                 HomeDto dto = HomeDto.builder()
                         .postID(p.getId())
                         .title(p.getTitle())
-                        .star(p.getAvgRate())
+                        .price(p.getPrice())
+                        .address(p.getAddress())
                         .build();
 
                 if (image.size() > 0) {
                     dto.setUrlImage(image.get(0).getImageUrl());
+                }
+
+                if (Objects.isNull(p.getAvgRate())) {
+                    dto.setStar(0.0);
+                } else {
+                    dto.setStar(p.getAvgRate());
                 }
                 homeDtoList.add(dto);
             });
