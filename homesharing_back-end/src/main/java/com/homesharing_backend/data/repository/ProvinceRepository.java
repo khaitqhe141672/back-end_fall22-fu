@@ -20,4 +20,7 @@ public interface ProvinceRepository extends JpaRepository<Province, Long> {
 
     @Query(value = "SELECT * FROM Province p WHERE p.name LIKE %:name% LIMIT 5", nativeQuery = true)
     List<Province> getSearchNameProvince(@Param("name") String name);
+
+    @Query(value = "SELECT * FROM Province p WHERE p.name LIKE %:name%", nativeQuery = true)
+    List<Province> searchAllProvinceByName(@Param("name") String name);
 }
