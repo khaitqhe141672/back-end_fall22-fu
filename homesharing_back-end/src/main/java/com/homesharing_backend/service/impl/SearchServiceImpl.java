@@ -333,7 +333,7 @@ public class SearchServiceImpl implements SearchService {
 
                     int totalSearch = price.size();
 
-                    int totalPage = (totalSearch % 0 == 0) ? totalSearch / 9 : totalSearch / 9 + 1;
+                    int totalPage = (totalSearch % 9 == 0) ? totalSearch / 9 : totalSearch / 9 + 1;
 
                     List<SearchDto> finalSort = price.stream()
                             .skip(page)
