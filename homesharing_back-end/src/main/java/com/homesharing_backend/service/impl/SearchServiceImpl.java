@@ -333,11 +333,11 @@ public class SearchServiceImpl implements SearchService {
 
                     int totalSearch = price.size();
 
-                    int totalPage = (totalSearch % 10 == 0) ? totalSearch / 10 : totalSearch / 10 + 1;
+                    int totalPage = (totalSearch % 0 == 0) ? totalSearch / 9 : totalSearch / 9 + 1;
 
                     List<SearchDto> finalSort = price.stream()
                             .skip(page)
-                            .limit(10)
+                            .limit(9)
                             .collect(Collectors.toList());
 
                     List<ViewSearchDto> viewSearchDtoList = new ArrayList<>();
