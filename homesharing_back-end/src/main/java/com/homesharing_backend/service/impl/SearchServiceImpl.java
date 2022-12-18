@@ -323,17 +323,21 @@ public class SearchServiceImpl implements SearchService {
         int size = 10;
         int page = indexPage - 1;
 
-        Province province = provinceRepository.getProvincesByName(" " + searchRequest.getSearchText());
+        List<Province> province = provinceRepository.searchAllProvinceByName(" " + searchRequest.getSearchText());
 
         if (Objects.isNull(province)) {
             throw new NotFoundException("khong co tinh thanh nay");
         } else {
-            List<District> list = districtRepository.findDistrictByProvince_Id(province.getId());
+
+            //List<District> list = districtRepository.findDistrictByProvince_Id(province.getId());
 
             List<Long> districtID = new ArrayList<>();
-
-            list.forEach(l -> {
-                districtID.add(l.getId());
+            
+            province.forEach(p->{
+                List<District> list = districtRepository.findDistrictByProvince_Id(p.getId());
+                list.forEach(l -> {
+                    districtID.add(l.getId());
+                });
             });
 
             Page<SearchDto> searchDtoPage =
