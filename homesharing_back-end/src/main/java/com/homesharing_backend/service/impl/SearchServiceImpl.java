@@ -44,7 +44,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseEntity<ResponseObject> searchByTitlePostOrLocation(SearchRequest searchRequest, int indexPage) {
 
-        int size = 10;
+        int size = 9;
         int page = indexPage - 1;
 
         if (Objects.isNull(searchRequest)) {
@@ -399,7 +399,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseEntity<ResponseObject> searchByProvince(SearchRequest searchRequest, int indexPage) {
 
-        int size = 10;
+        int size = 9;
         int page = indexPage - 1;
 
         List<Province> province = provinceRepository.searchAllProvinceByName(searchRequest.getSearchText());
