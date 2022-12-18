@@ -85,7 +85,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseEntity<ResponseObject> searchFilter(SearchFilterRequest searchFilterRequest, int indexPage) {
 
-        int size = 10;
+        int size = 9;
         int page = indexPage - 1;
 
         if (searchFilterRequest.getTypeSearch() == 1) {
