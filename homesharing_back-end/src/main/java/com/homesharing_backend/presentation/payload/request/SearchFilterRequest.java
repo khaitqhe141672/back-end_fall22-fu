@@ -22,4 +22,6 @@ public class SearchFilterRequest {
     private int statusSortPrice;
     private int numberOfGuest;
     private Long provinceID;
+    private String textSearch;
+    private int typeSearch;
 }
