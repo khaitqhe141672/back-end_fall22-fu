@@ -10,9 +10,12 @@ import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.exception.UpdateDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
+import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.RateRequest;
 import com.homesharing_backend.service.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,18 +47,21 @@ public class RateServiceImpl implements RateService {
     private LikesDislikesRepository likesDislikesRepository;
 
     @Override
-    public ResponseEntity<JwtResponse> getAllRate(Long postID) {
+    public ResponseEntity<ResponseObject> getAllRate(Long postID, int indexPage) {
+
+        int size = 5;
+        int page = indexPage - 1;
 
         if (!postRepository.existsPostById(postID)) {
             throw new NotFoundException("post_id khong ton tai trong rate");
         } else {
-            List<Rate> rates = rateRepository.findAllByBookingDetail_Post_IdAndStatus(postID, 1);
+            Page<Rate> rates = rateRepository.findAllByBookingDetail_Post_IdAndStatus(postID, 1, PageRequest.of(page, size));
 
             List<RateDto> rateDtos = new ArrayList<>();
 
             rates.forEach(r -> {
 
-                int countLike = likesDislikesRepository. countLikesDislikesByRate_IdAndType(r.getId(), 1);
+                int countLike = likesDislikesRepository.countLikesDislikesByRate_IdAndType(r.getId(), 1);
                 int countDislike = likesDislikesRepository.countLikesDislikesByRate_IdAndType(r.getId(), 2);
 
                 RateDto dto = RateDto.builder()
@@ -73,7 +80,12 @@ public class RateServiceImpl implements RateService {
                 rateDtos.add(dto);
             });
 
-            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), rateDtos));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("rate by post", new HashMap<>() {
+                {
+                    put("listRate", rateDtos);
+                    put("sizePage", rates.getTotalPages());
+                }
+            }));
         }
     }
 
