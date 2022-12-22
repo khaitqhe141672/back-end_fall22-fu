@@ -127,6 +127,12 @@ public class ReportServiceImpl implements ReportService {
 
                 ReportPost saveReportPost = reportPostRepository.save(reportRate);
 
+                if (reportPostRepository.countReportPostByPost_IdAndStatus(post.getId(), 1) == 3) {
+                    post.setStatusReport(2);
+                    post.setStatus(3);
+                    postRepository.save(post);
+                }
+
                 if (Objects.isNull(saveReportPost)) {
                     throw new SaveDataException("report post khong thanh cong");
                 } else {

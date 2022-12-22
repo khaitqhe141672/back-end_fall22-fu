@@ -167,5 +167,27 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND status!= 2;", nativeQuery = true)
     int totalPostDeActive(@Param("hostID") Long hostID);
 
+    @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
+            " pi.imageUrl, v.description, avg(r.point), p.host.typeAccount) FROM Post p " +
+            "LEFT JOIN PostDetail pd on p.id = pd.post.id " +
+            "LEFT join PostVoucher pv on p.id = pv.post.id " +
+            "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
+            "LEFT JOIN PostImage pi on p.id = pi.post.id " +
+            "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
+            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE p.title LIKE %:title% " +
+            "AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) AND p.status= 1" +
+            "GROUP BY p.id")
+    List<SearchDto> listSearchPostByTitleFilter(@Param("title") String title);
 
+    @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
+            " pi.imageUrl, v.description, avg(r.point), p.host.typeAccount) FROM Post p " +
+            "LEFT JOIN PostDetail pd on p.id = pd.post.id " +
+            "LEFT join PostVoucher pv on p.id = pv.post.id " +
+            "LEFT JOIN Voucher v on pv.voucher.id = v.id " +
+            "LEFT JOIN PostImage pi on p.id = pi.post.id " +
+            "LEFT JOIN BookingDetail bd on p.id = bd.post.id " +
+            "LEFT JOIN Rate r on bd.id = r.bookingDetail.id WHERE pd.district.id IN :districtID " +
+            "AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) AND p.status= 1" +
+            "GROUP BY p.id")
+    List<SearchDto> listSearchPostByProvincesFilter(@Param("districtID") List<Long> districtID);
 }

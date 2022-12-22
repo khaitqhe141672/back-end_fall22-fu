@@ -12,7 +12,9 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.PostRequest;
+import com.homesharing_backend.service.PaymentService;
 import com.homesharing_backend.service.PostService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -77,8 +79,18 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private HistoryPostPaymentRepository historyPostPaymentRepository;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public ResponseEntity<JwtResponse> getInterestingPlaceByPost() {
+
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         List<Post> postList = postRepository.getPostTop();
 

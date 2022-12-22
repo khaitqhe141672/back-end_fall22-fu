@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.JavaMail;
 import com.homesharing_backend.util.SecurityUtils;
 import org.modelmapper.ModelMapper;
@@ -176,6 +178,8 @@ public class AuthServiceImpl implements AuthService {
                     "\nTrân trọng,\n" +
                     "\nĐội ngũ HomeSharing.";
             new JavaMail().sentEmail(toEmail, subject, text);
+
+
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("User registered successfully!", new HashMap<>() {
                 {
                     put("user", userDto);

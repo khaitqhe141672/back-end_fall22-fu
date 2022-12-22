@@ -28,4 +28,5 @@ public interface PostService {
     public ResponseEntity<ResponseObject> getPostByProvinceID(Long provinceID, int indexPage);
 
     public ResponseEntity<ResponseObject> getPostByProvinceIDPagination(Long provinceID, int indexPage);
+
 }
