@@ -167,4 +167,30 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), status));
     }
+
+    @Override
+    public ResponseEntity<MessageResponse> checkTimePostPayment() {
+
+        List<PostPayment> postPayments = postPaymentRepository.findAll();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDate localDate = localDateTime.toLocalDate();
+
+        Date dateNow = Date.valueOf(localDate);
+
+        postPayments.forEach(p -> {
+            if (dateNow.after(p.getEndDate())) {
+                p.setStatus(2);
+
+                Post post = postRepository.getPostById(p.getId());
+                post.setStatus(4);
+
+                postPaymentRepository.save(p);
+                postRepository.save(post);
+            }
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Add voucher thanh cong"));
+
+    }
 }

@@ -120,4 +120,23 @@ public class PostVoucherServiceImpl implements PostVoucherService {
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "Add voucher thanh cong"));
         }
     }
+
+    @Override
+    public ResponseEntity<MessageResponse> checkTimePostVoucher() {
+
+        List<PostVoucher> postVouchers = postVoucherRepository.findAll();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDate localDate = localDateTime.toLocalDate();
+
+        Date dateNow = Date.valueOf(localDate);
+
+        postVouchers.forEach(v -> {
+            if (dateNow.after(v.getEndDate())) {
+                v.setStatus(2);
+                postVoucherRepository.save(v);
+            }
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK.value(), "CheckTime post_voucher thanh cong"));
+    }
 }

@@ -14,4 +14,6 @@ public interface PostVoucherService {
     public ResponseEntity<JwtResponse> getPostVoucherByPostID(Long postID);
 
     public ResponseEntity<MessageResponse> insertPostVoucher(Long postID, PostVoucherRequest postVoucherRequest);
+
+    public ResponseEntity<MessageResponse> checkTimePostVoucher();
 }
