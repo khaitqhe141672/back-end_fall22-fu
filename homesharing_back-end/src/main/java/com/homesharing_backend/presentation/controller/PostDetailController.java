@@ -27,8 +27,9 @@ public class PostDetailController {
     }
 
     @GetMapping("/rate-post")
-    public ResponseEntity<?> getAllRateByPostID(@RequestParam("post_id") Long postID) {
-        return rateService.getAllRate(postID);
+    public ResponseEntity<?> getAllRateByPostID(@RequestParam("post_id") Long postID,
+                                                @RequestParam("index-page") int indexPage) {
+        return rateService.getAllRate(postID, indexPage);
     }
 
     @GetMapping("/get-all-voucher")
