@@ -330,11 +330,16 @@ public class SearchServiceImpl implements SearchService {
             throw new NotFoundException("khong co data search");
         } else {
 
-            int totalSearch = price.size();
+            Set resultSearchFilter = price.stream()
+                    .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(SearchDto::getPostID))));
+
+            List<SearchDto> temp = resultSearchFilter.stream().toList();
+
+            int totalSearch = temp.size();
 
             int totalPage = (totalSearch % 9 == 0) ? totalSearch / 9 : totalSearch / 9 + 1;
 
-            List<SearchDto> finalSort = price.stream()
+            List<SearchDto> finalSort = temp.stream()
                     .skip(page)
                     .limit(9)
                     .collect(Collectors.toList());
