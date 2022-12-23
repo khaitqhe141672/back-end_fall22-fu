@@ -8,8 +8,6 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManagePostService;
-import com.homesharing_backend.service.PaymentService;
-import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,17 +51,8 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Autowired
     private BookingDetailRepository bookingDetailRepository;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     @Override
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;
@@ -102,9 +91,6 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Override
     public ResponseEntity<MessageResponse> checkPaymentPostByAdmin() {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         List<Post> postList = postRepository.findAll();
 
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -129,9 +115,6 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Override
     public ResponseEntity<ResponseObject> getAllPostByHost(int indexPage) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -186,9 +169,6 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Override
     public ResponseEntity<ResponseObject> getAllReportPostByHost(int indexPage, Long postID) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         int size = 5;
         int page = indexPage - 1;
 
@@ -208,9 +188,6 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Override
     public ResponseEntity<ResponseObject> getAllBookingByHost(int indexPage, int status) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -274,9 +251,6 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Override
     public ResponseEntity<ResponseObject> getTotalBookingStatusByHost() {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         int totalCurrentBooking = bookingRepository.countBookingByStatus(3);
         int totalComingBooking = bookingRepository.countBookingByStatus(2);
         int totalConfirmBooking = bookingRepository.countBookingByStatus(1);
@@ -292,9 +266,6 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Override
     public ResponseEntity<ResponseObject> getCurrentBooking(int indexPage) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -357,9 +328,6 @@ public class ManagePostServiceImpl implements ManagePostService {
 
     @Override
     public ResponseEntity<MessageResponse> updateStatusPostByHost(Long postID, int status) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Post post = postRepository.getPostById(postID);
 

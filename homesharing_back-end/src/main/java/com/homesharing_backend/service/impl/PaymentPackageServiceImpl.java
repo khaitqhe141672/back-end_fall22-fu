@@ -5,8 +5,6 @@ import com.homesharing_backend.data.repository.PaymentPackageRepository;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.PaymentPackageRequest;
 import com.homesharing_backend.service.PaymentPackageService;
-import com.homesharing_backend.service.PaymentService;
-import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +19,8 @@ public class PaymentPackageServiceImpl implements PaymentPackageService {
     @Autowired
     private PaymentPackageRepository paymentPackageRepository;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     @Override
     public ResponseEntity<ResponseObject> getAllPaymentPackage() {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         List<PaymentPackage> paymentPackages = paymentPackageRepository.findAll();
 
@@ -44,9 +33,6 @@ public class PaymentPackageServiceImpl implements PaymentPackageService {
 
     @Override
     public ResponseEntity<ResponseObject> insertPaymentPackage(PaymentPackageRequest paymentPackageRequest) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         PaymentPackage paymentPackage = PaymentPackage.builder()
                 .name(paymentPackageRequest.getName())
@@ -65,9 +51,6 @@ public class PaymentPackageServiceImpl implements PaymentPackageService {
     @Override
     public ResponseEntity<ResponseObject> updatePaymentPackage(Long id, PaymentPackageRequest paymentPackageRequest) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(id);
 
         paymentPackage.setDueMonth(paymentPackageRequest.getDueMonth());
@@ -83,9 +66,6 @@ public class PaymentPackageServiceImpl implements PaymentPackageService {
 
     @Override
     public ResponseEntity<ResponseObject> getOnePaymentPackage(Long id) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(id);
 

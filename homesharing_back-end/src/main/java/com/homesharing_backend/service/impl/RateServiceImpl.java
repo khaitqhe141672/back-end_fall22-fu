@@ -12,8 +12,6 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.RateRequest;
-import com.homesharing_backend.service.PaymentService;
-import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.service.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,17 +46,8 @@ public class RateServiceImpl implements RateService {
     @Autowired
     private LikesDislikesRepository likesDislikesRepository;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     @Override
     public ResponseEntity<ResponseObject> getAllRate(Long postID, int indexPage) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         int size = 5;
         int page = indexPage - 1;
@@ -103,9 +92,6 @@ public class RateServiceImpl implements RateService {
     @Override
     public ResponseEntity<MessageResponse> createRateByCustomer(RateRequest rateRequest, Long bookingDetailID) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         BookingDetail bookingDetail = bookingDetailRepository.getBookingDetailById(bookingDetailID);
 
         if (Objects.isNull(bookingDetail)) {
@@ -141,9 +127,6 @@ public class RateServiceImpl implements RateService {
     @Override
     public ResponseEntity<MessageResponse> editRateByCustomer(RateRequest rateRequest, Long rateID) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         Rate rate = rateRepository.getRateById(rateID);
 
         if (Objects.isNull(rate)) {
@@ -173,9 +156,6 @@ public class RateServiceImpl implements RateService {
     /* status = 3 la xoa rate*/
     @Override
     public ResponseEntity<MessageResponse> deleteRateByCustomer(Long rateID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Rate rate = rateRepository.getRateById(rateID);
 

@@ -5,9 +5,7 @@ import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
-import com.homesharing_backend.service.PaymentService;
 import com.homesharing_backend.service.PostDetailService;
-import com.homesharing_backend.service.PostVoucherService;
 import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,20 +40,11 @@ public class PostDetailServiceImpl implements PostDetailService {
     @Autowired
     private BookingDetailRepository bookingDetailRepository;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     /*
         còn voucher, rate bổ sung sau
     */
     @Override
     public ResponseEntity<JwtResponse> getPostDetailByPostID(Long postID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         if (!postRepository.existsPostById(postID)) {
             throw new NotFoundException("Post_ID không tôn tại!");
@@ -176,9 +165,6 @@ public class PostDetailServiceImpl implements PostDetailService {
 
     @Override
     public ResponseEntity<JwtResponse> getRateByPostID(Long postID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         if (postRepository.existsPostById(postID)) {
             throw new NotFoundException("Post_ID không tôn tại!");
