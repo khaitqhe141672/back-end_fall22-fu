@@ -12,6 +12,7 @@ import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.request.PostVoucherRequest;
+import com.homesharing_backend.service.PaymentService;
 import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,17 @@ public class PostVoucherServiceImpl implements PostVoucherService {
     @Autowired
     private VoucherRepository voucherRepository;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public ResponseEntity<JwtResponse> getPostVoucherByPostID(Long postID) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         Post post = postRepository.getPostById(postID);
 
@@ -75,6 +85,9 @@ public class PostVoucherServiceImpl implements PostVoucherService {
 
     @Override
     public ResponseEntity<MessageResponse> insertPostVoucher(Long postID, PostVoucherRequest postVoucherRequest) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         Post post = postRepository.getPostById(postID);
 
@@ -123,6 +136,9 @@ public class PostVoucherServiceImpl implements PostVoucherService {
 
     @Override
     public ResponseEntity<MessageResponse> checkTimePostVoucher() {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         List<PostVoucher> postVouchers = postVoucherRepository.findAll();
 

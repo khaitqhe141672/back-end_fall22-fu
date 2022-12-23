@@ -11,6 +11,7 @@
     <groupId>com</groupId>
     <artifactId>homesharing_back-end</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>homesharing_back-end</name>
     <description>homesharing_back-end</description>
     <properties>
@@ -159,6 +160,21 @@
                         <version>1.3.2</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.homesharing_backend.HomesharingBackEndApplication</mainClass>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
