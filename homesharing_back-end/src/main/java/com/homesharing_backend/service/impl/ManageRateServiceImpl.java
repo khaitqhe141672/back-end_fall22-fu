@@ -12,6 +12,8 @@ import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
 import com.homesharing_backend.service.ManageRateService;
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,8 +48,18 @@ public class ManageRateServiceImpl implements ManageRateService {
     @Autowired
     private ReportTypeRepository reportTypeRepository;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
+    @Autowired
+    private PaymentService paymentService;
+
+
     @Override
     public ResponseEntity<ResponseObject> getAllRateByHost(int indexPage) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;
@@ -86,6 +98,9 @@ public class ManageRateServiceImpl implements ManageRateService {
 
     @Override
     public ResponseEntity<ResponseObject> getAllDetailRateByHost(Long postID, int indexPage) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;
@@ -146,6 +161,10 @@ public class ManageRateServiceImpl implements ManageRateService {
 
     @Override
     public ResponseEntity<MessageResponse> createReportRateByHost(Long rateID, ReportRequest reportRequest) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
+
         Rate rate = rateRepository.getRateById(rateID);
 
         if (Objects.isNull(rate)) {

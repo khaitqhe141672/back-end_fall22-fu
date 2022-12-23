@@ -7,6 +7,8 @@ import com.homesharing_backend.data.repository.HostRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.HistoryPostPaymentService;
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +30,17 @@ public class HistoryPostPaymentServiceImpl implements HistoryPostPaymentService 
     @Autowired
     private HistoryPostPaymentRepository historyPostPaymentRepository;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public ResponseEntity<ResponseObject> getAllHistoryPostPayment(int index, Long postID) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = index - 1;

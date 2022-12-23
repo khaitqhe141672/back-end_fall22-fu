@@ -15,6 +15,8 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManageAccountService;
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,8 +44,17 @@ public class ManageAccountServiceImpl implements ManageAccountService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public ResponseEntity<ResponseObject> viewAccountHost(int indexPage) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         if (Objects.isNull(indexPage)) {
             throw new NotFoundException("Index page null");
@@ -91,6 +102,9 @@ public class ManageAccountServiceImpl implements ManageAccountService {
     @Override
     public ResponseEntity<ResponseObject> viewAccountCustomer(int indexPage) {
 
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
+
         if (Objects.isNull(indexPage)) {
             throw new NotFoundException("Index page null");
         } else {
@@ -136,6 +150,9 @@ public class ManageAccountServiceImpl implements ManageAccountService {
     @Override
     public ResponseEntity<JwtResponse> getOneAccountHostByAdmin(Long hostID) {
 
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
+
         if (Objects.isNull(hostID)) {
             throw new NotFoundException("host_id request param null");
         } else {
@@ -169,6 +186,9 @@ public class ManageAccountServiceImpl implements ManageAccountService {
 
     @Override
     public ResponseEntity<JwtResponse> getOneAccountCustomerByAdmin(Long customerID) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         if (Objects.isNull(customerID)) {
             throw new NotFoundException("host_id request param null");
@@ -205,6 +225,9 @@ public class ManageAccountServiceImpl implements ManageAccountService {
      */
     @Override
     public ResponseEntity<MessageResponse> changeStatus(Long userID, int status) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         User user = userRepository.findUserById(userID);
 
