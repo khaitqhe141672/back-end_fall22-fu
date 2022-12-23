@@ -190,4 +190,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "AND ((p.statusReport IS NULL) OR (p.statusReport = 1)) AND p.status= 1" +
             "GROUP BY p.id")
     List<SearchDto> listSearchPostByProvincesFilter(@Param("districtID") List<Long> districtID);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.PostTopRateDto(p.id, pi.imageUrl, avg(r.point)," +
+            " p.title, p.price, pd.address) FROM Post p" +
+            " left join PostImage pi on p.id = pi.post.id " +
+            "left join PostDetail pd on p.id = pd.post.id " +
+            "left join BookingDetail bd on p.id = bd.post.id " +
+            "left join Rate r on r.bookingDetail.id=bd.id " +
+            "WHERE p.id =:postID " +
+            " group by p.id order by avg(r.point) desc")
+    PostTopRateDto getPostDetailByPostIDByHost(@Param("postID") Long postID);
 }
