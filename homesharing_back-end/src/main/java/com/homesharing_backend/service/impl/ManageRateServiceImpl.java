@@ -97,7 +97,7 @@ public class ManageRateServiceImpl implements ManageRateService {
         if (Objects.isNull(post)) {
             throw new NotFoundException("khong co post lien quan den host_id");
         } else {
-            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostID(post.getId());
+            PostTopRateDto postTopRateDto = postRepository.getPostDetailByPostIDByHost(post.getId());
 
             Page<Rate> ratePage = rateRepository.getRateByBookingDetail_Post_Id(post.getId(), PageRequest.of(page, size));
 
@@ -126,13 +126,19 @@ public class ManageRateServiceImpl implements ManageRateService {
                             .build();
                     dtoList.add(dto);
                 });
+
                 ListDetailRateDto dto = ListDetailRateDto.builder()
                         .postID(post.getId())
                         .title(post.getTitle())
                         .statusPost(post.getStatus())
-                        .avgRate(postTopRateDto.getAvgRate())
                         .detailRateDtoList(dtoList)
                         .build();
+
+                if (Objects.isNull(postTopRateDto.getAvgRate())) {
+                    dto.setAvgRate(0.0);
+                } else {
+                    dto.setAvgRate(postTopRateDto.getAvgRate());
+                }
 
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
                     {
