@@ -121,9 +121,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<JwtResponse> getTopPostByRate() {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         Page<PostTopRateDto> postTopRateDtos = postRepository.getTopPostByRate(PageRequest.of(0, 8));
 
         if (postTopRateDtos.isEmpty()) {
@@ -158,9 +155,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<ResponseObject> createPosting(PostRequest postRequest) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -276,9 +270,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<JwtResponse> getAllPostByHost() {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
         List<PostDto> postList = postRepository.getPostDTO(host.getId());
@@ -292,9 +283,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<ResponseObject> editPost(Long postID, PostRequest postRequest) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Post post = postRepository.getPostById(postID);
 
@@ -464,9 +452,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<ResponseObject> getPostByProvinceID(Long provinceID, int indexPage) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         int size = 10;
         int page = indexPage - 1;
 
@@ -519,9 +504,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<ResponseObject> getPostByProvinceIDPagination(Long provinceID, int indexPage) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;

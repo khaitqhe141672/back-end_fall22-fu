@@ -9,9 +9,7 @@ import com.homesharing_backend.exception.SaveDataException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
-import com.homesharing_backend.service.PaymentService;
 import com.homesharing_backend.service.PostImageService;
-import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +32,6 @@ public class PostImageServiceImpl implements PostImageService {
     @Autowired
     private AWSService awsService;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     @Override
     public ResponseEntity<ResponseObject> getAllPostImageByPostID(Long postID) {
         return null;
@@ -47,9 +39,6 @@ public class PostImageServiceImpl implements PostImageService {
 
     @Override
     public ResponseEntity<MessageResponse> insertPostImage(List<MultipartFile> multipartFile, Long postID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         if (!postRepository.existsPostById(postID)) {
             throw new NotFoundException("Post_id khong ton tai");
@@ -72,9 +61,6 @@ public class PostImageServiceImpl implements PostImageService {
 
     @Override
     public ResponseEntity<MessageResponse> insertPostImageOneByPostID(MultipartFile multipartFile, Long postID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Post post = postRepository.getPostById(postID);
         if (Objects.isNull(post)) {
@@ -101,9 +87,6 @@ public class PostImageServiceImpl implements PostImageService {
 
     @Override
     public ResponseEntity<MessageResponse> editPostImageByPostImageID(Long postID, List<MultipartFile> multipartFile) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         if (!postRepository.existsPostById(postID)) {
             throw new NotFoundException("post-id khong ton tai");
@@ -136,9 +119,6 @@ public class PostImageServiceImpl implements PostImageService {
 
     @Override
     public ResponseEntity<JwtResponse> downloadImage(Long postID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         if (!postRepository.existsPostById(postID)) {
             throw new NotFoundException("post-id khong ton tai");

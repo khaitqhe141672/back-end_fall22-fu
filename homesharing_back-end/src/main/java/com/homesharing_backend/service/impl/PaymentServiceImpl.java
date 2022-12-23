@@ -16,7 +16,6 @@ import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.presentation.payload.request.PaymentRequest;
 import com.homesharing_backend.service.PaymentService;
-import com.homesharing_backend.service.PostVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,12 +45,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private HistoryPostPaymentRepository historyPostPaymentRepository;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     @Override
     public ResponseEntity<ResponseObject> rePayment(Long paymentPackageID) {
         return null;
@@ -59,9 +52,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public ResponseEntity<ResponseObject> createPayment(PaymentRequest paymentRequest) throws UnsupportedEncodingException {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         PaymentPackage paymentPackage = paymentPackageRepository.getPaymentPackageById(paymentRequest.getPaymentPackageID());
 
@@ -134,8 +124,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public ResponseEntity<JwtResponse> paymentResult(Long postID, Long packagePaymentID) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         LocalDateTime localDateTime = LocalDateTime.now();
         LocalDate localDate = localDateTime.toLocalDate();
@@ -182,9 +170,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public ResponseEntity<MessageResponse> checkTimePostPayment() {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         List<PostPayment> postPayments = postPaymentRepository.findAll();
 

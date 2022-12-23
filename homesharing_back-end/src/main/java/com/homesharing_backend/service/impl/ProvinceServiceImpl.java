@@ -7,8 +7,6 @@ import com.homesharing_backend.data.repository.DistrictRepository;
 import com.homesharing_backend.data.repository.ProvinceRepository;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
-import com.homesharing_backend.service.PaymentService;
-import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,17 +26,8 @@ public class ProvinceServiceImpl implements ProvinceService {
     @Autowired
     private DistrictRepository districtRepository;
 
-    @Autowired
-    private PostVoucherService postVoucherService;
-
-    @Autowired
-    private PaymentService paymentService;
-
     @Override
     public ResponseEntity<JwtResponse> getRecommendedPlaces() {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         List<Province> provinceList = provinceRepository.getRecommendedPlacesByProvinces();
 
@@ -64,9 +53,6 @@ public class ProvinceServiceImpl implements ProvinceService {
     @Override
     public ResponseEntity<JwtResponse> getAllProvince() {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         List<Province> provinces = provinceRepository.findAll();
 
         if (provinces.isEmpty()) {
@@ -78,9 +64,6 @@ public class ProvinceServiceImpl implements ProvinceService {
 
     @Override
     public ResponseEntity<JwtResponse> getAllDistrict() {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         List<District> districts = districtRepository.findAll();
 
@@ -94,9 +77,6 @@ public class ProvinceServiceImpl implements ProvinceService {
     @Override
     public ResponseEntity<JwtResponse> getAllDistrictByProvinceID(Long provinceID) {
 
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
-
         List<District> districts = districtRepository.findDistrictByProvince_Id(provinceID);
 
         if (Objects.isNull(districts)) {
@@ -108,9 +88,6 @@ public class ProvinceServiceImpl implements ProvinceService {
 
     @Override
     public ResponseEntity<JwtResponse> getOneProvinceByProvinceID(Long provinceID) {
-
-        paymentService.checkTimePostPayment();
-        postVoucherService.checkTimePostVoucher();
 
         Province province = provinceRepository.getById(provinceID);
 
