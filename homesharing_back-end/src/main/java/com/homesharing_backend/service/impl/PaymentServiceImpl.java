@@ -182,7 +182,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (dateNow.after(p.getEndDate())) {
                 p.setStatus(2);
 
-                Post post = postRepository.getPostById(p.getId());
+                Post post = postRepository.getPostById(p.getPost().getId());
                 post.setStatus(4);
 
                 postPaymentRepository.save(p);
