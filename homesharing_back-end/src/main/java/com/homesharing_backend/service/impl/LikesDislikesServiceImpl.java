@@ -62,7 +62,7 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
                     lk.setType(2);
                 }
 
-                LikesDislikes save = likesDislikesRepository.save(likesDislikes);
+                LikesDislikes save = likesDislikesRepository.save(lk);
 
                 if (Objects.isNull(save)) {
                     throw new SaveDataException("Like or dislike not success");
@@ -76,10 +76,15 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
                     }));
                 }
             } else {
-                if (type == 1) {
-                    likesDislikes.setType(2);
+                if (type == likesDislikes.getType()) {
+                    likesDislikes.setStatus(2);
                 } else {
-                    likesDislikes.setType(1);
+
+                    if(type == 1){
+                        likesDislikes.setType(1);
+                    } else {
+                        likesDislikes.setType(2);
+                    }
                 }
                 LikesDislikes save = likesDislikesRepository.save(likesDislikes);
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
