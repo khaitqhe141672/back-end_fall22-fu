@@ -47,23 +47,41 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
             throw new NotFoundException("Rate_id khong ton tai");
         } else {
 
-            LikesDislikes likesDislikes = LikesDislikes.builder()
-                    .rate(rate)
-                    .customer(customer)
-                    .status(1)
-                    .build();
+            LikesDislikes likesDislikes = likesDislikesRepository.getLikesDislikesByCustomer_Id(rate.getId());
 
-            if (type == 1) {
-                likesDislikes.setType(1);
+            if (Objects.isNull(likesDislikes)) {
+                LikesDislikes lk = LikesDislikes.builder()
+                        .rate(rate)
+                        .customer(customer)
+                        .status(1)
+                        .build();
+
+                if (type == 1) {
+                    lk.setType(1);
+                } else {
+                    lk.setType(2);
+                }
+
+                LikesDislikes save = likesDislikesRepository.save(likesDislikes);
+
+                if (Objects.isNull(save)) {
+                    throw new SaveDataException("Like or dislike not success");
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
+                        {
+                            put("likeDislikeID", save.getId());
+                            put("type", save.getType());
+                            put("status", save.getStatus());
+                        }
+                    }));
+                }
             } else {
-                likesDislikes.setType(2);
-            }
-
-            LikesDislikes save = likesDislikesRepository.save(likesDislikes);
-
-            if (Objects.isNull(save)) {
-                throw new SaveDataException("Like or dislike not success");
-            } else {
+                if (type == 1) {
+                    likesDislikes.setType(2);
+                } else {
+                    likesDislikes.setType(1);
+                }
+                LikesDislikes save = likesDislikesRepository.save(likesDislikes);
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
                     {
                         put("likeDislikeID", save.getId());

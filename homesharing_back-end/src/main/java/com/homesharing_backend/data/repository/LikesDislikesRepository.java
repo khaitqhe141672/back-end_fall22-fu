@@ -16,4 +16,6 @@ public interface LikesDislikesRepository extends JpaRepository<LikesDislikes, Lo
     int countLikesDislikesByRate_IdAndType(Long rateID, int type);
 
     int countLikesDislikesByRate_IdAndTypeAndStatus(Long rateID, int type, int status);
+
+    LikesDislikes getLikesDislikesByCustomer_Id(Long customerID);
 }
