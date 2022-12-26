@@ -1,8 +1,10 @@
 package com.homesharing_backend.service.impl;
 
+import com.homesharing_backend.data.entity.BookingDetail;
 import com.homesharing_backend.data.entity.Customer;
 import com.homesharing_backend.data.entity.LikesDislikes;
 import com.homesharing_backend.data.entity.Rate;
+import com.homesharing_backend.data.repository.BookingDetailRepository;
 import com.homesharing_backend.data.repository.CustomerRepository;
 import com.homesharing_backend.data.repository.LikesDislikesRepository;
 import com.homesharing_backend.data.repository.RateRepository;
@@ -34,10 +36,13 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
     @Autowired
     private LikesDislikesRepository likesDislikesRepository;
 
+    @Autowired
+    private BookingDetailRepository bookingDetailRepository;
+
 
     /* type = 1 like; type = 2 dislike*/
     @Override
-    public ResponseEntity<ResponseObject> createLikeOrDislikeRateByCustomer(Long rateID, int type) {
+    public ResponseEntity<ResponseObject> createLikeOrDislikeRateByCustomer(Long rateID, Long postID, int type) {
 
         Customer customer = customerRepository.getCustomerByUser_Id(SecurityUtils.getPrincipal().getId());
 
@@ -47,26 +52,47 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
             throw new NotFoundException("Rate_id khong ton tai");
         } else {
 
-            LikesDislikes likesDislikes = likesDislikesRepository.getLikesDislikesByCustomer_IdAndRate_Id(customer.getId(), rate.getId());
+            if(bookingDetailRepository.existsByBooking_Customer_IdAndPost_Id(customer.getId(), postID)){
+                LikesDislikes likesDislikes = likesDislikesRepository.getLikesDislikesByCustomer_IdAndRate_Id(customer.getId(), rate.getId());
 
-            if (Objects.isNull(likesDislikes)) {
-                LikesDislikes lk = LikesDislikes.builder()
-                        .rate(rate)
-                        .customer(customer)
-                        .status(1)
-                        .build();
+                if (Objects.isNull(likesDislikes)) {
+                    LikesDislikes lk = LikesDislikes.builder()
+                            .rate(rate)
+                            .customer(customer)
+                            .status(1)
+                            .build();
 
-                if (type == 1) {
-                    lk.setType(1);
+                    if (type == 1) {
+                        lk.setType(1);
+                    } else {
+                        lk.setType(2);
+                    }
+
+                    LikesDislikes save = likesDislikesRepository.save(lk);
+
+                    if (Objects.isNull(save)) {
+                        throw new SaveDataException("Like or dislike not success");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
+                            {
+                                put("likeDislikeID", save.getId());
+                                put("type", save.getType());
+                                put("status", save.getStatus());
+                            }
+                        }));
+                    }
                 } else {
-                    lk.setType(2);
-                }
+                    if (type == likesDislikes.getType()) {
+                        likesDislikes.setStatus(2);
+                    } else {
 
-                LikesDislikes save = likesDislikesRepository.save(lk);
-
-                if (Objects.isNull(save)) {
-                    throw new SaveDataException("Like or dislike not success");
-                } else {
+                        if(type == 1){
+                            likesDislikes.setType(1);
+                        } else {
+                            likesDislikes.setType(2);
+                        }
+                    }
+                    LikesDislikes save = likesDislikesRepository.save(likesDislikes);
                     return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
                         {
                             put("likeDislikeID", save.getId());
@@ -76,22 +102,9 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
                     }));
                 }
             } else {
-                if (type == likesDislikes.getType()) {
-                    likesDislikes.setStatus(2);
-                } else {
-
-                    if(type == 1){
-                        likesDislikes.setType(1);
-                    } else {
-                        likesDislikes.setType(2);
-                    }
-                }
-                LikesDislikes save = likesDislikesRepository.save(likesDislikes);
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike success", new HashMap<>() {
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Like or dislike error", new HashMap<>() {
                     {
-                        put("likeDislikeID", save.getId());
-                        put("type", save.getType());
-                        put("status", save.getStatus());
+                        put("mess", "Customer_id không có quyền");
                     }
                 }));
             }

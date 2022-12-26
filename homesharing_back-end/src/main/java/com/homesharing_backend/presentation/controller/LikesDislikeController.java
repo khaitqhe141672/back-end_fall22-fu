@@ -17,8 +17,9 @@ public class LikesDislikeController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public ResponseEntity<?> createLikeOrDislikeRateByCustomer(@RequestParam("rate-id") Long rateID,
+                                                               @RequestParam("post-id") Long postID,
                                                                @RequestParam("type") int type) {
-        return likesDislikesService.createLikeOrDislikeRateByCustomer(rateID, type);
+        return likesDislikesService.createLikeOrDislikeRateByCustomer(rateID, postID, type);
     }
 
     @PutMapping("/edit")

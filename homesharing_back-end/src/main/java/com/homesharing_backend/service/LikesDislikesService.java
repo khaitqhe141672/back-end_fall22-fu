@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface LikesDislikesService {
 
-    public ResponseEntity<ResponseObject> createLikeOrDislikeRateByCustomer(Long rateID, int type);
+    public ResponseEntity<ResponseObject> createLikeOrDislikeRateByCustomer(Long rateID, Long postID, int type);
 
     public ResponseEntity<ResponseObject> editLikeOrDislikeRateByCustomer(Long likeOrDislikeID, int type);
 

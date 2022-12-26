@@ -34,4 +34,6 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
             "left join Post p on bd.post.id = p.id where p.host.id= :hostID and b.status= :status \n" +
             "group by p.id")
     List<DashboardBookingDto> totalBookingByHost(@Param("hostID") Long hostID, @Param("status") int status);
+
+    Boolean existsByBooking_Customer_IdAndPost_Id(Long customerID, Long postID);
 }
