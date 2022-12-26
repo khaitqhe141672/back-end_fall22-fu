@@ -6,6 +6,8 @@ import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.DashboardService;
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +38,17 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     private BookingDetailRepository bookingDetailRepository;
 
+    @Autowired
+    private PostVoucherService postVoucherService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public ResponseEntity<ResponseObject> dashboardAdmin() {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int totalAccount = userRepository.totalAccount();
         int totalCustomer = customerRepository.totalCustomer();
@@ -83,6 +94,9 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public ResponseEntity<ResponseObject> dashboardHost() {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 

@@ -47,7 +47,7 @@ public class LikesDislikesServiceImpl implements LikesDislikesService {
             throw new NotFoundException("Rate_id khong ton tai");
         } else {
 
-            LikesDislikes likesDislikes = likesDislikesRepository.getLikesDislikesByCustomer_Id(rate.getId());
+            LikesDislikes likesDislikes = likesDislikesRepository.getLikesDislikesByCustomer_IdAndRate_Id(customer.getId(), rate.getId());
 
             if (Objects.isNull(likesDislikes)) {
                 LikesDislikes lk = LikesDislikes.builder()
