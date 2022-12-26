@@ -156,6 +156,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<ResponseObject> createPosting(PostRequest postRequest) {
 
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
+
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
         LocalDateTime localDateTime = LocalDateTime.now();
