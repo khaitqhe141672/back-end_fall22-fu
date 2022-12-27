@@ -5,6 +5,7 @@ import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
 import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.exception.SaveDataException;
+import com.homesharing_backend.exception.SendMailException;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
@@ -12,6 +13,7 @@ import com.homesharing_backend.presentation.payload.request.ComplaintRequest;
 import com.homesharing_backend.presentation.payload.request.ReportRequest;
 import com.homesharing_backend.presentation.payload.request.UpdateReportPostRequest;
 import com.homesharing_backend.service.ReportService;
+import com.homesharing_backend.util.JavaMail;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -131,6 +133,20 @@ public class ReportServiceImpl implements ReportService {
                     post.setStatusReport(2);
                     post.setStatus(3);
                     postRepository.save(post);
+                    String toEmail = post.getHost().getUser().getEmail();
+                    String subject = "Thông báo tạm thời ẩn bài đăng";
+                    String text = "Kính gửi anh/chị " + post.getHost().getUser().getUserDetail().getFullName() + ",\n" +
+                            "Home Sharing trân trọng thông báo về tình trạng bài đăng '" + post.getTitle() + "' đã bị khách hàng" +
+                            " báo cáo 3 lần về chất lượng và dịch vụ tại homestay. \n" +
+                            "Hệ thông chúng tôi đang tạm thời ẩn bài, bạn có thể truy cập vào hệ thống để thực hiện việc" +
+                            " khiếu nại. Chúng tôi sẽ xem xét và xử lý.\n\n" +
+                            "Trân trạng\n\n" +
+                            "Đội ngũ Home Sharing." ;
+                    try {
+                        new JavaMail().sentEmail(toEmail, subject, text);
+                    } catch (Exception e) {
+                        throw new SendMailException("Không gửi được email");
+                    }
                 }
 
                 if (Objects.isNull(saveReportPost)) {
