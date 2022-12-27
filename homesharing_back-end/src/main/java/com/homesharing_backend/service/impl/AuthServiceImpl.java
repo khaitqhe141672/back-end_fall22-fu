@@ -4,10 +4,7 @@ import com.homesharing_backend.data.dto.LoginDto;
 import com.homesharing_backend.data.dto.UserDto;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
-import com.homesharing_backend.exception.AuthException;
-import com.homesharing_backend.exception.BadRequestAlertException;
-import com.homesharing_backend.exception.ConflictException;
-import com.homesharing_backend.exception.NotFoundException;
+import com.homesharing_backend.exception.*;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
@@ -177,7 +174,11 @@ public class AuthServiceImpl implements AuthService {
                     "http://localhost:4200/auth/confirm-account?otp=" + otp + "\n" +
                     "\nTrân trọng,\n" +
                     "\nĐội ngũ HomeSharing.";
-            new JavaMail().sentEmail(toEmail, subject, text);
+            try {
+                new JavaMail().sentEmail(toEmail, subject, text);
+            } catch (Exception e) {
+                throw new SendMailException("Không gửi được email");
+            }
 
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("User registered successfully!", new HashMap<>() {
@@ -423,7 +424,11 @@ public class AuthServiceImpl implements AuthService {
                     "\nĐội ngũ HomeSharing.";
             user.setCodeActive(resetPassword);
             userRepository.save(user);
-            new JavaMail().sentEmail(toEmail, subject, text);
+            try {
+                new JavaMail().sentEmail(toEmail, subject, text);
+            } catch (Exception e) {
+                throw new SendMailException("Không gửi được email");
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "Reset-password success check mail"));
         }
     }

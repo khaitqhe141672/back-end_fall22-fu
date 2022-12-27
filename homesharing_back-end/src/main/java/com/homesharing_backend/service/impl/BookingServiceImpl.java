@@ -3,10 +3,7 @@ package com.homesharing_backend.service.impl;
 import com.homesharing_backend.data.dto.*;
 import com.homesharing_backend.data.entity.*;
 import com.homesharing_backend.data.repository.*;
-import com.homesharing_backend.exception.DateException;
-import com.homesharing_backend.exception.NotFoundException;
-import com.homesharing_backend.exception.SaveDataException;
-import com.homesharing_backend.exception.UpdateDataException;
+import com.homesharing_backend.exception.*;
 import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
@@ -342,8 +339,12 @@ public class BookingServiceImpl implements BookingService {
             text += "\n Trân trọng,\n\n" +
                     "Đội ngũ Home Sharing.";
 
-            new JavaMail().sentEmail(toEmail, subject, text);
             Booking b = bookingRepository.save(booking);
+            try {
+                new JavaMail().sentEmail(toEmail, subject, text);
+            } catch (Exception e) {
+                throw new SendMailException("Không gửi được email");
+            }
 
             if (Objects.isNull(b)) {
                 throw new UpdateDataException("Confirm booking not success");

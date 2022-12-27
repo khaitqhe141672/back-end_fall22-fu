@@ -50,4 +50,9 @@ public class CustomExceptionHandler {
     public ExceptionResponse handlerAuthException(AuthException ex, WebRequest req) {
         return new ExceptionResponse(11, ex.getMessage());
     }
+
+    @ExceptionHandler(SendMailException.class)
+    public ExceptionResponse handlerSendMailException(SendMailException ex, WebRequest req) {
+        return new ExceptionResponse(000, ex.getMessage());
+    }
 }

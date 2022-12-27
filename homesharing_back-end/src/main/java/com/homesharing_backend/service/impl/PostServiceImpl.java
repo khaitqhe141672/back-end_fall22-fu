@@ -121,6 +121,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<JwtResponse> getTopPostByRate() {
 
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
+
         Page<PostTopRateDto> postTopRateDtos = postRepository.getTopPostByRate(PageRequest.of(0, 8));
 
         if (postTopRateDtos.isEmpty()) {
