@@ -21,4 +21,6 @@ public class ReportDto {
     private Long reportTypeID;
     private String nameReportType;
     private int status;
+    private String descriptionRate;
+    private int pointRate;
 }
