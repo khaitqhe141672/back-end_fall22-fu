@@ -164,7 +164,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     int countPostByHost_Id(Long hostID);
 
-    @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND status!= 2;", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM demo.post where host_id= :hostID AND status!= 1;", nativeQuery = true)
     int totalPostDeActive(@Param("hostID") Long hostID);
 
     @Query("SELECT new com.homesharing_backend.data.dto.SearchDto(p.id, p.title, pd.address, p.price," +
