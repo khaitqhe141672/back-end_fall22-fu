@@ -28,4 +28,5 @@ public class HistoryHandleReportPostDetail {
 
     @Column(name = "status_history")
     private int statusHistory;
+
 }

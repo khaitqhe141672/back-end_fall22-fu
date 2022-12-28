@@ -29,24 +29,24 @@ public class ProvinceServiceImpl implements ProvinceService {
     @Override
     public ResponseEntity<JwtResponse> getRecommendedPlaces() {
 
-        List<Province> provinceList = provinceRepository.getRecommendedPlacesByProvinces();
+        List<ProvinceDto> provinceList = provinceRepository.getTopProvince();
 
         if (provinceList.isEmpty()) {
             throw new NotFoundException("không có dữ liệu");
         } else {
+//
+//            List<ProvinceDto> dtoList = new ArrayList<>();
+//
+//            provinceList.forEach(p -> {
+//                ProvinceDto dto = ProvinceDto.builder()
+//                        .provinceID(p.getId())
+//                        .provinceName(p.getName())
+//                        .imageUrl(p.getImageUrl())
+//                        .build();
+//                dtoList.add(dto);
+//            });
 
-            List<ProvinceDto> dtoList = new ArrayList<>();
-
-            provinceList.forEach(p -> {
-                ProvinceDto dto = ProvinceDto.builder()
-                        .provinceID(p.getId())
-                        .provinceName(p.getName())
-                        .imageUrl(p.getImageUrl())
-                        .build();
-                dtoList.add(dto);
-            });
-
-            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), dtoList));
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), provinceList));
         }
     }
 

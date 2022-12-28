@@ -1,5 +1,6 @@
 package com.homesharing_backend.data.repository;
 
+import com.homesharing_backend.data.dto.ProvinceDto;
 import com.homesharing_backend.data.entity.Province;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,10 @@ public interface ProvinceRepository extends JpaRepository<Province, Long> {
 
     @Query(value = "SELECT * FROM Province p WHERE p.name LIKE %:name%", nativeQuery = true)
     List<Province> searchAllProvinceByName(@Param("name") String name);
+
+    @Query(value = "SELECT new com.homesharing_backend.data.dto.ProvinceDto( pr.id, pr.name, pr.imageUrl) FROM Province pr \n" +
+            "left join District d on pr.id = d.province.id \n" +
+            "left join PostDetail pd on d.id = pd.district.id \n" +
+            "group by pr.id order by count(pd.id) desc")
+    List<ProvinceDto> getTopProvince();
 }

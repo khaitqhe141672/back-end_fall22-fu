@@ -28,4 +28,7 @@ public class HistoryHandleReportPost {
     @Column(name = "status_post")
     private int statusPost;
 
+    @Column(name = "status_complaint")
+    private int statusComplaint = 0;
+
 }
