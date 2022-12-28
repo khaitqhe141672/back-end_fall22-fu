@@ -693,6 +693,7 @@ public class ReportServiceImpl implements ReportService {
                 if(h.getStatusComplaint() == 0){
                     dto.setComplaintStatus(0);
                 } else {
+                    dto.setComplaintStatus(h.getStatusComplaint());
                     ComplaintPost complaintPost = complaintPostRepository.getComplaintPostByHistoryHandleReportPost_Id(h.getId());
                     dto.setDescription(complaintPost.getDescription());
                 }
