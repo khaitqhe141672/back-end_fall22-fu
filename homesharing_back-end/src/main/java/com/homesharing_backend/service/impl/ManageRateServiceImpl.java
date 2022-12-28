@@ -132,6 +132,7 @@ public class ManageRateServiceImpl implements ManageRateService {
                         dto.setStatusReportRate(1);
                     } else {
                         dto.setDescriptionReport(reportPost.getDescription());
+                        dto.setReportTypeName(reportPost.getReportType().getName());
                         dto.setStatusReportRate(0);
                     }
 

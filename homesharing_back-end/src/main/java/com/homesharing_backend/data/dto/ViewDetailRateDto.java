@@ -28,4 +28,5 @@ public class ViewDetailRateDto {
     private int statusRate;
     private String descriptionReport;
     private int statusReportRate;
+    private String reportTypeName;
 }
