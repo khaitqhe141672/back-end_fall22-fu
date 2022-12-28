@@ -195,7 +195,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.getUserByUsername(signInRequest.getUsername());
 
         if (Objects.isNull(user)) {
-            throw new AuthException("Tai Khoan khong hop le");
+            throw new AuthException("Tài khoản không hợp lệ");
         } else {
 
             if (passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
@@ -204,7 +204,7 @@ public class AuthServiceImpl implements AuthService {
                                 signInRequest.getPassword()));
 
                 if (user.getStatus() == 2) {
-                    throw new AuthException("Tai khoan bi chan");
+                    throw new AuthException("Tài khoản bị chặn");
                 } else {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     String jwt = jwtUtils.generateJwtToken(authentication);
@@ -240,7 +240,7 @@ public class AuthServiceImpl implements AuthService {
                 }
 
             } else {
-                throw new BadRequestAlertException("mat khau current khong khop");
+                throw new BadRequestAlertException("mật khẩu hiện tại không khớp");
             }
         }
     }
