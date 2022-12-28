@@ -132,7 +132,7 @@ public class PostVoucherServiceImpl implements PostVoucherService {
         Date dateNow = Date.valueOf(localDate);
 
         postVouchers.forEach(v -> {
-            if (dateNow.after(v.getEndDate())) {
+            if (dateNow.after(v.getEndDate()) && v.getStatus() != 2) {
                 v.setStatus(2);
                 postVoucherRepository.save(v);
             }
