@@ -205,6 +205,9 @@ public class ManagePostServiceImpl implements ManagePostService {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
 
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
+
         int size = 10;
         int page = indexPage - 1;
 
