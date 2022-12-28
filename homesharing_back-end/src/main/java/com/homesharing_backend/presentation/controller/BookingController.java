@@ -87,7 +87,8 @@ public class BookingController {
 
     @PutMapping("/check-in-homestay")
     @PreAuthorize("hasRole('ROLE_HOST')")
-    public ResponseEntity<?> checkInHomestay(@RequestParam("booking-id") Long bookingID) {
-        return bookingService.checkInHomestay(bookingID);
+    public ResponseEntity<?> checkInHomestay(@RequestParam("booking-id") Long bookingID,
+                                             @RequestParam("status") int status) {
+        return bookingService.checkInHomestay(bookingID, status);
     }
 }

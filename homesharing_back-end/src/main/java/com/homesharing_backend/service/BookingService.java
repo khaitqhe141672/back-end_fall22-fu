@@ -32,5 +32,5 @@ public interface BookingService {
 
     public ResponseEntity<JwtResponse> getAllBookingByAdmin();
 
-    public ResponseEntity<MessageResponse> checkInHomestay(Long bookingID);
+    public ResponseEntity<MessageResponse> checkInHomestay(Long bookingID, int status);
 }

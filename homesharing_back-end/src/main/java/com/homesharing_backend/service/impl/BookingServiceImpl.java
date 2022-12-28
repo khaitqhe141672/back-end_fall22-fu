@@ -554,13 +554,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public ResponseEntity<MessageResponse> checkInHomestay(Long bookingID) {
+    public ResponseEntity<MessageResponse> checkInHomestay(Long bookingID, int status) {
         Booking booking = bookingRepository.getBookingById(bookingID);
 
         if (Objects.isNull(booking)) {
             throw new NotFoundException("Booking_id khong ton tai");
         } else {
-            booking.setStatus(3);
+            booking.setStatus(status);
 
             Booking b = bookingRepository.save(booking);
 
