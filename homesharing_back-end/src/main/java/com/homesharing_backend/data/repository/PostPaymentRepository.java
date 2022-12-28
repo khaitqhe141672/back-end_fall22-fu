@@ -45,4 +45,5 @@ public interface PostPaymentRepository extends JpaRepository<PostPayment, Long> 
             "WHERE p.host.id= :hostID " +
             "GROUP BY pp.post.title")
     List<DashboardPaymentPostDto> getAllPaymentByHost(@Param("hostID") Long hostID);
+
 }

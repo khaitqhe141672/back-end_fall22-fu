@@ -11,6 +11,8 @@ import com.homesharing_backend.exception.NotFoundException;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManageVoucherService;
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,8 +38,17 @@ public class ManageVoucherServiceImpl implements ManageVoucherService {
     @Autowired
     private PostVoucherRepository postVoucherRepository;
 
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private PostVoucherService postVoucherService;
+
     @Override
     public ResponseEntity<ResponseObject> getAllVoucherByHost(int indexPage) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;

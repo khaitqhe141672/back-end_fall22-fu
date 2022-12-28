@@ -179,7 +179,7 @@ public class PaymentServiceImpl implements PaymentService {
         Date dateNow = Date.valueOf(localDate);
 
         postPayments.forEach(p -> {
-            if (dateNow.after(p.getEndDate())) {
+            if (dateNow.after(p.getEndDate()) && p.getStatus() != 2) {
                 p.setStatus(2);
 
                 Post post = postRepository.getPostById(p.getPost().getId());
