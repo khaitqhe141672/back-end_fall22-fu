@@ -8,6 +8,8 @@ import com.homesharing_backend.presentation.payload.JwtResponse;
 import com.homesharing_backend.presentation.payload.MessageResponse;
 import com.homesharing_backend.presentation.payload.ResponseObject;
 import com.homesharing_backend.service.ManagePostService;
+import com.homesharing_backend.service.PaymentService;
+import com.homesharing_backend.service.PostVoucherService;
 import com.homesharing_backend.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,8 +53,17 @@ public class ManagePostServiceImpl implements ManagePostService {
     @Autowired
     private BookingDetailRepository bookingDetailRepository;
 
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private PostVoucherService postVoucherService;
+
     @Override
     public ResponseEntity<ResponseObject> getAllPostByAdmin(int indexPage) {
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;
@@ -117,6 +128,9 @@ public class ManagePostServiceImpl implements ManagePostService {
     public ResponseEntity<ResponseObject> getAllPostByHost(int indexPage) {
 
         Host host = hostRepository.getHostsByUser_Id(SecurityUtils.getPrincipal().getId());
+
+        paymentService.checkTimePostPayment();
+        postVoucherService.checkTimePostVoucher();
 
         int size = 10;
         int page = indexPage - 1;
