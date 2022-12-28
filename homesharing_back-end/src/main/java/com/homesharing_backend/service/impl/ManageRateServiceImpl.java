@@ -46,6 +46,7 @@ public class ManageRateServiceImpl implements ManageRateService {
     @Autowired
     private ReportTypeRepository reportTypeRepository;
 
+
     @Override
     public ResponseEntity<ResponseObject> getAllRateByHost(int indexPage) {
 
@@ -111,6 +112,8 @@ public class ManageRateServiceImpl implements ManageRateService {
                     int totalLike = likesDislikesRepository.countLikesDislikesByRate_IdAndTypeAndStatus(r.getId(), 1, 1);
                     int totalDislike = likesDislikesRepository.countLikesDislikesByRate_IdAndTypeAndStatus(r.getId(), 2, 1);
 
+                    ReportRate reportPost = reportRateRepository.getReportRateByRate_Id(r.getId());
+
                     ViewDetailRateDto dto = ViewDetailRateDto.builder()
                             .customerID(r.getBookingDetail().getBooking().getCustomer().getId())
                             .username(r.getBookingDetail().getBooking().getCustomer().getUser().getUsername())
@@ -124,6 +127,14 @@ public class ManageRateServiceImpl implements ManageRateService {
                             .totalLike(totalLike)
                             .totalDislike(totalDislike)
                             .build();
+
+                    if(Objects.isNull(reportPost)){
+                        dto.setStatusReportRate(1);
+                    } else {
+                        dto.setDescriptionReport(reportPost.getDescription());
+                        dto.setStatusReportRate(0);
+                    }
+
                     dtoList.add(dto);
                 });
 
