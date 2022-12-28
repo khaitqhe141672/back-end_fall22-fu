@@ -21,4 +21,6 @@ public class HistoryReportPostDto {
     private int statusPost;
     private int statusReportPost;
     private int totalReportPost;
+    private int statusRate;
+    private String descriptionReport;
 }

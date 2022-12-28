@@ -26,4 +26,6 @@ public class ViewDetailRateDto {
     private String comment;
     private Date dateRate;
     private int statusRate;
+    private String descriptionReport;
+    private int statusReportRate;
 }

@@ -136,6 +136,8 @@ public class PostDetailServiceImpl implements PostDetailService {
                 }
             });
 
+            int countBooking = bookingDetailRepository.countBookingDetailByPost_Id(postID);
+
             PostDetailDto dto = PostDetailDto.builder()
                     .postDetailID(postDetail.getId())
                     .postID(postID)
@@ -162,6 +164,7 @@ public class PostDetailServiceImpl implements PostDetailService {
                     .longitude(postDetail.getLongitude())
                     .bookingDate(totalDates)
                     .typeAccountHost(postDetail.getPost().getHost().getTypeAccount())
+                    .countBooking(countBooking)
                     .build();
 
             if (Objects.isNull(postTopRateDto)) {

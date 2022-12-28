@@ -43,5 +43,6 @@ public class PostDetailDto {
     private String longitude;
     private List<LocalDate> bookingDate;
     private int typeAccountHost;
+    private int countBooking;
 
 }

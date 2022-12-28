@@ -36,4 +36,6 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
     List<DashboardBookingDto> totalBookingByHost(@Param("hostID") Long hostID, @Param("status") int status);
 
     Boolean existsByBooking_Customer_IdAndPost_Id(Long customerID, Long postID);
+
+    int countBookingDetailByPost_Id(Long postID);
 }
