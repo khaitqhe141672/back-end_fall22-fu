@@ -184,6 +184,9 @@ public class ReportServiceImpl implements ReportService {
 
             ComplaintPost saveComplaintPost = complaintPostRepository.save(complaintPost);
 
+            reportPost.setStatusComplaint(1);
+            historyHandleReportPostRepository.save(reportPost);
+
             if (Objects.isNull(saveComplaintPost)) {
                 throw new SaveDataException("Complaint post khong thanh cong");
             } else {
@@ -687,6 +690,13 @@ public class ReportServiceImpl implements ReportService {
                         .totalReportPost(totalReport)
                         .build();
 
+                if(h.getStatusComplaint() == 0){
+                    dto.setComplaintStatus(0);
+                } else {
+                    ComplaintPost complaintPost = complaintPostRepository.getComplaintPostByHistoryHandleReportPost_Id(h.getId());
+                    dto.setDescription(complaintPost.getDescription());
+                }
+
                 list.add(dto);
             });
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", new HashMap<>() {
@@ -726,6 +736,7 @@ public class ReportServiceImpl implements ReportService {
                         .username(d.getReportPost().getCustomer().getUser().getUsername())
                         .imageUrl(d.getReportPost().getCustomer().getUser().getUserDetail().getAvatarUrl())
                         .build();
+
 
                 list.add(dto);
             });
