@@ -552,4 +552,34 @@ public class BookingServiceImpl implements BookingService {
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.name(), bookingDtoList));
         }
     }
+
+    @Override
+    public ResponseEntity<MessageResponse> checkInHomestay(Long bookingID) {
+        Booking booking = bookingRepository.getBookingById(bookingID);
+
+        if (Objects.isNull(booking)) {
+            throw new NotFoundException("Booking_id khong ton tai");
+        } else {
+            booking.setStatus(3);
+
+            Booking b = bookingRepository.save(booking);
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            LocalDate localDate = localDateTime.toLocalDate();
+
+            Date editDate = Date.valueOf(localDate);
+
+            BookingDetail bookingDetail = bookingDetailRepository.getBookingDetailByBooking_Id(booking.getId());
+
+            bookingDetail.setEndDate(editDate);
+
+            bookingDetailRepository.save(bookingDetail);
+
+            if (Objects.isNull(b)) {
+                throw new UpdateDataException("Update status by booking-id not success");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(200, "update status success success"));
+            }
+        }
+    }
 }

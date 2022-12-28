@@ -85,4 +85,9 @@ public class BookingController {
         return bookingService.checkoutBookingEndDate();
     }
 
+    @PutMapping("/check-in-homestay")
+    @PreAuthorize("hasRole('ROLE_HOST')")
+    public ResponseEntity<?> checkInHomestay(@RequestParam("booking-id") Long bookingID) {
+        return bookingService.checkInHomestay(bookingID);
+    }
 }
