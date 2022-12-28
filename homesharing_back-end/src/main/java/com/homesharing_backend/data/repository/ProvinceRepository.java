@@ -27,7 +27,8 @@ public interface ProvinceRepository extends JpaRepository<Province, Long> {
 
     @Query(value = "SELECT new com.homesharing_backend.data.dto.ProvinceDto( pr.id, pr.name, pr.imageUrl) FROM Province pr \n" +
             "left join District d on pr.id = d.province.id \n" +
-            "left join PostDetail pd on d.id = pd.district.id \n" +
+            "left join PostDetail pd on d.id = pd.district.id " +
+            "left join Post p on pd.post.id = p.id where p.status= 1 \n" +
             "group by pr.id order by count(pd.id) desc")
     List<ProvinceDto> getTopProvince();
 }
